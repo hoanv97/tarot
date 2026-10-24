@@ -1,0 +1,90 @@
+{
+  "topics": {
+    "love": "Love",
+    "career": "Career",
+    "study": "Study",
+    "finance": "Finance",
+    "mind": "Mental wellbeing"
+  },
+  "elements": {
+    "fire": {
+      "name": "Fire",
+      "theme": "action, passion, initiative"
+    },
+    "water": {
+      "name": "Water",
+      "theme": "emotion, intuition, connection"
+    },
+    "air": {
+      "name": "Air",
+      "theme": "thoughts, words, information"
+    },
+    "earth": {
+      "name": "Earth",
+      "theme": "practicality, material life, body, habits"
+    }
+  },
+  "tones": {
+    "positive": "Bright spot",
+    "neutral": "Perspective",
+    "caution": "Heads-up"
+  },
+  "ranks": {
+    "page": "Page",
+    "knight": "Knight",
+    "queen": "Queen",
+    "king": "King"
+  },
+  "spreads": {
+    "1": {
+      "label": "1 card · daily",
+      "positions": {
+        "today": {
+          "label": "Today's card",
+          "prompt": "The main message for today."
+        }
+      }
+    },
+    "3": {
+      "label": "3 cards · Past, Present, Future",
+      "positions": {
+        "past": {
+          "label": "Past",
+          "prompt": "What shaped the current situation."
+        },
+        "present": {
+          "label": "Present",
+          "prompt": "What is happening right now."
+        },
+        "future": {
+          "label": "Future",
+          "prompt": "A tendency if things continue as they are; not a fixed outcome."
+        }
+      }
+    },
+    "3s": {
+      "label": "3 cards · Self, Situation, Challenge",
+      "positions": {
+        "self": {
+          "label": "Self",
+          "prompt": "What you bring to this story."
+        },
+        "situation": {
+          "label": "Situation",
+          "prompt": "What is happening around you."
+        },
+        "challenge": {
+          "label": "Challenge",
+          "prompt": "What needs attention or to be overcome."
+        }
+      }
+    }
+  },
+  "metrics": {},
+  "placeholders": {},
+  "disclaimer": {
+    "short": "Tarot is for reflection and entertainment, not a prediction.",
+    "full": "Tarot is only a prompt for reflection, offered for guidance and entertainment. It is not a prediction or a verdict, and it does not replace advice from a medical, mental-health, legal or financial professional. The final decision is always yours.",
+    "mind_note": "If you feel overwhelmed or unsafe, please talk to someone you trust, a professional, or contact your local emergency services."
+  }
+}

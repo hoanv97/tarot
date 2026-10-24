@@ -1,0 +1,236 @@
+{
+  "fool": {
+    "name": "The Fool"
+  },
+  "magician": {
+    "name": "The Magician"
+  },
+  "priestess": {
+    "name": "The High Priestess"
+  },
+  "empress": {
+    "name": "The Empress"
+  },
+  "emperor": {
+    "name": "The Emperor"
+  },
+  "hierophant": {
+    "name": "The Hierophant"
+  },
+  "lovers": {
+    "name": "The Lovers"
+  },
+  "chariot": {
+    "name": "The Chariot"
+  },
+  "strength": {
+    "name": "Strength"
+  },
+  "hermit": {
+    "name": "The Hermit"
+  },
+  "wheel": {
+    "name": "Wheel of Fortune"
+  },
+  "justice": {
+    "name": "Justice"
+  },
+  "hanged": {
+    "name": "The Hanged Man"
+  },
+  "death": {
+    "name": "Death"
+  },
+  "temperance": {
+    "name": "Temperance"
+  },
+  "devil": {
+    "name": "The Devil"
+  },
+  "tower": {
+    "name": "The Tower"
+  },
+  "star": {
+    "name": "The Star"
+  },
+  "moon": {
+    "name": "The Moon"
+  },
+  "sun": {
+    "name": "The Sun"
+  },
+  "judgement": {
+    "name": "Judgement"
+  },
+  "world": {
+    "name": "The World"
+  },
+  "wands-ace": {
+    "name": "Ace of Wands"
+  },
+  "wands-2": {
+    "name": "Two of Wands"
+  },
+  "wands-3": {
+    "name": "Three of Wands"
+  },
+  "wands-4": {
+    "name": "Four of Wands"
+  },
+  "wands-5": {
+    "name": "Five of Wands"
+  },
+  "wands-6": {
+    "name": "Six of Wands"
+  },
+  "wands-7": {
+    "name": "Seven of Wands"
+  },
+  "wands-8": {
+    "name": "Eight of Wands"
+  },
+  "wands-9": {
+    "name": "Nine of Wands"
+  },
+  "wands-10": {
+    "name": "Ten of Wands"
+  },
+  "wands-page": {
+    "name": "Page of Wands"
+  },
+  "wands-knight": {
+    "name": "Knight of Wands"
+  },
+  "wands-queen": {
+    "name": "Queen of Wands"
+  },
+  "wands-king": {
+    "name": "King of Wands"
+  },
+  "cups-ace": {
+    "name": "Ace of Cups"
+  },
+  "cups-2": {
+    "name": "Two of Cups"
+  },
+  "cups-3": {
+    "name": "Three of Cups"
+  },
+  "cups-4": {
+    "name": "Four of Cups"
+  },
+  "cups-5": {
+    "name": "Five of Cups"
+  },
+  "cups-6": {
+    "name": "Six of Cups"
+  },
+  "cups-7": {
+    "name": "Seven of Cups"
+  },
+  "cups-8": {
+    "name": "Eight of Cups"
+  },
+  "cups-9": {
+    "name": "Nine of Cups"
+  },
+  "cups-10": {
+    "name": "Ten of Cups"
+  },
+  "cups-page": {
+    "name": "Page of Cups"
+  },
+  "cups-knight": {
+    "name": "Knight of Cups"
+  },
+  "cups-queen": {
+    "name": "Queen of Cups"
+  },
+  "cups-king": {
+    "name": "King of Cups"
+  },
+  "swords-ace": {
+    "name": "Ace of Swords"
+  },
+  "swords-2": {
+    "name": "Two of Swords"
+  },
+  "swords-3": {
+    "name": "Three of Swords"
+  },
+  "swords-4": {
+    "name": "Four of Swords"
+  },
+  "swords-5": {
+    "name": "Five of Swords"
+  },
+  "swords-6": {
+    "name": "Six of Swords"
+  },
+  "swords-7": {
+    "name": "Seven of Swords"
+  },
+  "swords-8": {
+    "name": "Eight of Swords"
+  },
+  "swords-9": {
+    "name": "Nine of Swords"
+  },
+  "swords-10": {
+    "name": "Ten of Swords"
+  },
+  "swords-page": {
+    "name": "Page of Swords"
+  },
+  "swords-knight": {
+    "name": "Knight of Swords"
+  },
+  "swords-queen": {
+    "name": "Queen of Swords"
+  },
+  "swords-king": {
+    "name": "King of Swords"
+  },
+  "pentacles-ace": {
+    "name": "Ace of Pentacles"
+  },
+  "pentacles-2": {
+    "name": "Two of Pentacles"
+  },
+  "pentacles-3": {
+    "name": "Three of Pentacles"
+  },
+  "pentacles-4": {
+    "name": "Four of Pentacles"
+  },
+  "pentacles-5": {
+    "name": "Five of Pentacles"
+  },
+  "pentacles-6": {
+    "name": "Six of Pentacles"
+  },
+  "pentacles-7": {
+    "name": "Seven of Pentacles"
+  },
+  "pentacles-8": {
+    "name": "Eight of Pentacles"
+  },
+  "pentacles-9": {
+    "name": "Nine of Pentacles"
+  },
+  "pentacles-10": {
+    "name": "Ten of Pentacles"
+  },
+  "pentacles-page": {
+    "name": "Page of Pentacles"
+  },
+  "pentacles-knight": {
+    "name": "Knight of Pentacles"
+  },
+  "pentacles-queen": {
+    "name": "Queen of Pentacles"
+  },
+  "pentacles-king": {
+    "name": "King of Pentacles"
+  }
+}

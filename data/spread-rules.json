@@ -1,0 +1,534 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Miu Tarot - Bảng luật đọc cả trải bài (tầng 2)",
+    "description": "Luật khai báo bằng dữ liệu: engine tính các chỉ số (metric) từ các lá đã rút, đối chiếu điều kiện (when) của từng luật, rồi chọn ra vài nhận xét (insight) hiển thị. Kết quả cũng là đầu vào có cấu trúc cho tầng 3 (AI).",
+    "tone_guideline": "Giọng huyền bí nhưng hiện đại, nói trực tiếp với người xem (bạn). Dùng từ gợi ý (có thể, dường như, gợi ý) thay vì khẳng định tuyệt đối; không dự đoán điều chắc chắn; không đưa lời khuyên y tế hoặc tài chính cụ thể."
+  },
+  "vocab": {
+    "elements": {
+      "fire":  { "vi": "Lửa",  "theme": "hành động, đam mê, khởi xướng" },
+      "water": { "vi": "Nước", "theme": "cảm xúc, trực giác, kết nối" },
+      "air":   { "vi": "Khí",  "theme": "suy nghĩ, lời nói, thông tin" },
+      "earth": { "vi": "Đất",  "theme": "thực tế, vật chất, cơ thể, thói quen" }
+    },
+    "element_relations": {
+      "fire+air": "friendly",
+      "water+earth": "friendly",
+      "fire+water": "opposed",
+      "air+earth": "opposed",
+      "fire+earth": "neutral",
+      "air+water": "neutral"
+    },
+    "topics": [
+      { "id": "love", "label": "Tình yêu" },
+      { "id": "career", "label": "Sự nghiệp" },
+      { "id": "study", "label": "Học vấn" },
+      { "id": "finance", "label": "Tài chính" },
+      { "id": "mind", "label": "Sức khỏe tinh thần" }
+    ],
+    "tones": ["positive", "neutral", "caution"]
+  },
+  "spreads": [
+    {
+      "id": "1",
+      "label": "1 lá hằng ngày",
+      "card_count": 1,
+      "positions": [
+        { "id": "today", "label": "Lá bài hôm nay", "prompt": "Thông điệp chính cho hôm nay." }
+      ]
+    },
+    {
+      "id": "3",
+      "label": "3 lá · Quá khứ, Hiện tại, Tương lai",
+      "card_count": 3,
+      "positions": [
+        { "id": "past", "label": "Quá khứ", "prompt": "Điều đã định hình tình huống hiện tại." },
+        { "id": "present", "label": "Hiện tại", "prompt": "Điều đang diễn ra ngay lúc này." },
+        { "id": "future", "label": "Tương lai", "prompt": "Xu hướng nếu mọi thứ tiếp diễn như hiện tại; không phải kết quả cố định." }
+      ]
+    },
+    {
+      "id": "3s",
+      "label": "3 lá · Bản thân, Hoàn cảnh, Thử thách",
+      "card_count": 3,
+      "positions": [
+        { "id": "self", "label": "Bản thân", "prompt": "Điều bạn đang mang vào câu chuyện này." },
+        { "id": "situation", "label": "Hoàn cảnh", "prompt": "Điều đang diễn ra xung quanh bạn." },
+        { "id": "challenge", "label": "Thử thách", "prompt": "Điều cần được chú ý hoặc vượt qua." }
+      ]
+    }
+  ],
+  "metrics": {
+    "card_count": "Số lá trong trải bài (1 hoặc 3).",
+    "major_count": "Số lá Ẩn Chính (arcana = major).",
+    "court_count": "Số lá cung đình (rank: page, knight, queen, king).",
+    "ace_count": "Số lá Át (rank: ace).",
+    "reversal_pattern": "Chuỗi U (xuôi) / R (ngược) theo thứ tự vị trí, ví dụ RRU. Ở trải 3s, thứ tự là Bản thân, Hoàn cảnh, Thử thách. Toán tử matches cho phép ? thay cho một ký tự bất kỳ.",
+    "element_profile": "single (1 lá) | all_same (3 lá cùng nguyên tố) | dominant_pair (có 2 nguyên tố, một nguyên tố 2 lá) | mixed (3 nguyên tố khác nhau).",
+    "dominant_element": "Nguyên tố có từ 2 lá trở lên; null nếu profile là mixed.",
+    "secondary_element": "Nguyên tố còn lại khi profile là dominant_pair; ngược lại null.",
+    "element_relation": "friendly | opposed | neutral giữa dominant và secondary (tra vocab.element_relations); null nếu không phải dominant_pair.",
+    "missing_element": "Nguyên tố vắng mặt khi profile là mixed; ngược lại null.",
+    "repeated_numerology": "Giá trị numerology (1-9) trùng ở từ 2 lá trở lên; null nếu không có. Lá cung đình không có numerology.",
+    "repeated_numerology_size": "2 hoặc 3: số lá chia sẻ con số trùng.",
+    "repeated_rank": "Bậc cung đình (page | knight | queen | king) trùng ở từ 2 lá trở lên; null nếu không có.",
+    "cards_present": "Tập token của các lá đã rút: id (có mặt, bất kể hướng), id:U (xuôi), id:R (ngược). Toán tử contains_all kiểm tra mọi token trong value đều có mặt."
+  },
+  "placeholders": {
+    "{dominant}": "Tên Việt của nguyên tố chiếm ưu thế (Lửa/Nước/Khí/Đất).",
+    "{secondary}": "Tên Việt của nguyên tố còn lại.",
+    "{major_names}": "Tên các lá Ẩn Chính trong trải bài, cách nhau bằng dấu phẩy.",
+    "{repeated_names}": "Tên các lá cùng chia sẻ con số hoặc bậc trùng."
+  },
+  "selection": {
+    "max_insights": { "1": 2, "3": 4, "3s": 4 },
+    "min_priority": 30,
+    "steps": [
+      "1. Tính toàn bộ metric từ các lá đã rút (kèm xuôi/ngược và vị trí).",
+      "2. Giữ các luật có spreads chứa kiểu trải hiện tại và when đúng.",
+      "3. Trong mỗi exclusive_group chỉ giữ luật có priority cao nhất (bằng nhau thì lấy luật đứng trước trong file).",
+      "4. Sắp xếp giảm dần theo priority, lấy tối đa max_insights.",
+      "5. Nội dung hiển thị = text, rồi nếu có topic_text[chủ đề hiện tại] thì nối thêm sau text."
+    ]
+  },
+  "rules": [
+    {
+      "id": "PAIR-DEATH-STAR", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["death", "star"] },
+      "text": "Cái Chết và Ngôi Sao đi cùng nhau: một sự kết thúc mở đường cho hy vọng. Sau khi buông điều cũ, sự chữa lành có thể đến chậm mà chắc."
+    },
+    {
+      "id": "PAIR-TOWER-SUN", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["tower", "sun"] },
+      "text": "Tòa Tháp và Mặt Trời: sau biến động là sự rõ ràng. Điều sụp đổ có thể chỉ là lớp vỏ không còn thật, và phía sau là ánh sáng dễ chịu hơn."
+    },
+    {
+      "id": "PAIR-TOWER-STAR", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["tower", "star"] },
+      "text": "Tòa Tháp và Ngôi Sao: sau cú chấn động, hy vọng quay lại. Hãy cho mình thời gian hồi phục, không cần vội xây lại ngay."
+    },
+    {
+      "id": "PAIR-DEVIL-TOWER", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["devil", "tower"] },
+      "text": "Ác Quỷ và Tòa Tháp: những xiềng xích quen thuộc có thể sắp bị phá vỡ. Quá trình này có thể khó chịu, nhưng hướng về tự do."
+    },
+    {
+      "id": "PAIR-LOVERS-DEVIL", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "caution",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["lovers", "devil"] },
+      "text": "Tình Nhân và Ác Quỷ: sức hút rất mạnh, đi cùng nguy cơ phụ thuộc hoặc ràng buộc. Hãy tự hỏi mối liên hệ này đang nâng đỡ bạn hay đang trói buộc bạn."
+    },
+    {
+      "id": "PAIR-LOVERS-CUPS2", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["lovers", "cups-2"] },
+      "text": "Tình Nhân và Hai Cốc: sự kết nối sâu sắc và hòa hợp hai chiều, một mối quan hệ dựa trên thấu hiểu và tôn trọng lẫn nhau."
+    },
+    {
+      "id": "PAIR-HERMIT-PRIESTESS", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["hermit", "priestess"] },
+      "text": "Ẩn Sĩ và Nữ Tư Tế: tiếng nói nội tâm đang rất rõ. Khoảng yên tĩnh một mình có thể đem lại câu trả lời mà sự ồn ào không cho được."
+    },
+    {
+      "id": "PAIR-EMPRESS-EMPEROR", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["empress", "emperor"] },
+      "text": "Hoàng Hậu và Hoàng Đế: sự nuôi dưỡng gặp cấu trúc. Sự ấm áp kết hợp với kỷ luật tạo nên nền tảng vững cho điều bạn đang xây."
+    },
+    {
+      "id": "PAIR-CHARIOT-STRENGTH", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["chariot", "strength"] },
+      "text": "Cỗ Xe và Sức Mạnh: ý chí đi cùng sự kiên nhẫn. Bạn vừa có đà tiến lên, vừa có khả năng làm chủ cảm xúc của mình."
+    },
+    {
+      "id": "PAIR-SUN-MOON", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["sun", "moon"] },
+      "text": "Mặt Trời và Mặt Trăng: ánh sáng và bóng tối cùng hiện diện. Điều đang mơ hồ có thể dần sáng tỏ nếu bạn kiên nhẫn quan sát."
+    },
+    {
+      "id": "PAIR-MOON-STAR", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["moon", "star"] },
+      "text": "Mặt Trăng và Ngôi Sao: đường đi chưa rõ nhưng hy vọng vẫn còn. Hãy tin vào ánh sáng nhỏ dẫn lối thay vì đòi nhìn thấy cả con đường."
+    },
+    {
+      "id": "PAIR-FOOL-WORLD", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["fool", "world"] },
+      "text": "Chàng Khờ và Thế Giới: một vòng hành trình khép lại và vòng mới sắp mở ra. Bạn mang theo điều đã học để bắt đầu lại nhẹ nhàng hơn."
+    },
+    {
+      "id": "PAIR-FOOL-MAGICIAN", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["fool", "magician"] },
+      "text": "Chàng Khờ và Nhà Ảo Thuật: khởi đầu gặp đúng công cụ. Bạn có đủ nguồn lực để bắt tay vào điều mới, chỉ cần dám bước."
+    },
+    {
+      "id": "PAIR-JUSTICE-JUDGEMENT", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["justice", "judgement"] },
+      "text": "Công Lý và Phán Xét: thời điểm nhìn lại, nhận trách nhiệm và hành động theo điều bạn thật sự tin. Một kết quả công bằng bắt đầu từ sự trung thực với bản thân."
+    },
+    {
+      "id": "PAIR-TEMPERANCE-STAR", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["temperance", "star"] },
+      "text": "Tiết Độ và Ngôi Sao: chữa lành bằng sự kiên nhẫn và điều độ. Bước chậm lúc này đem lại sự bình yên bền lâu."
+    },
+    {
+      "id": "PAIR-HANGED-HERMIT", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["hanged", "hermit"] },
+      "text": "Người Treo Ngược và Ẩn Sĩ: giai đoạn dừng lại để nhìn khác đi. Đừng ép mình hành động, góc nhìn mới cần thời gian để chín."
+    },
+    {
+      "id": "PAIR-SWORDS3-CUPS5", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "caution",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["swords-3", "cups-5"] },
+      "text": "Ba Kiếm và Năm Cốc: nỗi đau và sự tiếc nuối cùng xuất hiện. Hãy cho phép mình buồn, và nhớ rằng vẫn còn những điều tốt đẹp quanh bạn."
+    },
+    {
+      "id": "PAIR-SWORDS9-MOON", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "caution",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["swords-9", "moon"] },
+      "text": "Chín Kiếm và Mặt Trăng: lo âu và suy nghĩ dồn dập, nhất là về đêm. Nỗi sợ đôi khi lớn hơn thực tế; nói ra với người bạn tin cậy có thể giúp bạn nhẹ lòng."
+    },
+    {
+      "id": "PAIR-PENTACLES10-CUPS10", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["pentacles-10", "cups-10"] },
+      "text": "Mười Tiền và Mười Cốc: sự ổn định vật chất gặp hạnh phúc gia đình, một tổ ấm vững chắc cả về cảm xúc lẫn đời sống."
+    },
+    {
+      "id": "PAIR-WANDS5-SWORDS5", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "caution",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["wands-5", "swords-5"] },
+      "text": "Năm Gậy và Năm Kiếm: xung đột và cạnh tranh. Hãy chọn trận đáng đánh, và nhớ rằng thắng bằng mọi giá có thể để lại nhiều mất mát."
+    },
+    {
+      "id": "PAIR-SWORDSACE-JUSTICE", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["swords-ace", "justice"] },
+      "text": "Át Kiếm và Công Lý: sự thật rõ ràng dẫn đến quyết định công bằng. Hãy dựa vào dữ kiện và nói điều cần nói một cách minh bạch."
+    },
+    {
+      "id": "PAIR-WANDSACE-PENTACLESACE", "category": "pair", "spreads": ["3", "3s"], "priority": 90, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "cards_present", "op": "contains_all", "value": ["wands-ace", "pentacles-ace"] },
+      "text": "Át Gậy và Át Tiền: ý tưởng gặp nền tảng thực tế. Một khởi đầu có cả cảm hứng lẫn khả năng trở thành hiện thực."
+    },
+
+    {
+      "id": "EL-ALL-FIRE", "category": "element", "spreads": ["3", "3s"], "priority": 80, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "all_same" }, { "metric": "dominant_element", "op": "==", "value": "fire" } ] },
+      "text": "Cả ba lá đều thuộc nguyên tố Lửa: năng lượng hành động rất mạnh. Câu chuyện của bạn đang nóng và có đà; hãy tự hỏi sức nóng ấy đang được dẫn vào đâu, và cần nghỉ ở chỗ nào để không cháy hết mình."
+    },
+    {
+      "id": "EL-ALL-WATER", "category": "element", "spreads": ["3", "3s"], "priority": 80, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "all_same" }, { "metric": "dominant_element", "op": "==", "value": "water" } ] },
+      "text": "Cả ba lá đều thuộc nguyên tố Nước: cảm xúc và trực giác là trung tâm của câu chuyện. Hãy cho mình thời gian cảm nhận, đồng thời cho cảm xúc một điểm tựa thực tế để nó không cuốn bạn đi."
+    },
+    {
+      "id": "EL-ALL-AIR", "category": "element", "spreads": ["3", "3s"], "priority": 80, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "all_same" }, { "metric": "dominant_element", "op": "==", "value": "air" } ] },
+      "text": "Cả ba lá đều thuộc nguyên tố Khí: đầu óc, lời nói và thông tin đang chiếm sân khấu. Có thể bạn đang nghĩ rất nhiều; hãy nói ra hoặc viết xuống, rồi phân biệt điều nào là sự thật, điều nào chỉ là lo nghĩ."
+    },
+    {
+      "id": "EL-ALL-EARTH", "category": "element", "spreads": ["3", "3s"], "priority": 80, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "all_same" }, { "metric": "dominant_element", "op": "==", "value": "earth" } ] },
+      "text": "Cả ba lá đều thuộc nguyên tố Đất: mọi thứ xoay quanh những điều cụ thể, ổn định và có thể chạm tới. Đây là nền móng vững, nhưng hãy chừa chỗ cho cảm hứng và sự linh hoạt."
+    },
+
+    {
+      "id": "EL-DOM-FIRE", "category": "element", "spreads": ["3", "3s"], "priority": 70, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "dominant_pair" }, { "metric": "dominant_element", "op": "==", "value": "fire" } ] },
+      "text": "Nguyên tố Lửa chiếm ưu thế: năng lượng hành động đang dẫn dắt câu chuyện này.",
+      "topic_text": {
+        "love": "Trong tình cảm, đó có thể là sự chủ động và đam mê, đôi khi cả sự nóng vội; một lời nói thẳng thắn nhưng dịu dàng sẽ giúp ích.",
+        "career": "Trong công việc, đây là tín hiệu của sáng kiến và tốc độ; hãy chọn một mục tiêu rõ ràng để năng lượng không bị phân tán.",
+        "study": "Trong học tập, bạn có thể đang có động lực mạnh; hãy biến nó thành lịch học cụ thể trước khi nhiệt huyết nguội đi.",
+        "finance": "Về tiền bạc, năng lượng này dễ đi cùng quyết định nhanh; hãy chờ một nhịp và kiểm tra lại con số trước khi cam kết.",
+        "mind": "Với tinh thần, nguồn năng lượng dồi dào cần lối thoát lành mạnh như vận động hoặc sáng tạo, và cả thời gian để hạ nhiệt."
+      }
+    },
+    {
+      "id": "EL-DOM-WATER", "category": "element", "spreads": ["3", "3s"], "priority": 70, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "dominant_pair" }, { "metric": "dominant_element", "op": "==", "value": "water" } ] },
+      "text": "Nguyên tố Nước chiếm ưu thế: cảm xúc và trực giác đang dẫn dắt câu chuyện này.",
+      "topic_text": {
+        "love": "Trong tình cảm, chiều sâu và sự nhạy cảm đang lên tiếng; hãy nói ra điều bạn cảm thấy thay vì chờ người kia tự hiểu.",
+        "career": "Trong công việc, sự thấu cảm là lợi thế khi làm việc với người khác, nhưng hãy giữ ranh giới để không bị cuốn theo bầu không khí chung.",
+        "study": "Trong học tập, tâm trạng đang ảnh hưởng đến sự tập trung của bạn nhiều hơn thường lệ; chăm sóc tinh thần sẽ giúp việc học nhẹ nhàng hơn.",
+        "finance": "Về tiền bạc, cảm xúc có thể chi phối cách bạn chi tiêu; hãy chờ lúc bình tâm rồi mới quyết định các khoản lớn.",
+        "mind": "Với tinh thần, hãy để cảm xúc được gọi tên và được nghỉ ngơi; chia sẻ với người bạn tin cậy sẽ giúp ích."
+      }
+    },
+    {
+      "id": "EL-DOM-AIR", "category": "element", "spreads": ["3", "3s"], "priority": 70, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "dominant_pair" }, { "metric": "dominant_element", "op": "==", "value": "air" } ] },
+      "text": "Nguyên tố Khí chiếm ưu thế: suy nghĩ, lời nói và thông tin đang dẫn dắt câu chuyện này.",
+      "topic_text": {
+        "love": "Trong tình cảm, giao tiếp là chìa khóa; hãy nói rõ điều mình mong muốn và lắng nghe đủ trước khi suy diễn.",
+        "career": "Trong công việc, ý tưởng và trao đổi là thế mạnh; hãy ghi lại các quyết định quan trọng để tránh hiểu lầm.",
+        "study": "Trong học tập, đầu óc đang linh hoạt; hãy tận dụng bằng cách hệ thống hóa kiến thức và đặt câu hỏi.",
+        "finance": "Về tiền bạc, hãy dựa vào thông tin đáng tin và đọc kỹ điều khoản thay vì nghe lời đồn.",
+        "mind": "Với tinh thần, suy nghĩ dồn dập có thể gây mệt; viết ra hoặc thở chậm vài phút giúp đầu óc nhẹ đi."
+      }
+    },
+    {
+      "id": "EL-DOM-EARTH", "category": "element", "spreads": ["3", "3s"], "priority": 70, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "dominant_pair" }, { "metric": "dominant_element", "op": "==", "value": "earth" } ] },
+      "text": "Nguyên tố Đất chiếm ưu thế: những điều thực tế, cụ thể và bền vững đang dẫn dắt câu chuyện này.",
+      "topic_text": {
+        "love": "Trong tình cảm, sự đáng tin và hành động nhỏ mỗi ngày quan trọng hơn lời hoa mỹ; hãy dành cho nhau thời gian chất lượng.",
+        "career": "Trong công việc, kỷ luật và sự kiên trì sẽ được đền đáp; hãy xây từng bước thay vì tìm lối tắt.",
+        "study": "Trong học tập, thói quen đều đặn mỗi ngày hiệu quả hơn học dồn; chia nhỏ mục tiêu sẽ giúp bạn giữ nhịp.",
+        "finance": "Về tiền bạc, ngân sách rõ ràng và thói quen ổn định là điểm tựa; tránh quyết định dựa trên cảm hứng nhất thời.",
+        "mind": "Với tinh thần, nhịp sinh hoạt đều đặn như ngủ, ăn và vận động nhẹ là nền tảng giúp bạn ổn hơn."
+      }
+    },
+
+    {
+      "id": "EL-REL-FRIENDLY", "category": "element_relation", "spreads": ["3", "3s"], "priority": 60, "exclusive_group": null, "tone": "positive",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "dominant_pair" }, { "metric": "element_relation", "op": "==", "value": "friendly" } ] },
+      "text": "{dominant} và {secondary} là hai nguyên tố hỗ trợ nhau: năng lượng trong trải bài này có xu hướng thuận chiều, nguyên tố này tiếp sức cho nguyên tố kia."
+    },
+    {
+      "id": "EL-REL-OPPOSED", "category": "element_relation", "spreads": ["3", "3s"], "priority": 60, "exclusive_group": null, "tone": "caution",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "dominant_pair" }, { "metric": "element_relation", "op": "==", "value": "opposed" } ] },
+      "text": "{dominant} và {secondary} là hai nguyên tố đối lập: bạn có thể cảm thấy bị giằng co giữa hai phía. Đây không phải điềm xấu, mà là lời nhắc tìm điểm giữa thay vì chọn một bên và bỏ hẳn bên còn lại."
+    },
+    {
+      "id": "EL-REL-NEUTRAL", "category": "element_relation", "spreads": ["3", "3s"], "priority": 60, "exclusive_group": null, "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "dominant_pair" }, { "metric": "element_relation", "op": "==", "value": "neutral" } ] },
+      "text": "{dominant} và {secondary} không hỗ trợ cũng không đối đầu nhau: hai năng lượng này có thể cùng tồn tại, và cách bạn kết hợp chúng sẽ quyết định kết quả."
+    },
+
+    {
+      "id": "EL-MISS-FIRE", "category": "element", "spreads": ["3", "3s"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "mixed" }, { "metric": "missing_element", "op": "==", "value": "fire" } ] },
+      "text": "Ba lá thuộc ba nguyên tố khác nhau, nghĩa là câu chuyện có nhiều khía cạnh. Nguyên tố vắng mặt là Lửa; có thể điều còn thiếu là một chút chủ động hoặc động lực để bắt đầu."
+    },
+    {
+      "id": "EL-MISS-WATER", "category": "element", "spreads": ["3", "3s"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "mixed" }, { "metric": "missing_element", "op": "==", "value": "water" } ] },
+      "text": "Ba lá thuộc ba nguyên tố khác nhau, nghĩa là câu chuyện có nhiều khía cạnh. Nguyên tố vắng mặt là Nước; có thể bạn chưa dành chỗ cho cảm xúc và sự nghỉ ngơi trong chuyện này."
+    },
+    {
+      "id": "EL-MISS-AIR", "category": "element", "spreads": ["3", "3s"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "mixed" }, { "metric": "missing_element", "op": "==", "value": "air" } ] },
+      "text": "Ba lá thuộc ba nguyên tố khác nhau, nghĩa là câu chuyện có nhiều khía cạnh. Nguyên tố vắng mặt là Khí; có thể còn thiếu một cuộc trò chuyện thẳng thắn hoặc một cái nhìn tỉnh táo, rõ ràng."
+    },
+    {
+      "id": "EL-MISS-EARTH", "category": "element", "spreads": ["3", "3s"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "mixed" }, { "metric": "missing_element", "op": "==", "value": "earth" } ] },
+      "text": "Ba lá thuộc ba nguyên tố khác nhau, nghĩa là câu chuyện có nhiều khía cạnh. Nguyên tố vắng mặt là Đất; có thể còn thiếu một kế hoạch cụ thể hoặc bước đi thực tế để biến ý định thành hiện thực."
+    },
+
+    {
+      "id": "EL-SINGLE-FIRE", "category": "element", "spreads": ["1"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "single" }, { "metric": "dominant_element", "op": "==", "value": "fire" } ] },
+      "text": "Lá hôm nay mang nguyên tố Lửa: năng lượng của hành động, đam mê và sự khởi xướng. Hôm nay có thể hợp để bắt đầu điều bạn vẫn trì hoãn."
+    },
+    {
+      "id": "EL-SINGLE-WATER", "category": "element", "spreads": ["1"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "single" }, { "metric": "dominant_element", "op": "==", "value": "water" } ] },
+      "text": "Lá hôm nay thuộc nguyên tố Nước: một ngày thiên về cảm xúc, trực giác và sự kết nối. Hãy lắng nghe điều mình cảm thấy trước khi vội kết luận."
+    },
+    {
+      "id": "EL-SINGLE-AIR", "category": "element", "spreads": ["1"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "single" }, { "metric": "dominant_element", "op": "==", "value": "air" } ] },
+      "text": "Lá hôm nay thuộc nguyên tố Khí: một ngày của suy nghĩ, lời nói và thông tin. Viết ra điều đang quanh quẩn trong đầu có thể giúp bạn nhìn rõ hơn."
+    },
+    {
+      "id": "EL-SINGLE-EARTH", "category": "element", "spreads": ["1"], "priority": 50, "exclusive_group": "element_main", "tone": "neutral",
+      "when": { "all": [ { "metric": "element_profile", "op": "==", "value": "single" }, { "metric": "dominant_element", "op": "==", "value": "earth" } ] },
+      "text": "Lá hôm nay thuộc nguyên tố Đất: một ngày của những việc cụ thể, thói quen và cơ thể. Những bước nhỏ, thực tế sẽ hiệu quả hơn lời hứa lớn."
+    },
+
+    {
+      "id": "RV-3-UUU", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "positive",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "UUU" },
+      "text": "Cả ba lá đều xuôi: dòng chảy từ quá khứ đến tương lai khá thông suốt. Hãy tận dụng đà này và đừng chủ quan với những chi tiết nhỏ."
+    },
+    {
+      "id": "RV-3-UUR", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "caution",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "UUR" },
+      "text": "Quá khứ và hiện tại thông suốt, nhưng lá tương lai ngược: hướng đi phía trước có thể gặp một điểm nghẽn hoặc cần được điều chỉnh. Tương lai ở đây là xu hướng, không phải kết quả cố định."
+    },
+    {
+      "id": "RV-3-URU", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "neutral",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "URU" },
+      "text": "Lá hiện tại ngược giữa hai lá xuôi: bạn có thể đang đi qua một khúc nghẽn tạm thời, trong khi nền tảng từ quá khứ và triển vọng phía trước vẫn thuận. Hãy kiên nhẫn đi qua đoạn này."
+    },
+    {
+      "id": "RV-3-URR", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "caution",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "URR" },
+      "text": "Quá khứ thông suốt, nhưng hiện tại và tương lai ngược: điều từng ổn đang gặp khó, và xu hướng này có thể kéo dài nếu giữ nguyên cách làm. Đây là lời mời điều chỉnh, không phải một bản án."
+    },
+    {
+      "id": "RV-3-RUU", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "positive",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "RUU" },
+      "text": "Quá khứ ngược, hiện tại và tương lai xuôi: những điều chưa trọn vẹn ở quá khứ đang dần được gỡ, và hướng đi phía trước sáng hơn. Bạn dường như đang trên đường hồi phục."
+    },
+    {
+      "id": "RV-3-RUR", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "neutral",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "RUR" },
+      "text": "Quá khứ và tương lai đều ngược, xen giữa là một hiện tại xuôi: hiện tại là khoảng thở có giá trị. Hãy dùng nó để xử lý điều còn dang dở thay vì để mọi thứ lặp lại."
+    },
+    {
+      "id": "RV-3-RRU", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "positive",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "RRU" },
+      "text": "Quá khứ và hiện tại ngược, tương lai xuôi: giai đoạn khó khăn có dấu hiệu qua đi, và phía trước có chỗ cho sự nhẹ nhõm. Hãy kiên trì thêm một chút."
+    },
+    {
+      "id": "RV-3-RRR", "category": "reversal", "spreads": ["3"], "priority": 75, "exclusive_group": "reversal", "tone": "caution",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "RRR" },
+      "text": "Cả ba lá đều ngược: câu chuyện đang hướng nhiều vào bên trong, với những điều bị dồn nén hoặc chưa được nhìn thẳng. Đây là thời điểm hợp để chậm lại, chăm sóc bản thân và trò chuyện với người bạn tin cậy."
+    },
+
+    {
+      "id": "RV-3S-RRR", "category": "reversal", "spreads": ["3s"], "priority": 78, "exclusive_group": "reversal", "tone": "caution",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "RRR" },
+      "text": "Cả ba lá đều ngược: bản thân, hoàn cảnh lẫn thử thách đều đang bị chặn hoặc chưa rõ ràng. Hãy đi chậm, tránh quyết định lớn lúc này và tìm sự hỗ trợ từ người bạn tin cậy."
+    },
+    {
+      "id": "RV-3S-UXU", "category": "reversal", "spreads": ["3s"], "priority": 75, "exclusive_group": "reversal", "tone": "positive",
+      "when": { "metric": "reversal_pattern", "op": "matches", "value": "U?U" },
+      "text": "Lá Bản thân và lá Thử thách đều xuôi: bạn đang đối diện một thử thách rõ ràng với nội lực khá ổn. Hãy tin vào những gì mình đang có và hành động có kế hoạch."
+    },
+    {
+      "id": "RV-3S-UXR", "category": "reversal", "spreads": ["3s"], "priority": 75, "exclusive_group": "reversal", "tone": "neutral",
+      "when": { "metric": "reversal_pattern", "op": "matches", "value": "U?R" },
+      "text": "Lá Bản thân xuôi, lá Thử thách ngược: bạn khá vững vàng, và thử thách có thể đang nhẹ hơn vẻ ngoài hoặc nằm nhiều ở bên trong hơn là bên ngoài."
+    },
+    {
+      "id": "RV-3S-RXU", "category": "reversal", "spreads": ["3s"], "priority": 75, "exclusive_group": "reversal", "tone": "caution",
+      "when": { "metric": "reversal_pattern", "op": "matches", "value": "R?U" },
+      "text": "Lá Bản thân ngược, lá Thử thách xuôi: thử thách khá rõ ràng nhưng bạn có thể đang hoài nghi chính mình. Lấy lại niềm tin bằng những việc nhỏ làm được ngay sẽ giúp bạn nhiều."
+    },
+    {
+      "id": "RV-3S-RXR", "category": "reversal", "spreads": ["3s"], "priority": 75, "exclusive_group": "reversal", "tone": "caution",
+      "when": { "metric": "reversal_pattern", "op": "matches", "value": "R?R" },
+      "text": "Lá Bản thân và lá Thử thách đều ngược: câu chuyện nằm nhiều ở nội tâm. Hãy chăm sóc bản thân trước, rồi mới giải quyết thử thách."
+    },
+
+    {
+      "id": "RV-1-R", "category": "reversal", "spreads": ["1"], "priority": 66, "exclusive_group": "reversal", "tone": "caution",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "R" },
+      "text": "Lá hôm nay xuất hiện ngược: năng lượng của nó có thể đang bị chặn lại, quá mức hoặc hướng vào bên trong. Đây không phải điềm xấu, mà là gợi ý nhìn kỹ hơn vào điều bạn đang né tránh hoặc cần điều chỉnh."
+    },
+    {
+      "id": "RV-1-U", "category": "reversal", "spreads": ["1"], "priority": 40, "exclusive_group": "reversal", "tone": "positive",
+      "when": { "metric": "reversal_pattern", "op": "==", "value": "U" },
+      "text": "Lá hôm nay xuất hiện xuôi: năng lượng của nó đang thông suốt, bạn có thể dựa vào thông điệp này một cách khá trực tiếp."
+    },
+
+    {
+      "id": "ARC-MAJOR-0", "category": "arcana", "spreads": ["3", "3s"], "priority": 65, "exclusive_group": "arcana", "tone": "neutral",
+      "when": { "metric": "major_count", "op": "==", "value": 0 },
+      "text": "Cả ba lá đều thuộc Ẩn Phụ: đây là câu chuyện của đời sống thường ngày, nằm trong tầm tay bạn điều chỉnh bằng những lựa chọn cụ thể."
+    },
+    {
+      "id": "ARC-MAJOR-1", "category": "arcana", "spreads": ["3", "3s"], "priority": 65, "exclusive_group": "arcana", "tone": "neutral",
+      "when": { "metric": "major_count", "op": "==", "value": 1 },
+      "text": "Chỉ có một lá Ẩn Chính ({major_names}), nên đây có thể là bài học hoặc chủ đề trung tâm; hai lá còn lại cho thấy nó thể hiện ra sao trong đời sống hằng ngày."
+    },
+    {
+      "id": "ARC-MAJOR-2PLUS", "category": "arcana", "spreads": ["3", "3s"], "priority": 65, "exclusive_group": "arcana", "tone": "neutral",
+      "when": { "metric": "major_count", "op": ">=", "value": 2 },
+      "text": "Có từ hai lá Ẩn Chính trở lên ({major_names}): trải bài này gợi một giai đoạn có ý nghĩa lớn hơn thường lệ, có thể là bước ngoặt hoặc bài học đáng để bạn dừng lại suy ngẫm.",
+      "topic_text": {
+        "love": "Trong tình cảm, đây có thể là chương mà cách bạn yêu và được yêu đang thay đổi; hãy đi chậm và trung thực với chính mình.",
+        "career": "Trong công việc, các quyết định lúc này có thể ảnh hưởng lâu dài; hãy cân nhắc kỹ và đừng ngại hỏi ý kiến người từng trải.",
+        "study": "Trong học tập, đây có thể là lúc xác định lại hướng đi hoặc mục tiêu dài hạn thay vì chỉ lo bài trước mắt.",
+        "finance": "Về tiền bạc, hãy nhìn bức tranh dài hạn và tránh quyết định lớn khi đang xúc động.",
+        "mind": "Với tinh thần, giai đoạn này có thể khá nặng ký; hãy dành chỗ cho nghỉ ngơi và sự hỗ trợ từ người bạn tin."
+      }
+    },
+    {
+      "id": "ARC-SINGLE-MAJOR", "category": "arcana", "spreads": ["1"], "priority": 65, "exclusive_group": "arcana", "tone": "neutral",
+      "when": { "metric": "major_count", "op": "==", "value": 1 },
+      "text": "Lá hôm nay là Ẩn Chính: một thông điệp có trọng lượng, đáng để bạn dành vài phút suy ngẫm thay vì lướt qua."
+    },
+    {
+      "id": "ARC-SINGLE-MINOR", "category": "arcana", "spreads": ["1"], "priority": 45, "exclusive_group": "arcana", "tone": "neutral",
+      "when": { "metric": "major_count", "op": "==", "value": 0 },
+      "text": "Lá hôm nay là Ẩn Phụ: thông điệp gắn với những việc cụ thể của ngày hôm nay, nằm trong tầm tay bạn điều chỉnh."
+    },
+
+    {
+      "id": "ACE-PRESENT", "category": "rank", "spreads": ["1", "3", "3s"], "priority": 62, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "ace_count", "op": ">=", "value": 1 },
+      "text": "Lá Át xuất hiện như một hạt giống: cơ hội hoặc khởi đầu mới đang chờ bạn chăm sóc. Hãy bắt đầu nhỏ và đi bền."
+    },
+    {
+      "id": "COURT-SINGLE", "category": "rank", "spreads": ["1"], "priority": 58, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "court_count", "op": "==", "value": 1 },
+      "text": "Lá cung đình gợi hình ảnh một con người hoặc một vai trò: có thể là một người quanh bạn, hoặc một mặt trong chính bạn đang cần lên tiếng."
+    },
+    {
+      "id": "COURT-MANY", "category": "rank", "spreads": ["3", "3s"], "priority": 58, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "court_count", "op": ">=", "value": 2 },
+      "text": "Nhiều lá cung đình xuất hiện: trải bài này có thể liên quan đến những con người cụ thể quanh bạn, hoặc các khía cạnh khác nhau trong tính cách của chính bạn."
+    },
+
+    {
+      "id": "RANK-REPEAT-PAGE", "category": "rank", "spreads": ["3", "3s"], "priority": 68, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_rank", "op": "==", "value": "page" },
+      "text": "Hai lá Tiểu Đồng trở lên ({repeated_names}): tin tức, việc học hỏi và những bước thử đầu tiên đang là chủ đề."
+    },
+    {
+      "id": "RANK-REPEAT-KNIGHT", "category": "rank", "spreads": ["3", "3s"], "priority": 68, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_rank", "op": "==", "value": "knight" },
+      "text": "Hai lá Hiệp Sĩ trở lên ({repeated_names}): hành động, di chuyển và theo đuổi mục tiêu đang nổi bật; hãy giữ nhịp để không lao đi quá nhanh."
+    },
+    {
+      "id": "RANK-REPEAT-QUEEN", "category": "rank", "spreads": ["3", "3s"], "priority": 68, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_rank", "op": "==", "value": "queen" },
+      "text": "Hai lá cung đình bậc Hoàng Hậu trở lên ({repeated_names}): chiều sâu cảm xúc, sự chăm sóc và việc làm chủ nội tâm đang nổi bật."
+    },
+    {
+      "id": "RANK-REPEAT-KING", "category": "rank", "spreads": ["3", "3s"], "priority": 68, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_rank", "op": "==", "value": "king" },
+      "text": "Hai lá Vua trở lên ({repeated_names}): quyền quyết định, trách nhiệm và khả năng dẫn dắt đang là trọng tâm."
+    },
+
+    {
+      "id": "NUM-REPEAT-1", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 1 },
+      "text": "Con số 1 lặp lại ({repeated_names}): chủ đề của khởi đầu, hạt giống và sáng kiến cá nhân, hoặc một vòng khép lại để mở ra vòng mới."
+    },
+    {
+      "id": "NUM-REPEAT-2", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 2 },
+      "text": "Con số 2 lặp lại ({repeated_names}): chủ đề của lựa chọn, cân bằng và sự kết nối giữa hai phía."
+    },
+    {
+      "id": "NUM-REPEAT-3", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 3 },
+      "text": "Con số 3 lặp lại ({repeated_names}): chủ đề của sáng tạo, giao tiếp và sự phát triển cùng người khác."
+    },
+    {
+      "id": "NUM-REPEAT-4", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 4 },
+      "text": "Con số 4 lặp lại ({repeated_names}): chủ đề của nền tảng và cấu trúc. Hãy tự hỏi sự ổn định này đang nâng đỡ bạn hay đang giữ chân bạn."
+    },
+    {
+      "id": "NUM-REPEAT-5", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "caution",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 5 },
+      "text": "Con số 5 lặp lại ({repeated_names}): chủ đề của thay đổi và thử thách. Điều quen thuộc có thể bị lay chuyển để bạn học cách thích nghi."
+    },
+    {
+      "id": "NUM-REPEAT-6", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 6 },
+      "text": "Con số 6 lặp lại ({repeated_names}): chủ đề của hài hòa, chia sẻ và hồi phục; việc cho đi và nhận lại đang là trọng tâm."
+    },
+    {
+      "id": "NUM-REPEAT-7", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 7 },
+      "text": "Con số 7 lặp lại ({repeated_names}): chủ đề của sự kiên nhẫn, đánh giá lại và niềm tin; có thể bạn cần một khoảng lùi để nhìn rõ hơn."
+    },
+    {
+      "id": "NUM-REPEAT-8", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "positive",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 8 },
+      "text": "Con số 8 lặp lại ({repeated_names}): chủ đề của nỗ lực, sức mạnh và chuyển động; công sức bạn bỏ ra đang tích tụ dần thành kết quả."
+    },
+    {
+      "id": "NUM-REPEAT-9", "category": "number", "spreads": ["3", "3s"], "priority": 72, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_numerology", "op": "==", "value": 9 },
+      "text": "Con số 9 lặp lại ({repeated_names}): một chu kỳ đang gần đến hồi kết, thường đi cùng sự từng trải và việc nhìn lại điều đã học."
+    },
+    {
+      "id": "NUM-REPEAT-TRIPLE", "category": "number", "spreads": ["3", "3s"], "priority": 71, "exclusive_group": null, "tone": "neutral",
+      "when": { "metric": "repeated_numerology_size", "op": "==", "value": 3 },
+      "text": "Ba lá cùng chung một con số là sự trùng khớp khá hiếm; thông điệp về con số này đáng được xem là trọng tâm của cả trải bài."
+    }
+  ]
+}

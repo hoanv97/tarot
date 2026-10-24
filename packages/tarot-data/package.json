@@ -1,0 +1,11 @@
+{
+  "name": "@miu/tarot-data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit", "test": "echo \"(không có test: dữ liệu được kiểm tra trong @miu/tarot-core)\"" },
+  "devDependencies": { "typescript": "^5.7.0" }
+}

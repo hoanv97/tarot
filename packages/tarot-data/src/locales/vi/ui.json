@@ -1,0 +1,110 @@
+{
+  "topics": {
+    "love": "Tình yêu",
+    "career": "Sự nghiệp",
+    "study": "Học vấn",
+    "finance": "Tài chính",
+    "mind": "Sức khỏe tinh thần"
+  },
+  "elements": {
+    "fire": {
+      "name": "Lửa",
+      "theme": "hành động, đam mê, khởi xướng"
+    },
+    "water": {
+      "name": "Nước",
+      "theme": "cảm xúc, trực giác, kết nối"
+    },
+    "air": {
+      "name": "Khí",
+      "theme": "suy nghĩ, lời nói, thông tin"
+    },
+    "earth": {
+      "name": "Đất",
+      "theme": "thực tế, vật chất, cơ thể, thói quen"
+    }
+  },
+  "tones": {
+    "positive": "Điểm sáng",
+    "neutral": "Góc nhìn",
+    "caution": "Lưu ý"
+  },
+  "ranks": {
+    "page": "Tiểu Đồng",
+    "knight": "Hiệp Sĩ",
+    "queen": "Hoàng Hậu",
+    "king": "Vua"
+  },
+  "spreads": {
+    "1": {
+      "label": "1 lá hằng ngày",
+      "positions": {
+        "today": {
+          "label": "Lá bài hôm nay",
+          "prompt": "Thông điệp chính cho hôm nay."
+        }
+      }
+    },
+    "3": {
+      "label": "3 lá · Quá khứ, Hiện tại, Tương lai",
+      "positions": {
+        "past": {
+          "label": "Quá khứ",
+          "prompt": "Điều đã định hình tình huống hiện tại."
+        },
+        "present": {
+          "label": "Hiện tại",
+          "prompt": "Điều đang diễn ra ngay lúc này."
+        },
+        "future": {
+          "label": "Tương lai",
+          "prompt": "Xu hướng nếu mọi thứ tiếp diễn như hiện tại; không phải kết quả cố định."
+        }
+      }
+    },
+    "3s": {
+      "label": "3 lá · Bản thân, Hoàn cảnh, Thử thách",
+      "positions": {
+        "self": {
+          "label": "Bản thân",
+          "prompt": "Điều bạn đang mang vào câu chuyện này."
+        },
+        "situation": {
+          "label": "Hoàn cảnh",
+          "prompt": "Điều đang diễn ra xung quanh bạn."
+        },
+        "challenge": {
+          "label": "Thử thách",
+          "prompt": "Điều cần được chú ý hoặc vượt qua."
+        }
+      }
+    }
+  },
+  "metrics": {
+    "card_count": "Số lá trong trải bài (1 hoặc 3).",
+    "major_count": "Số lá Ẩn Chính (arcana = major).",
+    "court_count": "Số lá cung đình (rank: page, knight, queen, king).",
+    "ace_count": "Số lá Át (rank: ace).",
+    "reversal_pattern": "Chuỗi U (xuôi) / R (ngược) theo thứ tự vị trí, ví dụ RRU. Ở trải 3s, thứ tự là Bản thân, Hoàn cảnh, Thử thách. Toán tử matches cho phép ? thay cho một ký tự bất kỳ.",
+    "element_profile": "single (1 lá) | all_same (3 lá cùng nguyên tố) | dominant_pair (có 2 nguyên tố, một nguyên tố 2 lá) | mixed (3 nguyên tố khác nhau).",
+    "dominant_element": "Nguyên tố có từ 2 lá trở lên; null nếu profile là mixed.",
+    "secondary_element": "Nguyên tố còn lại khi profile là dominant_pair; ngược lại null.",
+    "element_relation": "friendly | opposed | neutral giữa dominant và secondary (tra vocab.element_relations); null nếu không phải dominant_pair.",
+    "missing_element": "Nguyên tố vắng mặt khi profile là mixed; ngược lại null.",
+    "repeated_numerology": "Giá trị numerology (1-9) trùng ở từ 2 lá trở lên; null nếu không có. Lá cung đình không có numerology.",
+    "repeated_numerology_size": "2 hoặc 3: số lá chia sẻ con số trùng.",
+    "repeated_rank": "Bậc cung đình (page | knight | queen | king) trùng ở từ 2 lá trở lên; null nếu không có.",
+    "cards_present": "Tập token của các lá đã rút: id (có mặt, bất kể hướng), id:U (xuôi), id:R (ngược). Toán tử contains_all kiểm tra mọi token trong value đều có mặt."
+  },
+  "placeholders": {
+    "{dominant}": "Tên Việt của nguyên tố chiếm ưu thế (Lửa/Nước/Khí/Đất).",
+    "{secondary}": "Tên Việt của nguyên tố còn lại.",
+    "{major_names}": "Tên các lá Ẩn Chính trong trải bài, cách nhau bằng dấu phẩy.",
+    "{repeated_names}": "Tên các lá cùng chia sẻ con số hoặc bậc trùng."
+  },
+  "disclaimer": {
+    "short": "Tarot mang tính tham khảo và giải trí, không phải lời tiên đoán.",
+    "full": "Tarot chỉ là lời gợi mở để bạn suy ngẫm, mang tính tham khảo và giải trí, không phải lời tiên đoán hay phán quyết. Nội dung không thay thế lời khuyên của chuyên gia y tế, tâm lý, pháp lý hay tài chính. Quyết định cuối cùng luôn thuộc về bạn.",
+    "mind_note": "Nếu bạn đang cảm thấy quá tải hoặc không an toàn, hãy trò chuyện với người thân, chuyên gia, hoặc liên hệ dịch vụ khẩn cấp tại địa phương."
+  }
+}

@@ -1,0 +1,1512 @@
+{
+  "version": 1,
+  "element_relations": {
+    "fire+air": "friendly",
+    "water+earth": "friendly",
+    "fire+water": "opposed",
+    "air+earth": "opposed",
+    "fire+earth": "neutral",
+    "air+water": "neutral"
+  },
+  "spreads": [
+    {
+      "id": "1",
+      "card_count": 1,
+      "positions": [
+        "today"
+      ]
+    },
+    {
+      "id": "3",
+      "card_count": 3,
+      "positions": [
+        "past",
+        "present",
+        "future"
+      ]
+    },
+    {
+      "id": "3s",
+      "card_count": 3,
+      "positions": [
+        "self",
+        "situation",
+        "challenge"
+      ]
+    }
+  ],
+  "selection": {
+    "min_priority": 30,
+    "max_insights": {
+      "1": 3,
+      "3": 4,
+      "3s": 4
+    }
+  },
+  "rules": [
+    {
+      "id": "PAIR-DEATH-STAR",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "death",
+          "star"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-TOWER-SUN",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "tower",
+          "sun"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-TOWER-STAR",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "tower",
+          "star"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-DEVIL-TOWER",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "devil",
+          "tower"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-LOVERS-DEVIL",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "caution",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "lovers",
+          "devil"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-LOVERS-CUPS2",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "lovers",
+          "cups-2"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-HERMIT-PRIESTESS",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "hermit",
+          "priestess"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-EMPRESS-EMPEROR",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "empress",
+          "emperor"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-CHARIOT-STRENGTH",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "chariot",
+          "strength"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-SUN-MOON",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "sun",
+          "moon"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-MOON-STAR",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "moon",
+          "star"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-FOOL-WORLD",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "fool",
+          "world"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-FOOL-MAGICIAN",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "fool",
+          "magician"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-JUSTICE-JUDGEMENT",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "justice",
+          "judgement"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-TEMPERANCE-STAR",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "temperance",
+          "star"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-HANGED-HERMIT",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "hanged",
+          "hermit"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-SWORDS3-CUPS5",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "caution",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "swords-3",
+          "cups-5"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-SWORDS9-MOON",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "caution",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "swords-9",
+          "moon"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-PENTACLES10-CUPS10",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "pentacles-10",
+          "cups-10"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-WANDS5-SWORDS5",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "caution",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "wands-5",
+          "swords-5"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-SWORDSACE-JUSTICE",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "swords-ace",
+          "justice"
+        ]
+      }
+    },
+    {
+      "id": "PAIR-WANDSACE-PENTACLESACE",
+      "category": "pair",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 90,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "cards_present",
+        "op": "contains_all",
+        "value": [
+          "wands-ace",
+          "pentacles-ace"
+        ]
+      }
+    },
+    {
+      "id": "EL-ALL-FIRE",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 80,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "all_same"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "fire"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-ALL-WATER",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 80,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "all_same"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "water"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-ALL-AIR",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 80,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "all_same"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "air"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-ALL-EARTH",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 80,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "all_same"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "earth"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-DOM-FIRE",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 70,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "dominant_pair"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "fire"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-DOM-WATER",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 70,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "dominant_pair"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "water"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-DOM-AIR",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 70,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "dominant_pair"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "air"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-DOM-EARTH",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 70,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "dominant_pair"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "earth"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-REL-FRIENDLY",
+      "category": "element_relation",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 60,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "dominant_pair"
+          },
+          {
+            "metric": "element_relation",
+            "op": "==",
+            "value": "friendly"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-REL-OPPOSED",
+      "category": "element_relation",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 60,
+      "exclusive_group": null,
+      "tone": "caution",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "dominant_pair"
+          },
+          {
+            "metric": "element_relation",
+            "op": "==",
+            "value": "opposed"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-REL-NEUTRAL",
+      "category": "element_relation",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 60,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "dominant_pair"
+          },
+          {
+            "metric": "element_relation",
+            "op": "==",
+            "value": "neutral"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-MISS-FIRE",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "mixed"
+          },
+          {
+            "metric": "missing_element",
+            "op": "==",
+            "value": "fire"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-MISS-WATER",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "mixed"
+          },
+          {
+            "metric": "missing_element",
+            "op": "==",
+            "value": "water"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-MISS-AIR",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "mixed"
+          },
+          {
+            "metric": "missing_element",
+            "op": "==",
+            "value": "air"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-MISS-EARTH",
+      "category": "element",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "mixed"
+          },
+          {
+            "metric": "missing_element",
+            "op": "==",
+            "value": "earth"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-SINGLE-FIRE",
+      "category": "element",
+      "spreads": [
+        "1"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "single"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "fire"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-SINGLE-WATER",
+      "category": "element",
+      "spreads": [
+        "1"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "single"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "water"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-SINGLE-AIR",
+      "category": "element",
+      "spreads": [
+        "1"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "single"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "air"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EL-SINGLE-EARTH",
+      "category": "element",
+      "spreads": [
+        "1"
+      ],
+      "priority": 50,
+      "exclusive_group": "element_main",
+      "tone": "neutral",
+      "when": {
+        "all": [
+          {
+            "metric": "element_profile",
+            "op": "==",
+            "value": "single"
+          },
+          {
+            "metric": "dominant_element",
+            "op": "==",
+            "value": "earth"
+          }
+        ]
+      }
+    },
+    {
+      "id": "RV-3-UUU",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "positive",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "UUU"
+      }
+    },
+    {
+      "id": "RV-3-UUR",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "caution",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "UUR"
+      }
+    },
+    {
+      "id": "RV-3-URU",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "neutral",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "URU"
+      }
+    },
+    {
+      "id": "RV-3-URR",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "caution",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "URR"
+      }
+    },
+    {
+      "id": "RV-3-RUU",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "positive",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "RUU"
+      }
+    },
+    {
+      "id": "RV-3-RUR",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "neutral",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "RUR"
+      }
+    },
+    {
+      "id": "RV-3-RRU",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "positive",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "RRU"
+      }
+    },
+    {
+      "id": "RV-3-RRR",
+      "category": "reversal",
+      "spreads": [
+        "3"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "caution",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "RRR"
+      }
+    },
+    {
+      "id": "RV-3S-RRR",
+      "category": "reversal",
+      "spreads": [
+        "3s"
+      ],
+      "priority": 78,
+      "exclusive_group": "reversal",
+      "tone": "caution",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "RRR"
+      }
+    },
+    {
+      "id": "RV-3S-UXU",
+      "category": "reversal",
+      "spreads": [
+        "3s"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "positive",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "matches",
+        "value": "U?U"
+      }
+    },
+    {
+      "id": "RV-3S-UXR",
+      "category": "reversal",
+      "spreads": [
+        "3s"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "neutral",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "matches",
+        "value": "U?R"
+      }
+    },
+    {
+      "id": "RV-3S-RXU",
+      "category": "reversal",
+      "spreads": [
+        "3s"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "caution",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "matches",
+        "value": "R?U"
+      }
+    },
+    {
+      "id": "RV-3S-RXR",
+      "category": "reversal",
+      "spreads": [
+        "3s"
+      ],
+      "priority": 75,
+      "exclusive_group": "reversal",
+      "tone": "caution",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "matches",
+        "value": "R?R"
+      }
+    },
+    {
+      "id": "RV-1-R",
+      "category": "reversal",
+      "spreads": [
+        "1"
+      ],
+      "priority": 66,
+      "exclusive_group": "reversal",
+      "tone": "caution",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "R"
+      }
+    },
+    {
+      "id": "RV-1-U",
+      "category": "reversal",
+      "spreads": [
+        "1"
+      ],
+      "priority": 55,
+      "exclusive_group": "reversal",
+      "tone": "positive",
+      "when": {
+        "metric": "reversal_pattern",
+        "op": "==",
+        "value": "U"
+      }
+    },
+    {
+      "id": "ARC-MAJOR-0",
+      "category": "arcana",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 65,
+      "exclusive_group": "arcana",
+      "tone": "neutral",
+      "when": {
+        "metric": "major_count",
+        "op": "==",
+        "value": 0
+      }
+    },
+    {
+      "id": "ARC-MAJOR-1",
+      "category": "arcana",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 65,
+      "exclusive_group": "arcana",
+      "tone": "neutral",
+      "when": {
+        "metric": "major_count",
+        "op": "==",
+        "value": 1
+      }
+    },
+    {
+      "id": "ARC-MAJOR-2PLUS",
+      "category": "arcana",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 65,
+      "exclusive_group": "arcana",
+      "tone": "neutral",
+      "when": {
+        "metric": "major_count",
+        "op": ">=",
+        "value": 2
+      }
+    },
+    {
+      "id": "ARC-SINGLE-MAJOR",
+      "category": "arcana",
+      "spreads": [
+        "1"
+      ],
+      "priority": 65,
+      "exclusive_group": "arcana",
+      "tone": "neutral",
+      "when": {
+        "metric": "major_count",
+        "op": "==",
+        "value": 1
+      }
+    },
+    {
+      "id": "ARC-SINGLE-MINOR",
+      "category": "arcana",
+      "spreads": [
+        "1"
+      ],
+      "priority": 45,
+      "exclusive_group": "arcana",
+      "tone": "neutral",
+      "when": {
+        "metric": "major_count",
+        "op": "==",
+        "value": 0
+      }
+    },
+    {
+      "id": "ACE-PRESENT",
+      "category": "rank",
+      "spreads": [
+        "1",
+        "3",
+        "3s"
+      ],
+      "priority": 62,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "ace_count",
+        "op": ">=",
+        "value": 1
+      }
+    },
+    {
+      "id": "COURT-SINGLE",
+      "category": "rank",
+      "spreads": [
+        "1"
+      ],
+      "priority": 58,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "court_count",
+        "op": "==",
+        "value": 1
+      }
+    },
+    {
+      "id": "COURT-MANY",
+      "category": "rank",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 58,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "court_count",
+        "op": ">=",
+        "value": 2
+      }
+    },
+    {
+      "id": "RANK-REPEAT-PAGE",
+      "category": "rank",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 68,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_rank",
+        "op": "==",
+        "value": "page"
+      }
+    },
+    {
+      "id": "RANK-REPEAT-KNIGHT",
+      "category": "rank",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 68,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_rank",
+        "op": "==",
+        "value": "knight"
+      }
+    },
+    {
+      "id": "RANK-REPEAT-QUEEN",
+      "category": "rank",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 68,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_rank",
+        "op": "==",
+        "value": "queen"
+      }
+    },
+    {
+      "id": "RANK-REPEAT-KING",
+      "category": "rank",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 68,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_rank",
+        "op": "==",
+        "value": "king"
+      }
+    },
+    {
+      "id": "NUM-REPEAT-1",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 1
+      }
+    },
+    {
+      "id": "NUM-REPEAT-2",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 2
+      }
+    },
+    {
+      "id": "NUM-REPEAT-3",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 3
+      }
+    },
+    {
+      "id": "NUM-REPEAT-4",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 4
+      }
+    },
+    {
+      "id": "NUM-REPEAT-5",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "caution",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 5
+      }
+    },
+    {
+      "id": "NUM-REPEAT-6",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 6
+      }
+    },
+    {
+      "id": "NUM-REPEAT-7",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 7
+      }
+    },
+    {
+      "id": "NUM-REPEAT-8",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "positive",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 8
+      }
+    },
+    {
+      "id": "NUM-REPEAT-9",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 72,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_numerology",
+        "op": "==",
+        "value": 9
+      }
+    },
+    {
+      "id": "NUM-REPEAT-TRIPLE",
+      "category": "number",
+      "spreads": [
+        "3",
+        "3s"
+      ],
+      "priority": 71,
+      "exclusive_group": null,
+      "tone": "neutral",
+      "when": {
+        "metric": "repeated_numerology_size",
+        "op": "==",
+        "value": 3
+      }
+    }
+  ]
+}
