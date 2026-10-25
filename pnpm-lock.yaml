@@ -181,6 +181,9 @@ importers:
       '@miu/tarot-core':
         specifier: workspace:*
         version: link:../../packages/tarot-core
+      '@miu/tarot-data':
+        specifier: workspace:*
+        version: link:../../packages/tarot-data
       cors:
         specifier: ^2.8.5
         version: 2.8.6
