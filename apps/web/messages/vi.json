@@ -237,6 +237,7 @@
     "save": "Lưu",
     "saved": "Đã lưu.",
     "blocked": "Không lưu được: {reason}",
+    "loading": "Đang tải…",
     "nav": {
       "aria": "Mục quản trị",
       "cards": "Lá bài",

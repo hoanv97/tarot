@@ -237,6 +237,7 @@
     "save": "Save",
     "saved": "Saved.",
     "blocked": "Not saved: {reason}",
+    "loading": "Loading…",
     "nav": {
       "aria": "Admin sections",
       "cards": "Cards",

@@ -21,18 +21,25 @@ export default async function AdminCardsPage({ params, searchParams }: { params:
   if (!admin) return null;
   const { supabase } = admin;
 
-  const { data: deckRows } = await supabase.from('decks').select('id, sort_order, deck_translations(locale, name)').order('sort_order');
+  const loadDeckRows = (deckId: string) => Promise.all([
+    supabase.from('card_translations').select('card_id, name').eq('deck_id', deckId).eq('locale', locale),
+    supabase.from('card_translations').select('card_id, name').eq('deck_id', 'rws').eq('locale', locale),
+    supabase.from('deck_cards').select('card_id, image_url').eq('deck_id', deckId)
+  ]);
+
+  // Danh sách bộ bài và dữ liệu của bộ được yêu cầu (mặc định rws) lấy song song để khỏi chờ nhau.
+  const requested = /^[a-z0-9][a-z0-9-]*$/.test(query.deck ?? '') ? (query.deck as string) : 'rws';
+  const [{ data: deckRows }, firstRows] = await Promise.all([
+    supabase.from('decks').select('id, sort_order, deck_translations(locale, name)').order('sort_order'),
+    loadDeckRows(requested)
+  ]);
   const decks = (deckRows ?? []).map((d) => {
     const names = (d.deck_translations ?? []) as { locale: string; name: string }[];
     return { id: d.id as string, name: names.find((n) => n.locale === locale)?.name ?? names[0]?.name ?? (d.id as string) };
   });
-  const deck = decks.some((d) => d.id === query.deck) ? (query.deck as string) : (decks[0]?.id ?? 'rws');
-
-  const [{ data: own }, { data: base }, { data: images }] = await Promise.all([
-    supabase.from('card_translations').select('card_id, name').eq('deck_id', deck).eq('locale', locale),
-    supabase.from('card_translations').select('card_id, name').eq('deck_id', 'rws').eq('locale', locale),
-    supabase.from('deck_cards').select('card_id, image_url').eq('deck_id', deck)
-  ]);
+  // Mã bộ bài không tồn tại thì rơi về bộ đầu tiên (hiếm, mới phải lấy lại).
+  const deck = decks.some((d) => d.id === requested) ? requested : (decks[0]?.id ?? 'rws');
+  const [{ data: own }, { data: base }, { data: images }] = deck === requested ? firstRows : await loadDeckRows(deck);
   const customized = new Set((own ?? []).map((r) => r.card_id as string));
   const nameOf = new Map([...(base ?? []), ...(own ?? [])].map((r) => [r.card_id as string, r.name as string]));
   const imageOf = new Map((images ?? []).map((r) => [r.card_id as string, r.image_url as string | null]));
