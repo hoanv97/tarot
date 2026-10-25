@@ -218,6 +218,8 @@
       "taken": "That username is already taken.",
       "weak": "That password is too weak. Choose a harder one to guess.",
       "confirmEmail": "This account needs email confirmation so it cannot be used yet. An admin must turn off “Confirm email” in Supabase.",
+      "providerOff": "Email/password sign-in is turned off on the server. An admin must enable the Email provider in Supabase.",
+      "signupOff": "Sign-ups are currently closed.",
       "rate": "Too many attempts. Please wait a moment and try again.",
       "generic": "That did not work. Please try again.",
       "unconfigured": "Supabase is not configured (see .env.example)."

@@ -218,6 +218,8 @@
       "taken": "Tên đăng nhập này đã có người dùng.",
       "weak": "Mật khẩu quá yếu, hãy chọn mật khẩu khó đoán hơn.",
       "confirmEmail": "Tài khoản cần xác nhận email nên chưa dùng được ngay. Quản trị viên cần tắt “Confirm email” trong Supabase.",
+      "providerOff": "Đăng nhập bằng email/mật khẩu đang bị tắt trên máy chủ. Quản trị viên cần bật Email provider trong Supabase.",
+      "signupOff": "Hiện chưa mở đăng ký tài khoản mới.",
       "rate": "Bạn thử quá nhiều lần. Hãy đợi một lúc rồi thử lại.",
       "generic": "Chưa thực hiện được. Hãy thử lại.",
       "unconfigured": "Chưa cấu hình Supabase (xem .env.example)."

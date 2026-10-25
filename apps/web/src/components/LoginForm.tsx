@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { MIN_PASSWORD_LENGTH, USERNAME_RE, normalizeUsername, toLoginEmail } from '@/lib/username';
 
 type Mode = 'signin' | 'signup';
-type Problem = 'username' | 'passwordShort' | 'passwordMismatch' | 'invalid' | 'taken' | 'weak' | 'confirmEmail' | 'rate' | 'generic' | 'unconfigured';
+type Problem = 'username' | 'passwordShort' | 'passwordMismatch' | 'invalid' | 'taken' | 'weak' | 'confirmEmail' | 'providerOff' | 'signupOff' | 'rate' | 'generic' | 'unconfigured';
 
 /** Đăng nhập và đăng ký bằng tên đăng nhập + mật khẩu (xem lib/username.ts). */
 export function LoginForm({ withTitle = true }: { withTitle?: boolean }) {
@@ -25,6 +25,8 @@ export function LoginForm({ withTitle = true }: { withTitle?: boolean }) {
       case 'user_already_exists': case 'email_exists': return 'taken';
       case 'weak_password': return 'weak';
       case 'email_not_confirmed': return 'confirmEmail';
+      case 'email_provider_disabled': return 'providerOff';
+      case 'signup_disabled': return 'signupOff';
       case 'over_request_rate_limit': case 'over_email_send_rate_limit': return 'rate';
       default: return 'generic';
     }
@@ -45,7 +47,10 @@ export function LoginForm({ withTitle = true }: { withTitle?: boolean }) {
     const credentials = { email: toLoginEmail(name), password };
     const { data, error } = mode === 'signin' ? await supabase.auth.signInWithPassword(credentials) : await supabase.auth.signUp(credentials);
     setBusy(false);
-    if (error) return setProblem(classify(error));
+    if (error) {
+      console.warn('[auth]', error.code ?? error.status, error.message);
+      return setProblem(classify(error));
+    }
     // Đăng ký xong mà chưa có phiên nghĩa là Supabase đang bật xác nhận email, nên tên đăng nhập không dùng được ngay.
     if (mode === 'signup' && !data.session) return setProblem('confirmEmail');
     setPassword('');
