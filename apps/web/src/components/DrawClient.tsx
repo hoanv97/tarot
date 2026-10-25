@@ -52,6 +52,9 @@ const slotCount = (spread: SpreadId | null): number => (spread === '1' ? 1 : 3);
 const fill = (template: string, values: Record<string, string | number>): string =>
   template.replace(/\{(\w+)\}/g, (_m, key: string) => String(values[key] ?? ''));
 
+/** Số màu thanh bên trái của các mục kiến giải, khớp với [data-hue] trong globals.css. */
+const HUE_COUNT = 6;
+
 export function DrawClient() {
   const t = useTranslations('draw');
   const tDecks = useTranslations('decks');
@@ -393,6 +396,8 @@ export function DrawClient() {
     : '';
   const count = slotCount(d.spread);
   const deckForArt = d.deck ?? 'rws';
+  // Mỗi mục kiến giải dùng một màu thanh bên trái khác với mục liền kề (xoay vòng qua HUE_COUNT màu, xem .ins trong globals.css).
+  let analysisHue = 0;
   const insights = d.phase === 'done' && d.topic && d.spread
     ? readSpread({ picks: d.picks.map((p) => ({ id: p.id, reversed: p.reversed })), spreadId: d.spread, topicId: d.topic, locale, bundle, ruleSet: configured.ruleSet })
     : [];
@@ -532,8 +537,8 @@ export function DrawClient() {
                 <p className="eyebrow">{t('insightsEyebrow')}</p>
                 <h3 className="h3">{d.spread === '1' ? t('insightsTitle1') : t('insightsTitleN')}</h3>
                 <ul className="ins-list">
-                  {insights.map((i) => (
-                    <li className="ins" data-tone={i.tone} key={i.id}><span className="ins-tag">{bundle.ui.tones[i.tone]}</span><p>{i.text}</p></li>
+                  {insights.map((i, index) => (
+                    <li className="ins" data-tone={i.tone} data-hue={index % HUE_COUNT} key={i.id}><span className="ins-tag">{bundle.ui.tones[i.tone]}</span><p>{i.text}</p></li>
                   ))}
                 </ul>
               </Reveal>
@@ -549,7 +554,7 @@ export function DrawClient() {
                       <h3 className="h3 an-h">{section.title}</h3>
                       <ul className="ins-list">
                         {section.items.map((item, i) => (
-                          <li className="ins" data-tone={item.tone} key={`${section.id}-${i}`}>
+                          <li className="ins" data-tone={item.tone} data-hue={analysisHue++ % HUE_COUNT} key={`${section.id}-${i}`}>
                             {item.tag ? <span className="ins-tag">{item.tag}</span> : null}
                             <p>{item.text}</p>
                           </li>
