@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/be-vietnam-pro": "^5.3.0",
     "@miu/content-policy": "workspace:*",
     "@miu/tarot-core": "workspace:*",
     "@miu/tarot-data": "workspace:*",

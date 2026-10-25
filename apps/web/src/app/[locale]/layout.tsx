@@ -9,6 +9,11 @@ import { Header } from '@/components/Header';
 import { Sky } from '@/components/Sky';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
+// Phông chữ cho thanh điều hướng (Be Vietnam Pro, tự đóng gói, chỉ tải bộ ký tự Latin + tiếng Việt, hai độ đậm).
+import '@fontsource/be-vietnam-pro/latin-500.css';
+import '@fontsource/be-vietnam-pro/latin-600.css';
+import '@fontsource/be-vietnam-pro/vietnamese-500.css';
+import '@fontsource/be-vietnam-pro/vietnamese-600.css';
 import '../globals.css';
 
 export const generateStaticParams = () => routing.locales.map((locale) => ({ locale }));
