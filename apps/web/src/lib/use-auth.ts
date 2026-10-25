@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { displayName } from '@/lib/username';
+import { displayName } from '@miu/web-shared';
 
 export type AuthUser = { id: string; email: string; /** Tên hiển thị (tên đăng nhập, hoặc email nếu đăng nhập bằng email thật) */ name: string; role: 'user' | 'admin' } | null;
 type State = { ready: boolean; user: AuthUser; configured: boolean };

@@ -3,12 +3,12 @@ import { createClient } from '@supabase/supabase-js';
 import { unstable_cache } from 'next/cache';
 import en from '../../messages/en.json';
 import vi from '../../messages/vi.json';
-import { siteFallback } from './content-fallback';
+import { siteFallback } from '@miu/web-shared';
 import {
   CONTENT_TAGS, effectiveAnalysis, effectiveCardTones, mergeCardText, type AnalysisRow, type Row
-} from './content-merge';
+} from '@miu/web-shared';
 import { EMPTY_PATCH, applyContent, deepMerge, type ContentPatch, type Configured, type RulePatch, type RuleTextPatch, type SpreadText } from './content-patch';
-import { getLegalDoc, type LegalDoc, type LegalKind } from './legal-content';
+import { getLegalDoc, type LegalDoc, type LegalKind } from '@miu/web-shared';
 
 /**
  * Đọc nội dung cấu hình từ Supabase ở máy chủ (khóa anon, đọc công khai nhờ RLS), có cache theo tag.

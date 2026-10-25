@@ -3,7 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { ContentEditor } from '@/components/admin/ContentEditor';
 import { SITE_CONTENT_KEYS, type SiteContentKey } from '@/lib/admin/constants';
 import { getAdmin } from '@/lib/admin/guard';
-import { siteFallback } from '@/lib/content-fallback';
+import { siteFallback } from '@miu/web-shared';
 
 export const dynamic = 'force-dynamic';
 

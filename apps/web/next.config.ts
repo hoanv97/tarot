@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const config: NextConfig = {
   // Các gói trong monorepo xuất mã TypeScript nguồn, cần Next biên dịch giúp.
-  transpilePackages: ['@miu/tarot-core', '@miu/tarot-data', '@miu/content-policy'],
+  transpilePackages: ['@miu/tarot-core', '@miu/tarot-data', '@miu/content-policy', '@miu/web-shared'],
   reactStrictMode: true,
   poweredByHeader: false
 };

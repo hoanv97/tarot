@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { AdminShell } from '@/components/admin/AdminShell';
 import { Link } from '@/i18n/navigation';
 import { getAdmin } from '@/lib/admin/guard';
-import { displayName } from '@/lib/username';
+import { displayName } from '@miu/web-shared';
 
 // Luôn kiểm tra quyền ở máy chủ; RLS vẫn là lớp bảo vệ cuối cùng.
 export const dynamic = 'force-dynamic';

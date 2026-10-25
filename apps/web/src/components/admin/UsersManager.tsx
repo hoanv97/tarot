@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useRouter } from '@/i18n/navigation';
 import { AdminApiError, deleteUser, listAdmins, listUsers, setLocked, setRole, type AccountRole, type AdminAccount, type UsersPage } from '@/lib/admin/users-api';
 import { createClient } from '@/lib/supabase/client';
-import { displayName } from '@/lib/username';
+import { displayName } from '@miu/web-shared';
 
 export type AuditRow = { id: number; actor: string; action: string; target: string; at: string };
 

@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { MIN_PASSWORD_LENGTH, USERNAME_RE, normalizeUsername, toLoginEmail } from '@/lib/username';
+import { MIN_PASSWORD_LENGTH, USERNAME_RE, normalizeUsername, toLoginEmail } from '@miu/web-shared';
 
 type Mode = 'signin' | 'signup';
 type Problem = 'username' | 'passwordShort' | 'passwordMismatch' | 'invalid' | 'taken' | 'weak' | 'confirmEmail' | 'providerOff' | 'signupOff' | 'rate' | 'generic' | 'unconfigured';

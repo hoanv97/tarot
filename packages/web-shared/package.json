@@ -1,0 +1,16 @@
+{
+  "name": "@miu/web-shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mã dùng chung giữa apps/web và apps/admin: văn bản pháp lý, nội dung mặc định của site, gộp nội dung cấu hình, tên đăng nhập.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc --noEmit", "test": "echo \"(không có test riêng: được kiểm tra qua apps/web và apps/admin)\"" },
+  "dependencies": {
+    "@miu/tarot-core": "workspace:*",
+    "@miu/tarot-data": "workspace:*"
+  },
+  "devDependencies": { "typescript": "^5.7.0" }
+}

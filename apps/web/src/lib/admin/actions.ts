@@ -3,7 +3,7 @@
 import { lintText } from '@miu/content-policy';
 import { CARD_IDS, RULE_SET, TOPIC_IDS, validateAnalysis, type CardText, type Locale } from '@miu/tarot-core';
 import { revalidateTag } from 'next/cache';
-import { CONTENT_TAGS, effectiveAnalysis, effectiveCardTones, type AnalysisRow } from '@/lib/content-merge';
+import { CONTENT_TAGS, effectiveAnalysis, effectiveCardTones, type AnalysisRow } from '@miu/web-shared';
 import { ANALYSIS_SECTIONS, SITE_CONTENT_KEYS, type AnalysisSection, type SiteContentKey } from './constants';
 import { getAdmin } from './guard';
 

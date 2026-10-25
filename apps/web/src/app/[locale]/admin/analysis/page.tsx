@@ -3,7 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { AnalysisEditor, type AnalysisSnapshot } from '@/components/admin/AnalysisEditor';
 import { ANALYSIS_SECTIONS } from '@/lib/admin/constants';
 import { getAdmin } from '@/lib/admin/guard';
-import { effectiveAnalysis, effectiveCardTones, type AnalysisRow } from '@/lib/content-merge';
+import { effectiveAnalysis, effectiveCardTones, type AnalysisRow } from '@miu/web-shared';
 
 export const dynamic = 'force-dynamic';
 

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { CardEditor } from '@/components/admin/CardEditor';
 import { Link } from '@/i18n/navigation';
 import { getAdmin } from '@/lib/admin/guard';
-import { mergeCardText, type Row } from '@/lib/content-merge';
+import { mergeCardText, type Row } from '@miu/web-shared';
 
 export const dynamic = 'force-dynamic';
 

@@ -1,5 +1,5 @@
 import { Link } from '@/i18n/navigation';
-import { LEGAL_UPDATED, type LegalDoc } from '@/lib/legal-content';
+import { LEGAL_UPDATED, type LegalDoc } from '@miu/web-shared';
 
 type Props = {
   doc: LegalDoc;

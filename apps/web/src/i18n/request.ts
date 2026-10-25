@@ -1,3 +1,4 @@
+import { siteDefaultMessages } from '@miu/web-shared';
 import { hasLocale } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
 import { getMessageOverrides } from '@/lib/content';
@@ -9,5 +10,5 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
   const messages = (await import(`../../messages/${locale}.json`)).default;
   // Chữ trang chủ, câu hỏi gợi ý và thông tin bộ bài có thể được admin chỉnh; thiếu thì giữ messages gốc.
-  return { locale, messages: deepMerge(messages, await getMessageOverrides(locale)) };
+  return { locale, messages: deepMerge(deepMerge(messages, siteDefaultMessages(locale)), await getMessageOverrides(locale)) };
 });
