@@ -1,6 +1,6 @@
 export type AuthUser = { id: string; email: string | null };
 export type VerifyToken = (token: string) => Promise<AuthUser | null>;
-export type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string>; body?: string; signal?: AbortSignal }) => Promise<{ ok: boolean; status: number; json(): Promise<unknown>; text(): Promise<string> }>;
+export type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string>; body?: string; signal?: AbortSignal }) => Promise<{ ok: boolean; status: number; headers?: { get(name: string): string | null }; json(): Promise<unknown>; text(): Promise<string> }>;
 
 /**
  * Xác thực token đăng nhập bằng cách hỏi chính Supabase Auth (GET /auth/v1/user).

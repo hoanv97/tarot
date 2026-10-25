@@ -6,6 +6,8 @@ export type Config = {
   anthropicBaseUrl: string | undefined;
   supabaseUrl: string;
   supabaseAnonKey: string;
+  /** Chỉ dùng cho route /v1/admin và script seed; để trống thì route admin bị tắt */
+  supabaseServiceRoleKey: string | undefined;
   corsOrigins: string[];
   /** Số lượt đọc AI tối đa của một người dùng trong 1 phút / 1 ngày */
   perMinuteLimit: number;
@@ -34,6 +36,7 @@ export const loadConfig = (env: Record<string, string | undefined>): Config => {
     anthropicBaseUrl: env.ANTHROPIC_BASE_URL?.trim().replace(/\/+$/, '') || undefined,
     supabaseUrl: required('SUPABASE_URL').replace(/\/+$/, ''),
     supabaseAnonKey: required('SUPABASE_ANON_KEY'),
+    supabaseServiceRoleKey: env.SUPABASE_SERVICE_ROLE_KEY?.trim() || undefined,
     corsOrigins: (env.CORS_ORIGINS ?? 'http://localhost:3000').split(',').map((s) => s.trim()).filter(Boolean),
     perMinuteLimit: int('RATE_LIMIT_PER_MINUTE', 5),
     perDayLimit: int('RATE_LIMIT_PER_DAY', 40)

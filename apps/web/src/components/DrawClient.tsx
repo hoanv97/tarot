@@ -264,7 +264,7 @@ export function DrawClient() {
     if (!supabase) return;
     const { data } = await supabase.auth.getSession();
     if (!data.session || !d.spread || !d.topic) return;
-    await supabase.from('readings').insert({ user_id: data.session.user.id, spread: d.spread, topic: d.topic, question: d.question.trim() || null, cards, locale });
+    await supabase.from('readings').insert({ user_id: data.session.user.id, spread: d.spread, topic: d.topic, question: d.question.trim() || null, cards, locale, deck: d.deck });
   };
 
   const flip = (k: number) => {

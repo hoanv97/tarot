@@ -5,6 +5,8 @@ export type ApiRequest = {
   /** Tên header viết thường */
   headers: Record<string, string | undefined>;
   body: unknown;
+  /** Tham số trên URL (?a=b); chỉ chuỗi, bỏ qua dạng mảng/đối tượng */
+  query?: Record<string, string | undefined>;
 };
 export type ApiResponse = { status: number; body: unknown; headers?: Record<string, string> };
 

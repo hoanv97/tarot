@@ -1,4 +1,5 @@
 import { createApp } from './app';
+import { createSupabaseAdminStore } from './admin-store';
 import { createSupabaseVerifier, type FetchLike } from './auth';
 import { loadConfig } from './config';
 import { createHandler } from './handler';
@@ -15,6 +16,13 @@ const httpFetch = fetch as unknown as FetchLike;
 const handler = createHandler({
   verify: createSupabaseVerifier({ url: config.supabaseUrl, anonKey: config.supabaseAnonKey, fetch: httpFetch }),
   llm: createClaudeClient({ apiKey: config.anthropicApiKey, model: config.anthropicModel, fetch: httpFetch, ...(config.anthropicBaseUrl ? { baseUrl: config.anthropicBaseUrl } : {}) }),
+  ...(config.supabaseServiceRoleKey ? {
+    admin: {
+      store: createSupabaseAdminStore({ url: config.supabaseUrl, serviceKey: config.supabaseServiceRoleKey, fetch: httpFetch }),
+      // Chỉ ghi loại thao tác, không ghi email hay nội dung.
+      onEvent: (event: { type: string; detail?: string }) => console.warn(`[miu-api] ${event.type}${event.detail ? ` (${event.detail})` : ''}`)
+    }
+  } : {}),
   perMinuteLimit: config.perMinuteLimit,
   perDayLimit: config.perDayLimit,
   // Chỉ ghi loại sự kiện, không ghi câu hỏi hay nội dung người dùng.

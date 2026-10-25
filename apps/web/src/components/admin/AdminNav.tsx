@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 
-const ITEMS = ['cards', 'decks', 'spreads', 'content', 'analysis', 'rules'] as const;
+const ITEMS = ['cards', 'decks', 'spreads', 'content', 'analysis', 'rules', 'users'] as const;
 
 export function AdminNav() {
   const t = useTranslations('admin.nav');
