@@ -126,3 +126,48 @@ export type UiText = {
 };
 
 export type Insight = { id: string; category: string; tone: Tone; text: string };
+
+/* ---------- Phân tích chuyên sâu (dữ liệu có sẵn, không dùng AI) ---------- */
+export type SideText = { upright?: string; reversed?: string };
+
+/** Nội dung riêng cho một lá; mọi trường đều tùy chọn, thiếu thì rơi về kiến giải theo chủ đề trong cards.json. */
+export type AnalysisCardText = SideText & {
+  topics?: Partial<Record<TopicId, SideText>>;
+  /** Khóa là mã vị trí: today, past, present, future, self, situation, challenge */
+  positions?: Partial<Record<string, SideText>>;
+};
+
+export type AnalysisIntent = { id: string; keywords: string[]; lead: string[] };
+
+export type AnalysisText = {
+  version: number;
+  labels: Record<'title' | 'lead' | 'overview' | 'cards' | 'flow' | 'insights' | 'reflect' | 'upright' | 'reversed', string>;
+  safety: string;
+  intents: AnalysisIntent[];
+  lead: { with_question: string[]; no_question: string[] };
+  overview: Record<'positive_lean' | 'caution_lean' | 'balanced', string[]>;
+  /** vị trí -> tông -> các biến thể câu dẫn cho lá ở vị trí đó */
+  positions: Record<string, Record<Tone, string[]>>;
+  cards: Record<string, AnalysisCardText>;
+  /** "from>to" theo tông, ví dụ "positive>caution" */
+  transitions: Record<string, string[]>;
+  /** Khóa "idA+idB" (thứ tự tùy ý); giá trị là một câu hoặc danh sách biến thể */
+  pairs: Record<string, string | string[]>;
+  single_flow: string[];
+  closing: { common: string[]; topics: Record<TopicId, string[]>; note: string };
+};
+
+/** Tông từng lá theo chiều [xuôi, ngược]. */
+export type CardTones = Record<string, [Tone, Tone]>;
+
+export type AnalysisSectionId = 'lead' | 'overview' | 'cards' | 'flow' | 'insights' | 'reflect';
+/** Một ý trong phần phân tích: văn bản, sắc thái (để tô màu) và nhãn nhỏ (nếu có, ví dụ tên vị trí của lá). */
+export type AnalysisItem = { text: string; tone: Tone; tag?: string };
+export type AnalysisSection = { id: AnalysisSectionId; title: string; items: AnalysisItem[]; /** Chỉ phần chữ của items, tiện cho kiểm thử và xuất văn bản */ paragraphs: string[] };
+export type AnalysisResult = {
+  /** 'analysis': phân tích từ dữ liệu có sẵn · 'safety': lời nhắn hỗ trợ, không đọc bài */
+  source: 'analysis' | 'safety';
+  intent: string | null;
+  sections: AnalysisSection[];
+  note: string;
+};

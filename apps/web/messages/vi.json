@@ -70,14 +70,6 @@
     "reversed": "Ngược",
     "upright": "Xuôi",
     "overview": "Kiến giải chuyên sâu",
-    "ai": "Đọc kỹ hơn cùng Miu (AI)",
-    "aiLoading": "Miu đang đọc…",
-    "aiLogin": "Đăng nhập để dùng phần đọc kỹ hơn do AI viết.",
-    "aiLabel": "Bản đọc này do AI viết dựa trên các lá bài của bạn.",
-    "aiFallback": "Miu chưa thể viết bản đọc riêng lúc này, nên dưới đây là các nhận xét tổng quan.",
-    "aiSafety": "Miu không đọc bài cho câu hỏi này.",
-    "aiError": "Chưa thể kết nối. Hãy thử lại sau ít phút.",
-    "aiRateLimited": "Bạn đã dùng nhiều lượt trong thời gian ngắn. Hãy thử lại sau ít phút.",
     "titleA": "Hít một hơi. ",
     "titleB": "Nghĩ về câu hỏi.",
     "configAria": "Thiết lập trải bài",
@@ -154,7 +146,10 @@
       "listening": "Miu đang lắng nghe các vì sao...",
       "done": "Đây là lời nhắn của bài dành cho bạn. Lần xem này đã được lưu vào lịch sử.",
       "again": "Mình rút lại nhé! Đổi chủ đề nếu bạn muốn, rồi bấm “Xáo bài”."
-    }
+    },
+    "analysis": "Phân tích chuyên sâu",
+    "analysisLabel": "Phân tích từ bộ dữ liệu có sẵn của Miu, dựa trên thứ tự các lá bài và câu hỏi của bạn.",
+    "analysisSafety": "Miu không phân tích bài cho câu hỏi này."
   },
   "cards": {
     "title": "{n} lá bài. {n} câu chuyện.",
@@ -206,7 +201,7 @@
     "logout": "Đăng xuất",
     "user": "Người dùng",
     "adminBadge": "Quản trị",
-    "benefit": "Lưu lịch sử xem bài và dùng phần đọc kỹ hơn do AI viết."
+    "benefit": "Lưu lịch sử xem bài và xem lại bất cứ lúc nào, trên mọi thiết bị."
   },
   "admin": {
     "title": "Quản trị luật tầng 2",
@@ -225,14 +220,19 @@
     "title": "Lưu ý về nội dung",
     "entertainment": "Miu Tarot mang tính tham khảo và giải trí. Các lá bài là lời gợi mở để bạn suy ngẫm, không phải lời tiên đoán chắc chắn về tương lai.",
     "noAdvice": "Nội dung không phải lời khuyên y tế, tâm lý, pháp lý hay tài chính và không thay thế chuyên gia. Với các quyết định quan trọng, hãy tham khảo người có chuyên môn.",
-    "ai": "Một số bản đọc do trí tuệ nhân tạo (AI) viết dựa trên các lá bài bạn rút và được gắn nhãn rõ ràng. AI có thể sai sót.",
-    "age": "Dịch vụ dành cho người từ 18 tuổi trở lên. (Cần xác nhận với tư vấn pháp lý và cấu hình độ tuổi trên cửa hàng ứng dụng.)",
-    "privacy": "Chính sách quyền riêng tư: cần được soạn trước khi phát hành (thu thập email, lịch sử rút bài, câu hỏi gửi cho AI)."
+    "ai": "Phần \"Phân tích chuyên sâu\" được ghép từ bộ nội dung viết sẵn dựa trên các lá bài bạn rút và câu hỏi của bạn; không do trí tuệ nhân tạo tạo ra tại thời điểm xem. Nội dung chỉ mang tính tham khảo.",
+    "age": "Dịch vụ dành cho người từ 18 tuổi trở lên.",
+    "privacy": "Chính sách quyền riêng tư và Điều khoản sử dụng đã có ở liên kết bên dưới.",
+    "updated": "Cập nhật lần cuối",
+    "see_privacy": "Xem Chính sách quyền riêng tư",
+    "see_terms": "Xem Điều khoản sử dụng"
   },
   "footer": {
     "tagline": "Miu Tarot",
     "line1": "Miu Tarot",
-    "line2": "Tarot mang tính tham khảo và giải trí, không thay thế lời khuyên của chuyên gia."
+    "line2": "Tarot mang tính tham khảo và giải trí, không thay thế lời khuyên của chuyên gia.",
+    "privacy": "Quyền riêng tư",
+    "terms": "Điều khoản"
   },
   "decks": {
     "rws": {

@@ -48,7 +48,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <main id="main" tabIndex={-1}>{children}</main>
           <footer className="footer">
             <div className="wrap">
-              <p>{footer('line1')} · <Link href="/legal">{nav('legal')}</Link></p>
+              <p>{footer('line1')} · <Link href="/legal">{nav('legal')}</Link> · <Link href="/privacy">{footer('privacy')}</Link> · <Link href="/terms">{footer('terms')}</Link></p>
               <p>{footer('line2')}</p>
             </div>
           </footer>

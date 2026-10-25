@@ -1,19 +1,22 @@
 import { rawLocales, rawStructure } from '@miu/tarot-data';
 import type { CardIndex } from './metrics';
-import { DEFAULT_LOCALE, type CardStructure, type CardText, type Locale, type RuleSetDef, type RuleTexts, type UiText } from './types';
+import { DEFAULT_LOCALE, type AnalysisText, type CardStructure, type CardTones, type CardText, type Locale, type RuleSetDef, type RuleTexts, type UiText } from './types';
 
 export const CARDS: readonly CardStructure[] = rawStructure.cards as unknown as CardStructure[];
 export const CARD_INDEX: CardIndex = new Map(CARDS.map((card) => [card.id, card]));
 export const CARD_IDS: readonly string[] = CARDS.map((card) => card.id);
 export const RULE_SET: RuleSetDef = rawStructure.rules as unknown as RuleSetDef;
+export const CARD_TONES: CardTones = (rawStructure.analysis as unknown as { card_tone: CardTones }).card_tone;
 
-type RawLocale = { cards: Record<string, Partial<CardText>>; rules: RuleTexts; ui: Partial<UiText> };
+type RawLocale = { cards: Record<string, Partial<CardText>>; rules: RuleTexts; ui: Partial<UiText>; analysis: Partial<AnalysisText> };
 
 export type LocaleBundle = {
   locale: Locale;
   ui: UiText;
   cards: Record<string, CardText>;
   ruleTexts: RuleTexts;
+  /** Dữ liệu Phân tích chuyên sâu; mục nào chưa dịch tự rơi về tiếng Việt */
+  analysis: AnalysisText;
   /** Tỉ lệ nội dung đã dịch thật (0–1). Phần chưa dịch tự rơi về tiếng Việt. */
   coverage: { cards: number; rules: number };
   /** Id các lá / luật đã có bản dịch thật ở ngôn ngữ này (tiếng Việt: tất cả) */
@@ -63,6 +66,7 @@ export const getLocaleBundle = (locale: Locale): LocaleBundle => {
     ui: deepMerge(base.ui as UiText, own.ui),
     cards,
     ruleTexts,
+    analysis: deepMerge(base.analysis as AnalysisText, own.analysis),
     coverage: { cards: translatedCards.size / CARDS.length, rules: translatedRules.size / RULE_SET.rules.length },
     translated: { cards: translatedCards, rules: translatedRules }
   };

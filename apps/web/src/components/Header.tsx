@@ -101,7 +101,7 @@ export function Header() {
               <span className="sr-only">{t('account')}</span>
             </Link>
           ) : (
-            <Link className="nav-auth" href="/login">{t('login')}</Link>
+            <Link className="nav-auth" href="/history">{t('login')}</Link>
           )}
         </div>
       </div>
