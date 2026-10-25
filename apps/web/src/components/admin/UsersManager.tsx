@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useRouter } from '@/i18n/navigation';
 import { AdminApiError, deleteUser, listAdmins, listUsers, setLocked, setRole, type AccountRole, type AdminAccount, type UsersPage } from '@/lib/admin/users-api';
 import { createClient } from '@/lib/supabase/client';
+import { displayName } from '@/lib/username';
 
 export type AuditRow = { id: number; actor: string; action: string; target: string; at: string };
 
@@ -16,18 +17,19 @@ function DeleteDialog({ target, busy, error, onCancel, onConfirm }: { target: Ad
   const ref = useRef<HTMLDialogElement>(null);
   const [typed, setTyped] = useState('');
   useEffect(() => { ref.current?.showModal(); }, []);
-  const submit = (event: FormEvent) => { event.preventDefault(); onConfirm(typed); };
+  // Người dùng gõ tên hiển thị; api vẫn nhận email đầy đủ để đối chiếu với tài khoản thật.
+  const submit = (event: FormEvent) => { event.preventDefault(); onConfirm(target.email ?? ''); };
   return (
     <dialog ref={ref} className="glass admin-dialog" onCancel={onCancel} aria-labelledby="del-title">
       <form onSubmit={submit}>
         <h2 className="h3" id="del-title">{t('deleteTitle')}</h2>
-        <p>{t('deleteBody', { email: target.email ?? target.id })}</p>
-        <div className="field"><label htmlFor="del-confirm">{t('deleteType', { email: target.email ?? '' })}</label>
+        <p>{t('deleteBody', { email: displayName(target.email) || target.id })}</p>
+        <div className="field"><label htmlFor="del-confirm">{t('deleteType', { email: displayName(target.email) })}</label>
           <input className="input" id="del-confirm" autoComplete="off" value={typed} onChange={(e) => setTyped(e.target.value)} /></div>
         {error ? <p className="err" role="alert">{error}</p> : null}
         <div className="admin-actions">
           <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={busy}>{t('cancel')}</button>
-          <button type="submit" className="btn btn-secondary admin-danger" disabled={busy || typed !== target.email}>{t('deleteConfirm')}</button>
+          <button type="submit" className="btn btn-secondary admin-danger" disabled={busy || typed !== displayName(target.email)}>{t('deleteConfirm')}</button>
         </div>
       </form>
     </dialog>
@@ -147,7 +149,7 @@ export function UsersManager({ me, audit }: { me: string; audit: AuditRow[] }) {
             <tbody>
               {(data?.users ?? []).map((u) => (
                 <tr key={u.id}>
-                  <td>{u.email ?? '—'}{u.id === me ? <span className="tag"> {t('you')}</span> : null}</td>
+                  <td>{displayName(u.email) || '—'}{u.id === me ? <span className="tag"> {t('you')}</span> : null}</td>
                   <td>{date(u.createdAt)}</td><td>{date(u.lastSignInAt)}</td>
                   <td>{u.readingCount}</td><td>{u.decks.length ? u.decks.join(', ') : '—'}</td>
                   <td>{u.role === 'admin' ? <span className="tag">{t('roleAdmin')}</span> : isLocked(u) ? <span className="tag">{t('lockedTag')}</span> : <span className="muted small">{t('active')}</span>}</td>
@@ -173,7 +175,7 @@ export function UsersManager({ me, audit }: { me: string; audit: AuditRow[] }) {
         <ul className="admin-list">
           {admins.map((a) => (
             <li key={a.id}>
-              <span>{a.email ?? a.id}{a.id === me ? <span className="tag"> {t('you')}</span> : null}</span>
+              <span>{displayName(a.email) || a.id}{a.id === me ? <span className="tag"> {t('you')}</span> : null}</span>
               <button type="button" className="btn btn-text" disabled={busy || a.id === me} title={a.id === me ? t('selfRole') : undefined} onClick={() => changeRole(a, 'user')}>{t('revoke')}</button>
             </li>
           ))}

@@ -77,10 +77,10 @@ export function HistoryClient() {
           {user ? (
             <>
               <div className="who">
-                <span className="avatar" aria-hidden="true">{user.email.charAt(0).toUpperCase()}</span>
+                <span className="avatar" aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
                 <div>
                   <p className="small muted">{tLogin('hello')}</p>
-                  <p className="who-email">{user.email}</p>
+                  <p className="who-email">{user.name}</p>
                   <span className={`badge${user.role === 'admin' ? '' : ' muted'}`} style={{ marginTop: 6 }}>{user.role === 'admin' ? tLogin('adminBadge') : tLogin('user')}</span>
                 </div>
               </div>

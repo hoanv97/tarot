@@ -97,7 +97,7 @@ export function Header() {
           </button>
           {user ? (
             <Link className="nav-auth is-user" href="/history">
-              <span className="avatar sm" aria-hidden="true">{user.email.charAt(0).toUpperCase()}</span>
+              <span className="avatar sm" aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
               <span className="sr-only">{t('account')}</span>
             </Link>
           ) : (
