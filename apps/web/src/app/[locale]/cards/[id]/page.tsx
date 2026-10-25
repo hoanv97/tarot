@@ -1,8 +1,10 @@
-import { CARD_INDEX, CARD_IDS, DEFAULT_LOCALE, LOCALES, getLocaleBundle, isLocale } from '@miu/tarot-core';
+import { CARD_INDEX, CARD_IDS, DEFAULT_LOCALE, LOCALES, isLocale } from '@miu/tarot-core';
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { CardsExplorer } from '@/components/CardsExplorer';
+import { ContentScope } from '@/components/ContentScope';
+import { getConfigured } from '@/lib/content';
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 
@@ -13,7 +15,7 @@ export const dynamicParams = false;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: raw, id } = await params;
   const locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
-  const card = getLocaleBundle(locale).cards[id];
+  const card = (await getConfigured(locale)).bundle.cards[id];
   if (!card) return {};
   return {
     title: card.name,
@@ -26,5 +28,5 @@ export default async function CardPage({ params }: Props) {
   const { locale, id } = await params;
   setRequestLocale(locale);
   if (!CARD_INDEX.has(id)) notFound();
-  return <CardsExplorer initialId={id} />;
+  return <ContentScope><CardsExplorer initialId={id} /></ContentScope>;
 }

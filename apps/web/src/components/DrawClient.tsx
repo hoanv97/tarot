@@ -1,14 +1,15 @@
 'use client';
 
 import {
-  CARD_IDS, CARD_INDEX, DEFAULT_LOCALE, SPREAD_IDS, TOPIC_IDS, analyzeSpread, getLocaleBundle, isLocale, isSpreadId, isTopicId, readSpread,
+  CARD_IDS, CARD_INDEX, DEFAULT_LOCALE, SPREAD_IDS, TOPIC_IDS, analyzeSpread, isLocale, isSpreadId, isTopicId, readSpread,
   type AnalysisResult, type DrawnCard, type SpreadId, type TopicId
 } from '@miu/tarot-core';
 import { useLocale, useTranslations } from 'next-intl';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'react';
-import { cardBackSvg, cardFaceSvg } from '@/components/CardArt';
+import { cardBackSvg } from '@/components/CardArt';
+import { useCardFace, useConfigured, useContentPatch } from '@/lib/content-client';
 import { Disclaimer } from '@/components/Disclaimer';
 import { Mascot } from '@/components/Mascot';
 import { Reveal } from '@/components/Reveal';
@@ -56,7 +57,6 @@ export function DrawClient() {
   const tDecks = useTranslations('decks');
   const rawLocale = useLocale();
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const bundle = useMemo(() => getLocaleBundle(locale), [locale]);
   const router = useRouter();
   const params = useSearchParams();
   const { mood, setMood, nonce } = useMood();
@@ -67,6 +67,13 @@ export function DrawClient() {
     hint: '', cta: { label: '', visible: true, disabled: true }, resetKey: 0, big: false, analysis: { status: 'idle' }
   });
   const d = state.current;
+  // Nội dung theo bộ bài đang chọn, gộp với phần admin đã cấu hình (chưa cấu hình thì y hệt dữ liệu có sẵn).
+  const configured = useConfigured(locale, d.deck ?? 'rws');
+  const bundle = configured.bundle;
+  const face = useCardFace(locale);
+  const { hiddenDecks, hiddenSpreads } = useContentPatch();
+  const deckIds = DECK_IDS.filter((id) => !hiddenDecks.includes(id));
+  const spreadIds = SPREAD_IDS.filter((id) => !hiddenSpreads.includes(id));
   const questionRef = useRef<HTMLInputElement>(null);
   const pileRef = useRef<HTMLDivElement>(null);
   const slotsRef = useRef<HTMLDivElement>(null);
@@ -370,7 +377,8 @@ export function DrawClient() {
     if (!d.spread || !d.topic) return;
     const result = analyzeSpread({
       picks: d.picks.map((p) => ({ id: p.id, reversed: p.reversed })),
-      spreadId: d.spread, topicId: d.topic, locale, question: d.question, isCrisis: detectCrisis
+      spreadId: d.spread, topicId: d.topic, locale, question: d.question, isCrisis: detectCrisis,
+      bundle, ruleSet: configured.ruleSet, cardTones: configured.cardTones
     });
     set({ analysis: { status: 'done', data: result } });
     setMood(result.source === 'safety' ? 'happy' : 'wow');
@@ -386,7 +394,7 @@ export function DrawClient() {
   const count = slotCount(d.spread);
   const deckForArt = d.deck ?? 'rws';
   const insights = d.phase === 'done' && d.topic && d.spread
-    ? readSpread({ picks: d.picks.map((p) => ({ id: p.id, reversed: p.reversed })), spreadId: d.spread, topicId: d.topic, locale })
+    ? readSpread({ picks: d.picks.map((p) => ({ id: p.id, reversed: p.reversed })), spreadId: d.spread, topicId: d.topic, locale, bundle, ruleSet: configured.ruleSet })
     : [];
 
   return (
@@ -398,13 +406,13 @@ export function DrawClient() {
           <div className="cfg-group">
             <span className={`field-label${d.deck ? '' : ' need'}`} id="lbl-deck">{t('deck')}</span>
             <div className="seg" role="group" aria-labelledby="lbl-deck">
-              {DECK_IDS.map((id) => <button key={id} type="button" aria-pressed={d.deck === id} onClick={() => chooseDeck(id)}>{deckName(id)}</button>)}
+              {deckIds.map((id) => <button key={id} type="button" aria-pressed={d.deck === id} onClick={() => chooseDeck(id)}>{deckName(id)}</button>)}
             </div>
           </div>
           <div className="cfg-group">
             <span className={`field-label${d.spread ? '' : ' need'}`} id="lbl-mode">{t('spread')}</span>
             <div className="seg" role="group" aria-labelledby="lbl-mode">
-              {SPREAD_IDS.map((id) => <button key={id} type="button" aria-pressed={d.spread === id} onClick={() => chooseSpread(id)}>{bundle.ui.spreads[id].label}</button>)}
+              {spreadIds.map((id) => <button key={id} type="button" aria-pressed={d.spread === id} onClick={() => chooseSpread(id)}>{bundle.ui.spreads[id].label}</button>)}
             </div>
           </div>
         </div>
@@ -460,7 +468,7 @@ export function DrawClient() {
                     <div className={`card3d ${p.flipped ? 'is-flipped' : 'is-landing'}${p.reversed ? ' is-reversed' : ''}`}>
                       <div className="card3d-inner">
                         <div className="card3d-face card3d-back" dangerouslySetInnerHTML={{ __html: cardBackSvg(deckForArt) }} />
-                        <div className="card3d-face card3d-front"><div className="face-rot" dangerouslySetInnerHTML={{ __html: cardFaceSvg(p.id, deckForArt, locale) }} /></div>
+                        <div className="card3d-face card3d-front"><div className="face-rot" dangerouslySetInnerHTML={{ __html: face(p.id, deckForArt) }} /></div>
                       </div>
                     </div>
                   ) : <div className="card3d is-empty" />}
@@ -505,7 +513,7 @@ export function DrawClient() {
                   <Reveal as="article" className="rcard glass" delay={k * 90} key={p.id}>
                     <p className="pos">{labels[k]}</p>
                     <div className="rc-top">
-                      <div className={`mini${p.reversed ? ' is-rev' : ''}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: cardFaceSvg(p.id, d.deck as string, locale) }} />
+                      <div className={`mini${p.reversed ? ' is-rev' : ''}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: face(p.id, d.deck as string) }} />
                       <div>
                         <h3 className="h3">{card.name}</h3>
                         <p className="en">{p.reversed ? card.keywords_reversed.join(' · ') : card.keywords_upright.join(' · ')}</p>

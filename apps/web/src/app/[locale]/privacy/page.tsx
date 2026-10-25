@@ -1,12 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { LegalDocView } from '@/components/LegalDocView';
-import { getLegalDoc } from '@/lib/legal-content';
+import { getLegalDocConfigured } from '@/lib/content';
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
-  return { title: getLegalDoc(locale, 'privacy').title };
+  return { title: (await getLegalDocConfigured(locale, 'privacy')).title };
 }
 
 export default async function Page({ params }: Props) {
@@ -15,7 +15,7 @@ export default async function Page({ params }: Props) {
   const t = await getTranslations('legal');
   return (
     <LegalDocView
-      doc={getLegalDoc(locale, 'privacy')}
+      doc={await getLegalDocConfigured(locale, 'privacy')}
       updatedLabel={t('updated')}
       otherHref="/terms"
       otherLabel={t('see_terms')}

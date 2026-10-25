@@ -81,6 +81,12 @@ export const resetCard = async (deck: string, cardId: string): Promise<ActionRes
   return { ok: true };
 });
 
+/** RuleEditor ghi thẳng vào Supabase bằng phiên của admin; gọi hàm này sau đó để web đọc lại luật. */
+export const revalidateRules = async (): Promise<ActionResult> => run(async () => {
+  revalidateTag(CONTENT_TAGS.rules);
+  return { ok: true };
+});
+
 /* ---------- Bộ bài ---------- */
 
 export type DeckInput = {

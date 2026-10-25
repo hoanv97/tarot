@@ -1,9 +1,9 @@
 'use client';
 
-import { CARDS, CARD_INDEX, DEFAULT_LOCALE, LOCALES, TOPIC_IDS, getLocaleBundle, isLocale, type TopicId } from '@miu/tarot-core';
+import { CARDS, CARD_INDEX, DEFAULT_LOCALE, LOCALES, TOPIC_IDS, isLocale, type TopicId } from '@miu/tarot-core';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
-import { cardFaceSvg } from '@/components/CardArt';
+import { useCardFace, useConfigured, useContentPatch } from '@/lib/content-client';
 import { Disclaimer } from '@/components/Disclaimer';
 import { Mascot } from '@/components/Mascot';
 import { Link } from '@/i18n/navigation';
@@ -24,14 +24,16 @@ export function CardsExplorer({ initialId }: { initialId: string }) {
   const raw = useLocale();
   const locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
   const other = LOCALES.find((l) => l !== locale) ?? DEFAULT_LOCALE;
-  const bundle = useMemo(() => getLocaleBundle(locale), [locale]);
-  const otherBundle = useMemo(() => getLocaleBundle(other), [other]);
 
   const [id, setId] = useState(CARD_INDEX.has(initialId) ? initialId : (CARDS[0]?.id as string));
   const [group, setGroup] = useState<Group>('all');
   const [reversed, setReversed] = useState(false);
   const [topic, setTopic] = useState<TopicId>('love');
   const [deck, setDeck] = useState('rws');
+  const bundle = useConfigured(locale, deck).bundle;
+  const otherBundle = useConfigured(other, deck).bundle;
+  const face = useCardFace(locale);
+  const { hiddenDecks } = useContentPatch();
   const { mood, setMood, nonce } = useMood();
 
   const stripRef = useRef<HTMLElement>(null);
@@ -122,7 +124,7 @@ export function CardsExplorer({ initialId }: { initialId: string }) {
         <nav className="strip" ref={stripRef} aria-label={t('listAria')} onScroll={updateEdges}>
           {visible.map((c) => (
             <Link key={c.id} className="thumb" href={`/cards/${c.id}`} aria-current={c.id === id} onClick={(e) => onThumb(e, c.id)}>
-              <span className="mini" aria-hidden="true" dangerouslySetInnerHTML={{ __html: cardFaceSvg(c.id, deck, locale) }} />
+              <span className="mini" aria-hidden="true" dangerouslySetInnerHTML={{ __html: face(c.id, deck) }} />
               {bundle.cards[c.id]?.name}
             </Link>
           ))}
@@ -133,13 +135,13 @@ export function CardsExplorer({ initialId }: { initialId: string }) {
       <div className="detail">
         <div className="detail-visual">
           <div className={`detail-card${reversed ? ' is-reversed' : ''}`} role="img" aria-label={t('cardAria', { name: text.name, rev: reversed ? t('revAria') : '' })}
-            dangerouslySetInnerHTML={{ __html: cardFaceSvg(id, deck, locale) }} />
+            dangerouslySetInnerHTML={{ __html: face(id, deck) }} />
           <div className="seg" role="group" aria-label={t('orientAria')}>
             <button type="button" aria-pressed={!reversed} onClick={() => { setReversed(false); setMood('happy'); }}>{t('upright')}</button>
             <button type="button" aria-pressed={reversed} onClick={() => { setReversed(true); setMood('think'); }}>{t('reversed')}</button>
           </div>
           <div className="seg seg-sm" role="group" aria-label={t('deckAria')}>
-            {DECK_IDS.map((d) => <button key={d} type="button" aria-pressed={deck === d} onClick={() => setDeck(d)}>{tDecks(`${d}.name`)}</button>)}
+            {DECK_IDS.filter((d) => !hiddenDecks.includes(d)).map((d) => <button key={d} type="button" aria-pressed={deck === d} onClick={() => setDeck(d)}>{tDecks(`${d}.name`)}</button>)}
           </div>
         </div>
 

@@ -12,7 +12,8 @@ export const CONTENT_TAGS = {
   decks: 'content:decks',
   spreads: 'content:spreads',
   site: 'content:site',
-  analysis: 'content:analysis'
+  analysis: 'content:analysis',
+  rules: 'content:rules'
 } as const;
 
 export type Row = Record<string, unknown>;

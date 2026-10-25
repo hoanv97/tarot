@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ContentScope } from '@/components/ContentScope';
 import { HistoryClient } from '@/components/HistoryClient';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -10,5 +11,5 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HistoryPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <HistoryClient />;
+  return <ContentScope><HistoryClient /></ContentScope>;
 }
