@@ -840,3 +840,36 @@ select.input{appearance:none;-webkit-appearance:none;padding-right:40px;cursor:p
 .insights .an-h{font-size:clamp(19px,2.2vw,23px)}
 .insights .an-sec .ins-list{margin-top:12px}
 .insights .an-note{font-size:13px;color:var(--text-2);margin:24px 0 0}
+
+/* ---------- Admin ---------- */
+.admin{display:grid;gap:20px}
+.admin-nav{display:flex;flex-wrap:wrap;gap:8px}
+.admin-nav .chip{text-decoration:none}
+.admin-nav .chip[aria-current="page"],.chip[aria-pressed="true"]{border-color:rgba(139,92,246,.6);background:var(--accent-bg);color:var(--accent-text);font-weight:600}
+.admin-panel{padding:28px;display:grid;gap:16px;align-content:start}
+.admin-panel>*{margin:0}
+.admin-stack{display:grid;gap:20px}
+.admin-toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.admin-toolbar .field{margin-bottom:0;min-width:200px;flex:1 1 200px}
+.admin-toolbar .field:last-child{flex:0 0 auto;min-width:0}
+.admin-table-wrap{overflow-x:auto}
+.admin-table{width:100%;border-collapse:collapse;font-size:15px}
+.admin-table th,.admin-table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:middle}
+.admin-table th{font-size:13px;color:var(--text-2);font-weight:600}
+.admin-thumb{width:36px;height:56px;object-fit:cover;border-radius:6px}
+.admin-pager{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.admin-two{display:grid;gap:16px}
+@media (min-width:720px){.admin-two{grid-template-columns:1fr 1fr}}
+.admin-check{display:flex;align-items:center;gap:10px;min-height:44px}
+.admin-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.admin-danger{color:var(--err);border-color:currentColor}
+.admin-image{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.admin-image-preview{width:120px;height:186px;object-fit:cover;border-radius:10px;border:1px solid var(--hairline)}
+.admin-image-empty{display:flex;align-items:center;justify-content:center;text-align:center;padding:8px}
+.admin-json{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;min-height:360px}
+.admin-issues{margin:8px 0 0;padding-left:20px;display:grid;gap:4px}
+.jte-group{border:1px solid var(--hairline);border-radius:var(--radius-md);padding:16px;margin:0 0 12px;min-width:0}
+.jte-group legend{padding:0 8px;font-weight:600;font-size:14px}
+.jte-list{display:grid;gap:12px}
+.jte-object .field{margin-bottom:12px}
+.jte-object .field>label{font-size:13px;color:var(--text-2);font-family:ui-monospace,Menlo,Consolas,monospace}
