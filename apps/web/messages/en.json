@@ -453,6 +453,20 @@
         "not_found": "Account not found.",
         "error": "Something went wrong."
       }
+    },
+    "shell": {
+      "title": "Admin",
+      "groups": {
+        "content": "Content",
+        "system": "System"
+      },
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu",
+      "backToSite": "Back to site",
+      "signOut": "Sign out",
+      "language": "Language",
+      "themeLight": "Switch to light theme",
+      "themeDark": "Switch to dark theme"
     }
   },
   "legal": {

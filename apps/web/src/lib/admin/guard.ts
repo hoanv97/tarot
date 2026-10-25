@@ -17,5 +17,5 @@ export const getAdmin = cache(async () => {
   const userId = data?.claims.sub;
   if (!userId) return null;
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).maybeSingle();
-  return profile?.role === 'admin' ? { supabase, userId } : null;
+  return profile?.role === 'admin' ? { supabase, userId, email: typeof data.claims.email === 'string' ? data.claims.email : '' } : null;
 });

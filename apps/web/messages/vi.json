@@ -453,6 +453,20 @@
         "not_found": "Không tìm thấy tài khoản.",
         "error": "Đã có lỗi xảy ra."
       }
+    },
+    "shell": {
+      "title": "Quản trị",
+      "groups": {
+        "content": "Nội dung",
+        "system": "Hệ thống"
+      },
+      "openMenu": "Mở menu",
+      "closeMenu": "Đóng menu",
+      "backToSite": "Về trang web",
+      "signOut": "Đăng xuất",
+      "language": "Ngôn ngữ",
+      "themeLight": "Bật giao diện sáng",
+      "themeDark": "Bật giao diện tối"
     }
   },
   "legal": {
