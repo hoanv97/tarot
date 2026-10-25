@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AddCardPicker } from '@/components/AddCardPicker';
 import { Link } from '@/i18n/navigation';
 import { CARDS_PER_PAGE } from '@/lib/constants';
-import { getAdmin } from '@/lib/guard';
+import { getAdmin, getDb } from '@/lib/guard';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,9 +17,10 @@ export default async function AdminCardsPage({ params, searchParams }: { params:
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
   const query = await searchParams;
   const t = await getTranslations('admin.cards');
-  const admin = await getAdmin();
-  if (!admin) return null;
-  const { supabase } = admin;
+  // Dữ liệu nội dung đọc công khai được, nên truy vấn chạy ngay, song song với kiểm tra vai trò admin (tiết kiệm một lượt chờ Supabase).
+  const supabase = await getDb();
+  const adminCheck = getAdmin();
+  if (!supabase) return null;
 
   const loadDeckRows = (deckId: string) => Promise.all([
     supabase.from('card_translations').select('card_id, name').eq('deck_id', deckId).eq('locale', locale),
@@ -55,6 +56,9 @@ export default async function AdminCardsPage({ params, searchParams }: { params:
   const page = Math.min(pages, Math.max(1, Number(query.page) || 1));
   const rows = filtered.slice((page - 1) * CARDS_PER_PAGE, page * CARDS_PER_PAGE);
   const href = (p: number) => ({ pathname: '/cards', query: { ...(q ? { q: query.q } : {}), deck, page: String(p) } });
+
+  const admin = await adminCheck;
+  if (!admin) return null;
 
   return (
     <section className="glass admin-panel">

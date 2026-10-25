@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { CardEditor } from '@/components/CardEditor';
 import { Link } from '@/i18n/navigation';
-import { getAdmin } from '@/lib/guard';
+import { getAdmin, getDb } from '@/lib/guard';
 import { mergeCardText, type Row } from '@miu/web-shared';
 
 export const dynamic = 'force-dynamic';
@@ -15,9 +15,10 @@ export default async function AdminCardPage({ params, searchParams }: { params: 
   const t = await getTranslations('admin.cardEdit');
   const card = CARD_INDEX.get(id);
   if (!card) notFound();
-  const admin = await getAdmin();
-  if (!admin) return null;
-  const { supabase } = admin;
+  // Dữ liệu nội dung đọc công khai được, nên truy vấn chạy ngay, song song với kiểm tra vai trò admin (tiết kiệm một lượt chờ Supabase).
+  const supabase = await getDb();
+  const adminCheck = getAdmin();
+  if (!supabase) return null;
 
   const [{ data: rows }, { data: image }] = await Promise.all([
     supabase.from('card_translations').select('*').eq('card_id', id).in('deck_id', ['rws', deck]),
@@ -28,6 +29,9 @@ export default async function AdminCardPage({ params, searchParams }: { params: 
   const texts = Object.fromEntries(LOCALES.map((l) => [l, mergeCardText(getLocaleBundle(l).cards[id] as CardText, find('rws', l), find(deck, l))])) as Record<Locale, CardText>;
   const customized = (rows ?? []).some((r) => r.deck_id === deck) || Boolean(image?.image_url);
   const topicNames = Object.fromEntries(LOCALES.map((l) => [l, getLocaleBundle(l).ui.topics])) as Record<Locale, Record<string, string>>;
+
+  const admin = await adminCheck;
+  if (!admin) return null;
 
   return (
     <section className="glass admin-panel">

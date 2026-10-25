@@ -16,8 +16,11 @@ export type AdminState =
  * khóa ký bất đối xứng; nếu không thì nó tự hỏi Supabase Auth như getUser()). Vai trò vẫn đọc mới từ bảng profiles
  * ở mỗi request, nên bỏ quyền admin có hiệu lực ngay.
  */
+/** Client Supabase gắn phiên của người truy cập (dùng chung trong một request). null khi chưa cấu hình Supabase. */
+export const getDb = cache(async () => createClient());
+
 export const getAdminState = cache(async (): Promise<AdminState> => {
-  const supabase = await createClient();
+  const supabase = await getDb();
   if (!supabase) return { status: 'unconfigured' };
   const { data } = await supabase.auth.getClaims();
   const userId = data?.claims.sub;
