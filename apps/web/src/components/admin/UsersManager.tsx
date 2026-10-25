@@ -189,7 +189,7 @@ export function UsersManager({ me, audit }: { me: string; audit: AuditRow[] }) {
             <table className="admin-table">
               <thead><tr><th scope="col">{t('auditAt')}</th><th scope="col">{t('auditActor')}</th><th scope="col">{t('auditAction')}</th><th scope="col">{t('auditTarget')}</th></tr></thead>
               <tbody>{audit.map((row) => (
-                <tr key={row.id}><td>{date(row.at)}</td><td>{row.actor || '—'}</td><td>{t(`actions_log.${row.action}`)}</td><td>{row.target || '—'}</td></tr>
+                <tr key={row.id}><td>{date(row.at)}</td><td>{row.actor || '—'}</td><td>{t(`actions_log.${row.action.replace('.', '_')}`)}</td><td>{row.target || '—'}</td></tr>
               ))}</tbody>
             </table>
           </div>

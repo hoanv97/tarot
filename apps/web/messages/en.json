@@ -433,11 +433,11 @@
       "auditAction": "Action",
       "auditTarget": "Account",
       "actions_log": {
-        "user.delete": "Deleted account",
-        "user.lock": "Locked account",
-        "user.unlock": "Unlocked account",
-        "role.grant": "Granted admin",
-        "role.revoke": "Removed admin"
+        "user_delete": "Deleted account",
+        "user_lock": "Locked account",
+        "user_unlock": "Unlocked account",
+        "role_grant": "Granted admin",
+        "role_revoke": "Removed admin"
       },
       "errors": {
         "unauthorized": "Your session has expired. Please sign in again.",

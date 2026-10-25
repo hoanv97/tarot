@@ -433,11 +433,11 @@
       "auditAction": "Thao tác",
       "auditTarget": "Tài khoản",
       "actions_log": {
-        "user.delete": "Xóa tài khoản",
-        "user.lock": "Khóa tài khoản",
-        "user.unlock": "Mở khóa",
-        "role.grant": "Cấp quyền admin",
-        "role.revoke": "Bỏ quyền admin"
+        "user_delete": "Xóa tài khoản",
+        "user_lock": "Khóa tài khoản",
+        "user_unlock": "Mở khóa",
+        "role_grant": "Cấp quyền admin",
+        "role_revoke": "Bỏ quyền admin"
       },
       "errors": {
         "unauthorized": "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.",
