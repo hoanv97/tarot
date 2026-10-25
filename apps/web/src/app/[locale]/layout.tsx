@@ -6,7 +6,6 @@ import type { ReactNode } from 'react';
 import { ArtSprite } from '@/components/ArtSprite';
 import { Companion } from '@/components/Companion';
 import { Header } from '@/components/Header';
-import { SiteChrome } from '@/components/SiteChrome';
 import { Sky } from '@/components/Sky';
 import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
@@ -42,25 +41,18 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       </head>
       <body>
         <NextIntlClientProvider>
-          <SiteChrome
-            top={<>
-              <ArtSprite />
-              <Sky />
-              <a className="skip" href="#main">{nav('skip')}</a>
-              <Header />
-            </>}
-            bottom={<>
-              <footer className="footer">
-                <div className="wrap">
-                  <p>{footer('line1')} · <Link href="/legal">{nav('legal')}</Link> · <Link href="/privacy">{footer('privacy')}</Link> · <Link href="/terms">{footer('terms')}</Link></p>
-                  <p>{footer('line2')}</p>
-                </div>
-              </footer>
-              <Companion />
-            </>}
-          >
-            {children}
-          </SiteChrome>
+          <ArtSprite />
+          <Sky />
+          <a className="skip" href="#main">{nav('skip')}</a>
+          <Header />
+          <main id="main" tabIndex={-1}>{children}</main>
+          <footer className="footer">
+            <div className="wrap">
+              <p>{footer('line1')} · <Link href="/legal">{nav('legal')}</Link> · <Link href="/privacy">{footer('privacy')}</Link> · <Link href="/terms">{footer('terms')}</Link></p>
+              <p>{footer('line2')}</p>
+            </div>
+          </footer>
+          <Companion />
         </NextIntlClientProvider>
       </body>
     </html>

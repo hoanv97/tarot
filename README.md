@@ -7,7 +7,9 @@ Web rút bài Tarot tiếng Việt / English. Next.js (giao diện) + Supabase (
 | Đường dẫn | Vai trò |
 |---|---|
 | `apps/web` | Next.js 15 (App Router, next-intl vi/en, Supabase SSR) |
+| `apps/admin` | Trang quản trị: ứng dụng Next.js riêng (cổng 3001, đăng nhập riêng, menu dọc). Sửa lá bài, bộ bài, kiểu trải, chữ trên site, dữ liệu phân tích, luật; quản lý tài khoản qua `apps/api` |
 | `apps/api` | Express: `POST /v1/interpret`, `GET /health`. Hiện web KHÔNG gọi (Phân tích chuyên sâu chạy từ dữ liệu có sẵn, xem `docs/analysis.md`); giữ lại để dùng sau nếu muốn thêm AI |
+| `packages/web-shared` | Mã dùng chung giữa web và admin: văn bản pháp lý, nội dung mặc định của site, gộp nội dung cấu hình, quy ước tên đăng nhập |
 | `packages/tarot-core` | Bộ máy luật tầng 2, rút bài, kiểm tra luật (thuần TypeScript, không phụ thuộc framework) |
 | `packages/tarot-data` | Dữ liệu 78 lá + luật: `structure/` (không phụ thuộc ngôn ngữ) và `locales/<vi|en>/` |
 | `packages/content-policy` | Bộ lọc nội dung (y tế, tài chính, tiên đoán tuyệt đối, tự hại), quy tắc an toàn cho LLM, phát hiện khủng hoảng |
@@ -20,7 +22,7 @@ Web rút bài Tarot tiếng Việt / English. Next.js (giao diện) + Supabase (
 cp .env.example .env            # điền Supabase + ANTHROPIC_API_KEY
 pnpm install
 pnpm test && pnpm typecheck
-pnpm dev                        # web :3000, api :4000
+pnpm dev                        # web :3000, admin :3001, api :4000
 ```
 
 Supabase: xem `supabase/README.md` (chạy `0001_init.sql`, rồi `seed.sql`).
@@ -34,4 +36,4 @@ Supabase: xem `supabase/README.md` (chạy `0001_init.sql`, rồi `seed.sql`).
 
 - Chính sách quyền riêng tư, xác nhận độ tuổi 18+ và xếp hạng nội dung trên cửa hàng ứng dụng.
 - Dịch tiếng Anh cho nội dung lá bài và luật (hiện chỉ có tên lá + nhãn giao diện; phần còn lại dùng tiếng Việt).
-- ứng dụng di động (Expo). Trang admin mới sửa được luật tầng 2 (bản mẫu còn quản lý người dùng và nội dung lá bài).
+- ứng dụng di động (Expo).

@@ -7,6 +7,7 @@ import { useCardFace, useConfigured } from '@/lib/content-client';
 import { LoginForm } from '@/components/LoginForm';
 import { Mascot } from '@/components/Mascot';
 import { Link, useRouter } from '@/i18n/navigation';
+import { adminHref } from '@/lib/admin-url';
 import { getHistory, saveHistory, type HistoryEntry } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/use-auth';
@@ -84,7 +85,7 @@ export function HistoryClient() {
                   <span className={`badge${user.role === 'admin' ? '' : ' muted'}`} style={{ marginTop: 6 }}>{user.role === 'admin' ? tLogin('adminBadge') : tLogin('user')}</span>
                 </div>
               </div>
-              {user.role === 'admin' ? <Link className="btn btn-primary btn-block" href="/admin" style={{ marginBottom: 10 }}>{tLogin('admin')}</Link> : null}
+              {user.role === 'admin' ? <a className="btn btn-primary btn-block" href={adminHref(locale)} style={{ marginBottom: 10 }}>{tLogin('admin')}</a> : null}
               <button type="button" className="btn btn-secondary btn-block" onClick={signOut}>{tLogin('logout')}</button>
             </>
           ) : (

@@ -1,12 +1,14 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Link, useRouter } from '@/i18n/navigation';
+import { adminHref } from '@/lib/admin-url';
 import { createClient } from '@/lib/supabase/client';
 
 export function AuthButton() {
   const t = useTranslations('nav');
+  const locale = useLocale();
   const router = useRouter();
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
 
@@ -22,7 +24,7 @@ export function AuthButton() {
   if (!signedIn) return <Link href="/login">{t('login')}</Link>;
   return (
     <>
-      <Link href="/admin">{t('admin')}</Link>
+      <a href={adminHref(locale)}>{t('admin')}</a>
       <button
         type="button"
         className="link-btn"

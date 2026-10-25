@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
+import { adminHref } from '@/lib/admin-url';
 import { KEYS, storeGet, storeSet } from '@/lib/store';
 import { prefersReducedMotion } from '@/lib/motion';
 import { useAuth } from '@/lib/use-auth';
@@ -63,9 +64,8 @@ export function Header() {
   };
 
   const current = (path: string) => (path === '/' ? pathname === '/' : pathname === path || pathname.startsWith(`${path}/`));
-  const links: { path: string; key: 'home' | 'draw' | 'cards' | 'history' | 'admin' }[] = [
+  const links: { path: string; key: 'home' | 'draw' | 'cards' | 'history' }[] = [
     { path: '/', key: 'home' }, { path: '/draw', key: 'draw' }, { path: '/cards', key: 'cards' },
-    ...(user?.role === 'admin' ? [{ path: '/admin', key: 'admin' as const }] : []),
     { path: '/history', key: 'history' }
   ];
   const otherLocale = routing.locales.find((l) => l !== locale) ?? locale;
@@ -78,6 +78,7 @@ export function Header() {
           <span>Miu Tarot</span>
         </Link>
         <nav className="nav-links" aria-label="main">
+          {user?.role === 'admin' ? <a href={adminHref(locale)}>{ICONS.admin}<span>{t('admin')}</span></a> : null}
           {links.map(({ path, key }) => (
             <Link key={key} href={path} aria-current={current(path) ? 'page' : undefined}>
               {ICONS[key]}<span>{t(key)}</span>
