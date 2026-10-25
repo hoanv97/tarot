@@ -1,10 +1,11 @@
 'use client';
 
 import {
-  CARD_IDS, CARD_INDEX, DEFAULT_LOCALE, SPREAD_IDS, TOPIC_IDS, getLocaleBundle, isLocale, isSpreadId, isTopicId, readSpread,
-  type DrawnCard, type SpreadId, type TopicId
+  CARD_IDS, CARD_INDEX, DEFAULT_LOCALE, SPREAD_IDS, TOPIC_IDS, analyzeSpread, getLocaleBundle, isLocale, isSpreadId, isTopicId, readSpread,
+  type AnalysisResult, type DrawnCard, type SpreadId, type TopicId
 } from '@miu/tarot-core';
 import { useLocale, useTranslations } from 'next-intl';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'react';
 import { cardBackSvg, cardFaceSvg } from '@/components/CardArt';
@@ -13,7 +14,7 @@ import { Mascot } from '@/components/Mascot';
 import { Reveal } from '@/components/Reveal';
 import { Link, useRouter } from '@/i18n/navigation';
 import { DECK_IDS } from '@/lib/art/draw';
-import { ApiError, requestInterpretation, type InterpretResponse } from '@/lib/api';
+import { detectCrisis } from '@miu/content-policy';
 import { prefersReducedMotion, pickOne, round1, shuffled, wait } from '@/lib/motion';
 import { addHistory } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
@@ -22,7 +23,7 @@ import { useMood } from '@/lib/use-mood';
 
 type Phase = 'idle' | 'shuffling' | 'picking' | 'revealing' | 'flipped' | 'loading' | 'done';
 type PickState = DrawnCard & { flipped: boolean; landed: boolean };
-type AiState = { status: 'idle' | 'loading' | 'needs-login' | 'error' | 'done'; message?: string; data?: InterpretResponse };
+type AnalysisState = { status: 'idle' | 'done'; data?: AnalysisResult };
 
 type Draw = {
   deck: string | null;
@@ -38,10 +39,13 @@ type Draw = {
   cta: { label: string; visible: boolean; disabled: boolean };
   resetKey: number;
   big: boolean;
-  ai: AiState;
+  analysis: AnalysisState;
 };
 
 const WOW = ['sun', 'star', 'world'];
+/** Tốc độ xáo bài so với bản gốc (1 = như cũ). 0.3 nghĩa là thời gian xáo chỉ còn 30%. Đổi số này là đủ; CSS cũng đọc cùng hệ số qua --k. */
+const SHUFFLE_SCALE = 0.3;
+const sh = (ms: number): number => Math.round(ms * SHUFFLE_SCALE);
 const CHEV = <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>;
 const slotCount = (spread: SpreadId | null): number => (spread === '1' ? 1 : 3);
 const fill = (template: string, values: Record<string, string | number>): string =>
@@ -60,7 +64,7 @@ export function DrawClient() {
   const [, bump] = useReducer((n: number) => n + 1, 0);
   const state = useRef<Draw>({
     deck: null, topic: null, spread: null, question: '', phase: 'idle', order: [...CARD_IDS], picks: [], bubble: '', bubbleKey: 0,
-    hint: '', cta: { label: '', visible: true, disabled: true }, resetKey: 0, big: false, ai: { status: 'idle' }
+    hint: '', cta: { label: '', visible: true, disabled: true }, resetKey: 0, big: false, analysis: { status: 'idle' }
   });
   const d = state.current;
   const questionRef = useRef<HTMLInputElement>(null);
@@ -70,6 +74,8 @@ export function DrawClient() {
   const stageRef = useRef<HTMLDivElement>(null);
   const alive = useRef(true);
 
+  /** Đọc phase hiện tại từ ref. TypeScript không theo dõi được thay đổi qua set(), nên không dùng d.phase sau các lần await. */
+  const phaseNow = (): Draw['phase'] => state.current.phase;
   const set = (patch: Partial<Draw>) => { Object.assign(state.current, patch); bump(); };
   const say = (text: string, next: 'happy' | 'wow' | 'think' | null = null) => {
     set({ bubble: text, bubbleKey: state.current.bubbleKey + 1 });
@@ -136,7 +142,7 @@ export function DrawClient() {
   const reset = (message?: string) => {
     set({
       phase: 'idle', picks: [], order: shuffled(CARD_IDS), resetKey: state.current.resetKey + 1, big: false,
-      hint: t('pileCount', { n: CARD_IDS.length }), cta: { label: t('shuffle'), visible: true, disabled: !isReady() }, ai: { status: 'idle' }
+      hint: t('pileCount', { n: CARD_IDS.length }), cta: { label: t('shuffle'), visible: true, disabled: !isReady() }, analysis: { status: 'idle' }
     });
     resetPile();
     say(message ?? introMessage());
@@ -158,26 +164,27 @@ export function DrawClient() {
     const cx = pile.clientWidth / 2;
     const cy = pile.clientHeight / 2;
     pile.classList.remove('is-idle');
+    pile.style.setProperty('--k', String(SHUFFLE_SCALE));
     cards.forEach((c, i) => {
-      c.style.setProperty('--td', `${i * 4}ms`);
+      c.style.setProperty('--td', `${sh(i * 12)}ms`);
       c.style.setProperty('--gx', `${round1(cx - (c.offsetLeft + c.offsetWidth / 2))}px`);
       c.style.setProperty('--gy', `${round1(cy - (c.offsetTop + c.offsetHeight / 2))}px`);
       c.style.setProperty('--gr', `${round1((Math.random() - 0.5) * 18)}deg`);
       c.style.setProperty('--sx', `${round1((Math.random() - 0.5) * 120)}px`);
       c.style.setProperty('--sr', `${round1((Math.random() - 0.5) * 30)}deg`);
     });
-    await wait(450 + cards.length * 4);
+    await wait(sh(650 + cards.length * 12));
     pile.classList.add('is-riffle');
-    await wait(600);
+    await wait(sh(1000));
     pile.classList.remove('is-riffle');
     cards.forEach((c, i) => {
-      c.style.setProperty('--td', `${i * 8}ms`);
+      c.style.setProperty('--td', `${sh(i * 30)}ms`);
       c.style.setProperty('--gx', '0px');
       c.style.setProperty('--gy', '0px');
       c.style.setProperty('--gr', '0deg');
     });
-    await wait(cards.length * 8 + 450);
-    if (!alive.current || d.phase !== 'shuffling') return;
+    await wait(sh(cards.length * 30 + 650));
+    if (!alive.current || phaseNow() !== 'shuffling') return;
     cards.forEach((c) => { c.style.setProperty('--td', '0ms'); c.disabled = false; });
     pile.classList.add('is-picking');
     set({ phase: 'picking', cta: { label: '', visible: false, disabled: true }, hint: remainingText() });
@@ -231,7 +238,7 @@ export function DrawClient() {
     pile.classList.remove('is-picking');
     pile.classList.add('is-gone');
     await wait(420);
-    if (!alive.current || d.phase !== 'revealing') return;
+    if (!alive.current || phaseNow() !== 'revealing') return;
     pile.hidden = true;
     set({
       big: true, hint: d.spread === '1' ? t('tapFlip1') : t('tapFlipN'),
@@ -247,7 +254,7 @@ export function DrawClient() {
     addHistory({ id: `${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`, at: Date.now(), spread: d.spread, deck: d.deck, topic: d.topic, question: d.question.trim(), locale, cards });
     void saveToAccount(cards);
     await wait(750);
-    if (!alive.current || d.phase !== 'flipped') return;
+    if (!alive.current || phaseNow() !== 'flipped') return;
     set({ hint: t('allFlipped'), cta: { label: t('seeMeaning'), visible: true, disabled: false } });
     say(d.spread === '1' ? t('say.flipped1') : t('say.flippedN'), 'happy');
   };
@@ -286,7 +293,7 @@ export function DrawClient() {
     set({ phase: 'loading', hint: '', cta: { ...d.cta, disabled: true } });
     say(t('say.listening'), 'happy');
     await wait(1000);
-    if (!alive.current || d.phase !== 'loading') return;
+    if (!alive.current || phaseNow() !== 'loading') return;
     set({ phase: 'done', cta: { label: t('redraw'), visible: true, disabled: false } });
     say(t('say.done'), 'happy');
   };
@@ -350,21 +357,23 @@ export function DrawClient() {
     }
   }, [d.phase]);
 
-  /* ---------- AI ---------- */
-  const askAi = async () => {
+  /* Khóa cuộn trang khi màn hình chờ đang hiện. */
+  useEffect(() => {
+    if (d.phase !== 'loading') return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [d.phase]);
+
+  /* ---------- Phân tích chuyên sâu (từ dữ liệu có sẵn, không gọi AI) ---------- */
+  const showAnalysis = () => {
     if (!d.spread || !d.topic) return;
-    const supabase = createClient();
-    const { data } = (await supabase?.auth.getSession()) ?? { data: { session: null } };
-    if (!data.session) { set({ ai: { status: 'needs-login' } }); return; }
-    set({ ai: { status: 'loading' } });
-    try {
-      const result = await requestInterpretation(data.session.access_token, {
-        spread: d.spread, topic: d.topic, locale, question: d.question.trim(), cards: d.picks.map((p) => ({ id: p.id, reversed: p.reversed }))
-      });
-      set({ ai: { status: 'done', data: result } });
-    } catch (error) {
-      set({ ai: { status: 'error', message: error instanceof ApiError && error.status === 429 ? t('aiRateLimited') : t('aiError') } });
-    }
+    const result = analyzeSpread({
+      picks: d.picks.map((p) => ({ id: p.id, reversed: p.reversed })),
+      spreadId: d.spread, topicId: d.topic, locale, question: d.question, isCrisis: detectCrisis
+    });
+    set({ analysis: { status: 'done', data: result } });
+    setMood(result.source === 'safety' ? 'happy' : 'wow');
   };
 
   /* ---------- Hiển thị ---------- */
@@ -413,9 +422,11 @@ export function DrawClient() {
         <div className="cfg-group cfg-q">
           <label className="field-label" htmlFor="question">{t('question')}</label>
           <div className="q-wrap">
-            <input className="q-input" id="question" type="text" maxLength={200} autoComplete="off" placeholder={t('questionPlaceholder')}
-              ref={questionRef} value={d.question} onChange={(e) => { d.question = e.target.value; bump(); }} />
-            <span className="q-count" aria-hidden="true">{d.question.length}/200</span>
+            <div className="q-field">
+              <input className="q-input" id="question" type="text" maxLength={200} autoComplete="off" placeholder={t('questionPlaceholder')}
+                ref={questionRef} value={d.question} onChange={(e) => { d.question = e.target.value; bump(); }} />
+              <span className="q-count" aria-hidden="true">{d.question.length}/200</span>
+            </div>
           </div>
           {d.topic ? (
             <div className="q-samples" role="group" aria-label={t('sampleAria')}>
@@ -478,13 +489,6 @@ export function DrawClient() {
       </div>
 
       <div className="reading" ref={readingRef}>
-        {d.phase === 'loading' ? (
-          <div className="cosmic-loader" role="status" aria-live="polite">
-            <div className="orbit" aria-hidden="true"><span className="core" /><span className="ring r1"><i /></span><span className="ring r2"><i /></span></div>
-            <p>{t('loader')}</p>
-          </div>
-        ) : null}
-
         {d.phase === 'done' && d.topic && d.deck ? (
           <>
             <Reveal className="reading-head center">
@@ -527,20 +531,29 @@ export function DrawClient() {
               </Reveal>
             ) : null}
 
-            <div className="insights glass" style={{ marginTop: 20 }}>
-              <button type="button" className="btn btn-secondary" onClick={askAi} disabled={d.ai.status === 'loading'}>
-                {d.ai.status === 'loading' ? t('aiLoading') : t('ai')}
-              </button>
-              {d.ai.status === 'needs-login' ? <p className="form-msg">{t('aiLogin')} <Link href="/login">→</Link></p> : null}
-              {d.ai.status === 'error' ? <p className="form-msg error" role="alert">{d.ai.message}</p> : null}
-              {d.ai.status === 'done' && d.ai.data ? (
-                <div className="ai-box">
-                  {d.ai.data.source === 'ai' ? <p className="hint">{t('aiLabel')}</p> : null}
-                  {d.ai.data.source === 'rules' ? <p className="hint">{t('aiFallback')}</p> : null}
-                  {d.ai.data.source === 'safety' ? <p className="hint">{t('aiSafety')}</p> : null}
-                  <p className="reading-text">{d.ai.data.text}</p>
-                </div>
-              ) : null}
+            <div className="insights glass" aria-live="polite">
+              <p className="eyebrow">{t('analysis')}</p>
+              {d.analysis.status === 'done' && d.analysis.data ? (
+                <>
+                  <p className="hint an-intro">{d.analysis.data.source === 'safety' ? t('analysisSafety') : t('analysisLabel')}</p>
+                  {d.analysis.data.sections.filter((section) => section.id !== 'insights').map((section) => (
+                    <section className="an-sec" key={section.id}>
+                      <h3 className="h3 an-h">{section.title}</h3>
+                      <ul className="ins-list">
+                        {section.items.map((item, i) => (
+                          <li className="ins" data-tone={item.tone} key={`${section.id}-${i}`}>
+                            {item.tag ? <span className="ins-tag">{item.tag}</span> : null}
+                            <p>{item.text}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
+                  {d.analysis.data.source === 'analysis' ? <p className="hint an-note">{d.analysis.data.note}</p> : null}
+                </>
+              ) : (
+                <button type="button" className="btn btn-secondary an-btn" onClick={showAnalysis}>{t('analysis')}</button>
+              )}
             </div>
 
             <Reveal className="reading-foot">
@@ -551,6 +564,16 @@ export function DrawClient() {
           </>
         ) : null}
       </div>
+
+      {d.phase === 'loading' && typeof document !== 'undefined'
+        ? createPortal(
+            <div className="preloader" role="status" aria-live="polite">
+              <div className="orbit" aria-hidden="true"><span className="core" /><span className="ring r1"><i /></span><span className="ring r2"><i /></span></div>
+              <p>{t('loader')}</p>
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

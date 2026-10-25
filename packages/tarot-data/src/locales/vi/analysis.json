@@ -1,0 +1,329 @@
+{
+ "_doc": "Dữ liệu 'Phân tích chuyên sâu' (tiếng Việt). Xem docs/analysis.md để biết cách viết. Mỗi danh sách là các biến thể; hệ thống chọn một biến thể cố định theo bộ bài (cùng bộ bài thì ra cùng kết quả).",
+ "version": 1,
+ "labels": {
+  "title": "Phân tích chuyên sâu",
+  "lead": "Câu hỏi của bạn",
+  "overview": "Bức tranh chung",
+  "cards": "Theo thứ tự các lá",
+  "flow": "Mạch chuyển",
+  "insights": "Những điểm đáng chú ý",
+  "reflect": "Để bạn tự vấn",
+  "upright": "xuôi",
+  "reversed": "ngược"
+ },
+ "safety": "Miu cảm nhận câu hỏi của bạn đang mang theo điều gì đó nặng nề, nên Miu sẽ không đọc bài lúc này. Bạn xứng đáng được lắng nghe: hãy trò chuyện với một người bạn tin cậy hoặc một chuyên gia, hoặc liên hệ dịch vụ hỗ trợ khẩn cấp tại nơi bạn sống.",
+ "intents": [
+  {
+   "id": "timing",
+   "keywords": [
+    "khi nào",
+    "bao giờ",
+    "lúc nào",
+    "bao lâu",
+    "đến bao giờ"
+   ],
+   "lead": [
+    "Bạn hỏi về thời điểm: “{question}”. Tarot không chỉ ra ngày giờ cụ thể; điều các lá có thể gợi ra là nhịp độ của câu chuyện và những gì cần chuẩn bị.",
+    "Câu hỏi của bạn xoay quanh thời gian: “{question}”. Thay vì một mốc cụ thể, hãy xem các lá như bản đồ nhịp độ: đâu là lúc chờ, đâu là lúc bước tiếp."
+   ]
+  },
+  {
+   "id": "feelings",
+   "keywords": [
+    "có yêu",
+    "còn yêu",
+    "nghĩ gì",
+    "cảm thấy",
+    "tình cảm",
+    "thích tôi",
+    "thích mình",
+    "quan tâm",
+    "nghĩ về tôi",
+    "nghĩ về mình"
+   ],
+   "lead": [
+    "Bạn muốn hiểu thêm về cảm xúc: “{question}”. Các lá không đọc được suy nghĩ của ai khác, nhưng có thể phản chiếu bầu không khí chung và điều bạn cần để ý ở chính mình.",
+    "Câu hỏi của bạn chạm tới tình cảm: “{question}”. Hãy đọc các lá như tấm gương cho cảm xúc và mong đợi, thay vì một lời xác nhận về người khác."
+   ]
+  },
+  {
+   "id": "reason",
+   "keywords": [
+    "tại sao",
+    "vì sao",
+    "lý do",
+    "do đâu",
+    "nguyên nhân"
+   ],
+   "lead": [
+    "Bạn đang tìm lý do phía sau: “{question}”. Các lá sẽ không kết luận nguyên nhân, nhưng có thể chỉ ra những lớp ý nghĩa đáng để bạn nhìn lại.",
+    "Câu hỏi “{question}” là lời mời nhìn sâu hơn. Hãy xem mỗi lá như một lớp, từ điều dễ thấy đến điều ít được nói ra."
+   ]
+  },
+  {
+   "id": "how",
+   "keywords": [
+    "làm sao",
+    "như thế nào",
+    "thế nào",
+    "cách nào",
+    "làm thế nào",
+    "phải làm gì",
+    "nên làm gì",
+    "làm gì"
+   ],
+   "lead": [
+    "Bạn đang tìm hướng đi: “{question}”. Các lá không đưa ra một công thức, nhưng có thể gợi ý thái độ và bước nhỏ phù hợp với từng chặng.",
+    "Câu hỏi “{question}” thiên về hành động. Hãy đọc các lá như những lời gợi ý về cách tiếp cận, còn lựa chọn cụ thể vẫn do bạn quyết định."
+   ]
+  },
+  {
+   "id": "decision",
+   "keywords": [
+    "có nên",
+    "nên không",
+    "nên hay không",
+    "nên chọn",
+    "quyết định",
+    "lựa chọn",
+    "chọn giữa",
+    "hay là",
+    "có nên không"
+   ],
+   "lead": [
+    "Bạn đang đứng trước một lựa chọn: “{question}”. Các lá không phân đúng sai, nhưng có thể giúp bạn nhìn rõ điều mình đang cân nhắc.",
+    "Câu hỏi “{question}” nghe như một ngã rẽ. Hãy dùng các lá để soi lại điều bạn thật sự cần, thay vì tìm một câu trả lời có hoặc không."
+   ]
+  },
+  {
+   "id": "outcome",
+   "keywords": [
+    "kết quả",
+    "sẽ ra sao",
+    "có thành công",
+    "có được",
+    "có thể",
+    "tương lai",
+    "diễn biến"
+   ],
+   "lead": [
+    "Bạn quan tâm đến diễn tiến: “{question}”. Các lá chỉ nói về xu hướng nếu mọi thứ giữ nguyên, không phải kết quả cố định.",
+    "Câu hỏi “{question}” nhìn về phía trước. Hãy xem các lá như hướng gió hiện tại, còn con thuyền vẫn do bạn lái."
+   ]
+  }
+ ],
+ "lead": {
+  "with_question": [
+   "Câu hỏi bạn mang đến: “{question}”. Miu đọc các lá theo đúng thứ tự bạn rút, từng bước một, để xem mỗi lá soi sáng điều gì cho câu hỏi này.",
+   "Bạn hỏi: “{question}”. Mỗi lá dưới đây giữ một vị trí riêng, nên Miu sẽ đi qua chúng lần lượt rồi mới ghép lại thành bức tranh chung.",
+   "Với câu hỏi “{question}”, thứ tự các lá cũng là một phần thông điệp. Cùng đi từ lá đầu tiên nhé."
+  ],
+  "no_question": [
+   "Bạn chưa đặt câu hỏi cụ thể, nên Miu đọc các lá theo chủ đề {topic} và theo đúng thứ tự bạn rút.",
+   "Không có câu hỏi riêng cũng không sao. Miu sẽ đọc các lá cho chủ đề {topic}, lần lượt từng vị trí.",
+   "Lần này Miu đọc theo chủ đề {topic}. Thứ tự các lá cho thấy câu chuyện đang đi như thế nào."
+  ]
+ },
+ "overview": {
+  "positive_lean": [
+   "Nhìn tổng thể, bộ bài nghiêng về những tín hiệu nâng đỡ cho chủ đề {topic}. Điều này gợi ý bạn có nhiều nguồn lực hơn mình tưởng, nhưng vẫn cần để ý từng chi tiết ở dưới.",
+   "Bức tranh chung khá nhẹ nhàng: nhiều lá mang năng lượng ủng hộ cho chủ đề {topic}. Hãy xem đó là điểm tựa, không phải lời hứa."
+  ],
+  "caution_lean": [
+   "Nhìn tổng thể, bộ bài có khá nhiều lá nhắc bạn chậm lại ở chủ đề {topic}. Đây không phải điềm xấu, mà là lời mời quan sát kỹ hơn những điều đang bị bỏ qua.",
+   "Bức tranh chung hơi trầm: nhiều lá đặt ra câu hỏi hoặc thử thách cho chủ đề {topic}. Thử thách thường là chỗ để bạn hiểu mình rõ hơn."
+  ],
+  "balanced": [
+   "Bộ bài cân bằng giữa điểm sáng và điều cần lưu ý ở chủ đề {topic}. Đó là dấu hiệu của một giai đoạn có cả nguồn lực lẫn bài tập cần làm.",
+   "Bức tranh chung đan xen sáng và tối cho chủ đề {topic}, giống như đa số tình huống thật trong đời: không có gì hoàn toàn một màu."
+  ]
+ },
+ "positions": {
+  "today": {
+   "positive": [
+    "Với lá bài của hôm nay, {card} ({orientation}) mang đến một điểm sáng ở vị trí “{position}” ({prompt}). {meaning}",
+    "Hôm nay, {card} ({orientation}) là điểm tựa đáng quý ở vị trí “{position}” ({prompt}). {meaning}"
+   ],
+   "neutral": [
+    "Với lá bài của hôm nay, {card} ({orientation}) đưa ra một góc nhìn để cân nhắc ở vị trí “{position}” ({prompt}). {meaning}",
+    "Hôm nay, {card} ({orientation}) ở vị trí “{position}” ({prompt}) mời bạn nhìn từ nhiều phía. {meaning}"
+   ],
+   "caution": [
+    "Với lá bài của hôm nay, {card} ({orientation}) nhắc bạn chậm lại ở vị trí “{position}” ({prompt}). {meaning}",
+    "Hôm nay, {card} ({orientation}) ở vị trí “{position}” ({prompt}) gợi một điều cần được nhìn kỹ hơn. {meaning}"
+   ]
+  },
+  "past": {
+   "positive": [
+    "Nhìn về quá khứ, {card} ({orientation}) mang đến một điểm sáng ở vị trí “{position}” ({prompt}). {meaning}",
+    "Phía sau lưng bạn, {card} ({orientation}) là điểm tựa đáng quý ở vị trí “{position}” ({prompt}). {meaning}"
+   ],
+   "neutral": [
+    "Nhìn về quá khứ, {card} ({orientation}) đưa ra một góc nhìn để cân nhắc ở vị trí “{position}” ({prompt}). {meaning}",
+    "Phía sau lưng bạn, {card} ({orientation}) ở vị trí “{position}” ({prompt}) mời bạn nhìn từ nhiều phía. {meaning}"
+   ],
+   "caution": [
+    "Nhìn về quá khứ, {card} ({orientation}) nhắc bạn chậm lại ở vị trí “{position}” ({prompt}). {meaning}",
+    "Phía sau lưng bạn, {card} ({orientation}) ở vị trí “{position}” ({prompt}) gợi một điều cần được nhìn kỹ hơn. {meaning}"
+   ]
+  },
+  "present": {
+   "positive": [
+    "Ở hiện tại, {card} ({orientation}) mang đến một điểm sáng ở vị trí “{position}” ({prompt}). {meaning}",
+    "Ngay lúc này, {card} ({orientation}) là điểm tựa đáng quý ở vị trí “{position}” ({prompt}). {meaning}"
+   ],
+   "neutral": [
+    "Ở hiện tại, {card} ({orientation}) đưa ra một góc nhìn để cân nhắc ở vị trí “{position}” ({prompt}). {meaning}",
+    "Ngay lúc này, {card} ({orientation}) ở vị trí “{position}” ({prompt}) mời bạn nhìn từ nhiều phía. {meaning}"
+   ],
+   "caution": [
+    "Ở hiện tại, {card} ({orientation}) nhắc bạn chậm lại ở vị trí “{position}” ({prompt}). {meaning}",
+    "Ngay lúc này, {card} ({orientation}) ở vị trí “{position}” ({prompt}) gợi một điều cần được nhìn kỹ hơn. {meaning}"
+   ]
+  },
+  "future": {
+   "positive": [
+    "Về xu hướng phía trước, {card} ({orientation}) mang đến một điểm sáng ở vị trí “{position}” ({prompt}). {meaning}",
+    "Nhìn về phía trước, {card} ({orientation}) là điểm tựa đáng quý ở vị trí “{position}” ({prompt}). {meaning}"
+   ],
+   "neutral": [
+    "Về xu hướng phía trước, {card} ({orientation}) đưa ra một góc nhìn để cân nhắc ở vị trí “{position}” ({prompt}). {meaning}",
+    "Nhìn về phía trước, {card} ({orientation}) ở vị trí “{position}” ({prompt}) mời bạn nhìn từ nhiều phía. {meaning}"
+   ],
+   "caution": [
+    "Về xu hướng phía trước, {card} ({orientation}) nhắc bạn chậm lại ở vị trí “{position}” ({prompt}). {meaning}",
+    "Nhìn về phía trước, {card} ({orientation}) ở vị trí “{position}” ({prompt}) gợi một điều cần được nhìn kỹ hơn. {meaning}"
+   ]
+  },
+  "self": {
+   "positive": [
+    "Về chính bạn, {card} ({orientation}) mang đến một điểm sáng ở vị trí “{position}” ({prompt}). {meaning}",
+    "Khi nhìn vào bản thân, {card} ({orientation}) là điểm tựa đáng quý ở vị trí “{position}” ({prompt}). {meaning}"
+   ],
+   "neutral": [
+    "Về chính bạn, {card} ({orientation}) đưa ra một góc nhìn để cân nhắc ở vị trí “{position}” ({prompt}). {meaning}",
+    "Khi nhìn vào bản thân, {card} ({orientation}) ở vị trí “{position}” ({prompt}) mời bạn nhìn từ nhiều phía. {meaning}"
+   ],
+   "caution": [
+    "Về chính bạn, {card} ({orientation}) nhắc bạn chậm lại ở vị trí “{position}” ({prompt}). {meaning}",
+    "Khi nhìn vào bản thân, {card} ({orientation}) ở vị trí “{position}” ({prompt}) gợi một điều cần được nhìn kỹ hơn. {meaning}"
+   ]
+  },
+  "situation": {
+   "positive": [
+    "Về hoàn cảnh xung quanh, {card} ({orientation}) mang đến một điểm sáng ở vị trí “{position}” ({prompt}). {meaning}",
+    "Trong bối cảnh hiện tại, {card} ({orientation}) là điểm tựa đáng quý ở vị trí “{position}” ({prompt}). {meaning}"
+   ],
+   "neutral": [
+    "Về hoàn cảnh xung quanh, {card} ({orientation}) đưa ra một góc nhìn để cân nhắc ở vị trí “{position}” ({prompt}). {meaning}",
+    "Trong bối cảnh hiện tại, {card} ({orientation}) ở vị trí “{position}” ({prompt}) mời bạn nhìn từ nhiều phía. {meaning}"
+   ],
+   "caution": [
+    "Về hoàn cảnh xung quanh, {card} ({orientation}) nhắc bạn chậm lại ở vị trí “{position}” ({prompt}). {meaning}",
+    "Trong bối cảnh hiện tại, {card} ({orientation}) ở vị trí “{position}” ({prompt}) gợi một điều cần được nhìn kỹ hơn. {meaning}"
+   ]
+  },
+  "challenge": {
+   "positive": [
+    "Về điều cần vượt qua, {card} ({orientation}) mang đến một điểm sáng ở vị trí “{position}” ({prompt}). {meaning}",
+    "Ở phần thử thách, {card} ({orientation}) là điểm tựa đáng quý ở vị trí “{position}” ({prompt}). {meaning}"
+   ],
+   "neutral": [
+    "Về điều cần vượt qua, {card} ({orientation}) đưa ra một góc nhìn để cân nhắc ở vị trí “{position}” ({prompt}). {meaning}",
+    "Ở phần thử thách, {card} ({orientation}) ở vị trí “{position}” ({prompt}) mời bạn nhìn từ nhiều phía. {meaning}"
+   ],
+   "caution": [
+    "Về điều cần vượt qua, {card} ({orientation}) nhắc bạn chậm lại ở vị trí “{position}” ({prompt}). {meaning}",
+    "Ở phần thử thách, {card} ({orientation}) ở vị trí “{position}” ({prompt}) gợi một điều cần được nhìn kỹ hơn. {meaning}"
+   ]
+  }
+ },
+ "cards": {},
+ "transitions": {
+  "positive>positive": [
+   "Từ {from} sang {to}, mạch đi khá thuận: điểm sáng ở chặng trước dường như được tiếp nối ở chặng sau.",
+   "Hai lá {from} và {to} cùng nghiêng về hướng nâng đỡ, nên câu chuyện có thể đang dần thêm vững."
+  ],
+  "positive>neutral": [
+   "Từ {from} sang {to}, điểm sáng ở chặng trước đưa bạn tới một chỗ cần cân nhắc thêm hơn là cứ đi theo đà.",
+   "{from} cho bạn đà đi, còn {to} nhắc rằng bước kế tiếp cần được nhìn từ nhiều góc."
+  ],
+  "positive>caution": [
+   "Từ {from} sang {to}, thuận lợi ở chặng trước đi kèm một lời nhắc ở chặng sau: đừng để đà tốt làm bạn bỏ sót điều cần để ý.",
+   "{from} là điểm tựa, và {to} cho biết đâu là chỗ nên chậm lại để giữ được điểm tựa ấy."
+  ],
+  "neutral>positive": [
+   "Từ {from} sang {to}, sự cân nhắc ở chặng trước dần mở ra một hướng sáng hơn.",
+   "Sau {from}, lá {to} xuất hiện như một tín hiệu dễ chịu: nghĩ kỹ có thể đang được đền đáp."
+  ],
+  "neutral>neutral": [
+   "Từ {from} sang {to}, câu chuyện vẫn ở vùng cần quan sát; chưa có lá nào kéo hẳn về một phía.",
+   "{from} và {to} cùng giữ bạn ở vị trí người quan sát, nên thông tin thêm sẽ có ích."
+  ],
+  "neutral>caution": [
+   "Từ {from} sang {to}, điều còn chưa rõ ở chặng trước chuyển thành một lời nhắc cụ thể hơn ở chặng sau.",
+   "Sau {from}, lá {to} gợi ý rằng chỗ lưng chừng ấy cần được gọi tên rõ hơn."
+  ],
+  "caution>positive": [
+   "Từ {from} sang {to}, điều khiến bạn băn khoăn ở chặng trước dường như có lối ra ở chặng sau.",
+   "{from} là phần khó, còn {to} gợi ý rằng sự nhẹ nhõm hoặc một cách nhìn mới có thể đang đến."
+  ],
+  "caution>neutral": [
+   "Từ {from} sang {to}, áp lực ở chặng trước dịu dần thành một khoảng cần cân nhắc.",
+   "Sau {from}, lá {to} mở ra khoảng thở để bạn nhìn lại mà chưa phải vội kết luận."
+  ],
+  "caution>caution": [
+   "Từ {from} sang {to}, hai lá cùng gợi sự thận trọng. Hãy xem đó là lời nhắc dịu dàng để bạn chăm sóc bản thân và đi chậm lại.",
+   "{from} và {to} cùng đặt ra thử thách, nên việc nghỉ ngơi và tìm hỗ trợ từ người thân là điều đáng cân nhắc."
+  ]
+ },
+ "pairs": {},
+ "single_flow": [
+  "{card} có hai mặt. Ở chiều bạn rút ({orientation}), lá bài nói về {keywords}. Mặt còn lại gợi tới {other_keywords}; hai mặt này thường là hai nửa của cùng một câu chuyện.",
+  "Với một lá duy nhất, Miu nhìn cả hai phía của {card}: chiều {orientation} gắn với {keywords}, còn phía bên kia nói về {other_keywords}. Bạn thấy mình gần phía nào hơn lúc này?"
+ ],
+ "closing": {
+  "common": [
+   "Điều gì trong các lá bài này khiến bạn thấy quen thuộc nhất?",
+   "Nếu chỉ chọn một bước nhỏ cho tuần này, đó sẽ là gì?",
+   "Bạn đang kỳ vọng điều gì, và kỳ vọng ấy đến từ đâu?",
+   "Điều gì khiến bạn thấy nhẹ lòng khi nghĩ đến chủ đề này?",
+   "Bạn cần thêm thông tin gì trước khi quyết định?",
+   "Nếu một người bạn thân hỏi cùng câu hỏi, bạn sẽ nói gì với họ?"
+  ],
+  "topics": {
+   "love": [
+    "Bạn cần gì để cảm thấy an toàn và được là chính mình trong mối quan hệ?",
+    "Có điều gì bạn vẫn chưa nói ra, và bạn muốn nói thế nào?",
+    "Bạn đang cho đi và nhận lại có cân bằng không?",
+    "Khoảng cách giữa điều bạn mong muốn và điều đang có là gì?"
+   ],
+   "career": [
+    "Điều gì ở công việc này vẫn khiến bạn muốn học thêm?",
+    "Bạn đang cân nhắc điều gì ngoài thu nhập?",
+    "Kỹ năng nào của bạn chưa được dùng đúng chỗ?",
+    "Bước thử nhỏ nào giúp bạn hiểu rõ hơn trước khi thay đổi lớn?"
+   ],
+   "study": [
+    "Cách học nào đã từng hiệu quả với bạn?",
+    "Bạn muốn hiểu sâu điều gì, thay vì chỉ làm cho xong?",
+    "Điều gì đang làm bạn phân tâm, và bạn có thể giảm nó bằng cách nào?",
+    "Bạn cần ai hoặc điều gì để duy trì nhịp học đều?"
+   ],
+   "finance": [
+    "Bạn đang cảm thấy thế nào khi nghĩ đến chuyện tiền bạc của mình?",
+    "Điều gì với bạn là đủ, và điều gì là thừa?",
+    "Nếu cần một người có chuyên môn góp ý, bạn muốn hỏi ai?",
+    "Thói quen nhỏ nào về chi tiêu bạn muốn nhìn lại?"
+   ],
+   "mind": [
+    "Cơ thể và tâm trí bạn đang cần được nghỉ ngơi ở đâu?",
+    "Bạn nói chuyện với chính mình bằng giọng như thế nào?",
+    "Ai là người bạn có thể trò chuyện khi thấy nặng lòng?",
+    "Điều gì giúp bạn bình tĩnh lại, dù chỉ một chút?"
+   ]
+  },
+  "note": "Tất cả chỉ là gợi ý để bạn suy ngẫm; quyết định cuối cùng luôn thuộc về bạn. Với những vấn đề quan trọng, hãy trao đổi với người có chuyên môn."
+ }
+}

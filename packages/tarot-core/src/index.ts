@@ -7,8 +7,10 @@ export * from './metrics';
 export * from './conditions';
 export * from './insights';
 export * from './draw';
+export * from './analysis';
+export * from './analysis-validate';
 export * from './validate';
-export { CARDS, CARD_INDEX, CARD_IDS, RULE_SET, getLocaleBundle, getCardName } from './data';
+export { CARDS, CARD_INDEX, CARD_IDS, CARD_TONES, RULE_SET, getLocaleBundle, getCardName } from './data';
 export type { LocaleBundle } from './data';
 
 export type ReadSpreadArgs = {

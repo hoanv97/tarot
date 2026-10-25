@@ -1,0 +1,317 @@
+{
+ "_doc": "Tông của từng lá theo chiều [xuôi, ngược]: positive | neutral | caution. Bộ phân tích chuyên sâu dùng tông này để chọn câu dẫn và câu nối. Hãy xem lại và chỉnh theo ý bạn.",
+ "card_tone": {
+  "fool": [
+   "positive",
+   "caution"
+  ],
+  "magician": [
+   "positive",
+   "caution"
+  ],
+  "priestess": [
+   "neutral",
+   "caution"
+  ],
+  "empress": [
+   "positive",
+   "caution"
+  ],
+  "emperor": [
+   "positive",
+   "caution"
+  ],
+  "hierophant": [
+   "positive",
+   "caution"
+  ],
+  "lovers": [
+   "positive",
+   "caution"
+  ],
+  "chariot": [
+   "positive",
+   "caution"
+  ],
+  "strength": [
+   "positive",
+   "caution"
+  ],
+  "hermit": [
+   "neutral",
+   "caution"
+  ],
+  "wheel": [
+   "positive",
+   "neutral"
+  ],
+  "justice": [
+   "neutral",
+   "caution"
+  ],
+  "hanged": [
+   "neutral",
+   "neutral"
+  ],
+  "death": [
+   "neutral",
+   "neutral"
+  ],
+  "temperance": [
+   "positive",
+   "caution"
+  ],
+  "devil": [
+   "caution",
+   "neutral"
+  ],
+  "tower": [
+   "caution",
+   "neutral"
+  ],
+  "star": [
+   "positive",
+   "caution"
+  ],
+  "moon": [
+   "neutral",
+   "neutral"
+  ],
+  "sun": [
+   "positive",
+   "caution"
+  ],
+  "judgement": [
+   "positive",
+   "neutral"
+  ],
+  "world": [
+   "positive",
+   "neutral"
+  ],
+  "wands-ace": [
+   "positive",
+   "caution"
+  ],
+  "wands-2": [
+   "neutral",
+   "neutral"
+  ],
+  "wands-3": [
+   "positive",
+   "caution"
+  ],
+  "wands-4": [
+   "positive",
+   "caution"
+  ],
+  "wands-5": [
+   "caution",
+   "neutral"
+  ],
+  "wands-6": [
+   "positive",
+   "caution"
+  ],
+  "wands-7": [
+   "neutral",
+   "neutral"
+  ],
+  "wands-8": [
+   "positive",
+   "caution"
+  ],
+  "wands-9": [
+   "neutral",
+   "neutral"
+  ],
+  "wands-10": [
+   "caution",
+   "neutral"
+  ],
+  "wands-page": [
+   "positive",
+   "caution"
+  ],
+  "wands-knight": [
+   "neutral",
+   "neutral"
+  ],
+  "wands-queen": [
+   "positive",
+   "caution"
+  ],
+  "wands-king": [
+   "positive",
+   "caution"
+  ],
+  "cups-ace": [
+   "positive",
+   "caution"
+  ],
+  "cups-2": [
+   "positive",
+   "caution"
+  ],
+  "cups-3": [
+   "positive",
+   "caution"
+  ],
+  "cups-4": [
+   "neutral",
+   "neutral"
+  ],
+  "cups-5": [
+   "caution",
+   "neutral"
+  ],
+  "cups-6": [
+   "positive",
+   "caution"
+  ],
+  "cups-7": [
+   "neutral",
+   "neutral"
+  ],
+  "cups-8": [
+   "neutral",
+   "neutral"
+  ],
+  "cups-9": [
+   "positive",
+   "caution"
+  ],
+  "cups-10": [
+   "positive",
+   "caution"
+  ],
+  "cups-page": [
+   "positive",
+   "caution"
+  ],
+  "cups-knight": [
+   "neutral",
+   "neutral"
+  ],
+  "cups-queen": [
+   "positive",
+   "caution"
+  ],
+  "cups-king": [
+   "positive",
+   "caution"
+  ],
+  "swords-ace": [
+   "positive",
+   "caution"
+  ],
+  "swords-2": [
+   "neutral",
+   "neutral"
+  ],
+  "swords-3": [
+   "caution",
+   "neutral"
+  ],
+  "swords-4": [
+   "neutral",
+   "neutral"
+  ],
+  "swords-5": [
+   "caution",
+   "neutral"
+  ],
+  "swords-6": [
+   "neutral",
+   "neutral"
+  ],
+  "swords-7": [
+   "caution",
+   "neutral"
+  ],
+  "swords-8": [
+   "caution",
+   "neutral"
+  ],
+  "swords-9": [
+   "caution",
+   "neutral"
+  ],
+  "swords-10": [
+   "caution",
+   "neutral"
+  ],
+  "swords-page": [
+   "positive",
+   "caution"
+  ],
+  "swords-knight": [
+   "neutral",
+   "neutral"
+  ],
+  "swords-queen": [
+   "positive",
+   "caution"
+  ],
+  "swords-king": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-ace": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-2": [
+   "neutral",
+   "neutral"
+  ],
+  "pentacles-3": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-4": [
+   "neutral",
+   "neutral"
+  ],
+  "pentacles-5": [
+   "caution",
+   "neutral"
+  ],
+  "pentacles-6": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-7": [
+   "neutral",
+   "neutral"
+  ],
+  "pentacles-8": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-9": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-10": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-page": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-knight": [
+   "neutral",
+   "neutral"
+  ],
+  "pentacles-queen": [
+   "positive",
+   "caution"
+  ],
+  "pentacles-king": [
+   "positive",
+   "caution"
+  ]
+ }
+}

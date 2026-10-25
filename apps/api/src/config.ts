@@ -2,6 +2,8 @@ export type Config = {
   port: number;
   anthropicApiKey: string;
   anthropicModel: string;
+  /** Mặc định https://api.anthropic.com; chỉ đổi khi đi qua proxy/gateway */
+  anthropicBaseUrl: string | undefined;
   supabaseUrl: string;
   supabaseAnonKey: string;
   corsOrigins: string[];
@@ -29,6 +31,7 @@ export const loadConfig = (env: Record<string, string | undefined>): Config => {
     port: int('PORT', 4000),
     anthropicApiKey: required('ANTHROPIC_API_KEY'),
     anthropicModel: env.ANTHROPIC_MODEL?.trim() || 'claude-sonnet-5-5',
+    anthropicBaseUrl: env.ANTHROPIC_BASE_URL?.trim().replace(/\/+$/, '') || undefined,
     supabaseUrl: required('SUPABASE_URL').replace(/\/+$/, ''),
     supabaseAnonKey: required('SUPABASE_ANON_KEY'),
     corsOrigins: (env.CORS_ORIGINS ?? 'http://localhost:3000').split(',').map((s) => s.trim()).filter(Boolean),

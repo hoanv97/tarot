@@ -1,3 +1,4 @@
+import { Link } from '@/i18n/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -18,7 +19,9 @@ export default async function LegalPage({ params }: { params: Promise<{ locale: 
         <p>{t('noAdvice')}</p>
         <p>{t('ai')}</p>
         <p className="muted">{t('age')}</p>
-        <p className="muted">{t('privacy')}</p>
+        <p className="muted">
+          <Link href="/privacy">{t('see_privacy')}</Link> · <Link href="/terms">{t('see_terms')}</Link>
+        </p>
       </div>
     </div>
   );

@@ -70,6 +70,20 @@ describe('buildPrompt', () => {
     expect(prompt.user).toContain('Cái Chết (xuôi)');
     expect(prompt.user).toContain('Sự nghiệp');
   });
+
+  it('đánh số lá theo thứ tự rút, kèm vị trí, và yêu cầu Phân tích chuyên sâu', () => {
+    const parsed = parseInterpretBody(body());
+    if (!parsed.ok) throw new Error('parse');
+    const { user, system } = buildPrompt(parsed.value, []);
+    const first = user.indexOf('Lá 1/');
+    const second = user.indexOf('Lá 2/');
+    const third = user.indexOf('Lá 3/');
+    expect(first).toBeGreaterThan(-1);
+    expect(second).toBeGreaterThan(first);
+    expect(third).toBeGreaterThan(second);
+    expect(user).toContain('Phân tích chuyên sâu');
+    expect(system).toContain('THỨ TỰ');
+  });
 });
 
 describe('POST /v1/interpret', () => {

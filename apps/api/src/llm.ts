@@ -7,12 +7,12 @@ export interface LlmClient {
 export class LlmError extends Error {}
 
 /** Gọi Claude Messages API trực tiếp bằng fetch (không cần SDK). Phần system được đánh dấu cache. */
-export const createClaudeClient = (options: { apiKey: string; model: string; fetch: FetchLike; timeoutMs?: number }): LlmClient => ({
+export const createClaudeClient = (options: { apiKey: string; model: string; fetch: FetchLike; baseUrl?: string; timeoutMs?: number }): LlmClient => ({
   async complete({ system, user, maxTokens }) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 30000);
     try {
-      const res = await options.fetch('https://api.anthropic.com/v1/messages', {
+      const res = await options.fetch(`${options.baseUrl ?? 'https://api.anthropic.com'}/v1/messages`, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': options.apiKey, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({

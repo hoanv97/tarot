@@ -7,16 +7,19 @@
  */
 import cardsStructure from './structure/cards.json';
 import rulesStructure from './structure/rules.json';
+import analysisStructure from './structure/analysis.json';
 import viCards from './locales/vi/cards.json';
 import viRules from './locales/vi/rules.json';
 import viUi from './locales/vi/ui.json';
+import viAnalysis from './locales/vi/analysis.json';
 import enCards from './locales/en/cards.json';
 import enRules from './locales/en/rules.json';
 import enUi from './locales/en/ui.json';
+import enAnalysis from './locales/en/analysis.json';
 
-export const rawStructure = { cards: cardsStructure, rules: rulesStructure } as const;
+export const rawStructure = { cards: cardsStructure, rules: rulesStructure, analysis: analysisStructure } as const;
 
 export const rawLocales = {
-  vi: { cards: viCards, rules: viRules, ui: viUi },
-  en: { cards: enCards, rules: enRules, ui: enUi }
+  vi: { cards: viCards, rules: viRules, ui: viUi, analysis: viAnalysis },
+  en: { cards: enCards, rules: enRules, ui: enUi, analysis: enAnalysis }
 } as const;
