@@ -67,11 +67,12 @@ export const initCompanion = () => {
     let raf = 0, last = 0, W = innerWidth, H = innerHeight;
     let x = -80, y = 140, vx = 0, vy = 0, tx = 0, ty = 0;
     let mode = 'fly', idleUntil = 0, facing = 1, hovering = false, emitAcc = 0, checkAcc = 0;
-    let pending = null, sayTimer = 0;
+    let pending = null, sayTimer = 0, wakeTimer = 0, blinkTimer = 0, idleSince = 0, dirty = false, lastPlace = '';
     const parts = [];
     const spriteCache = new Map();
 
-    const size = () => el.offsetWidth || 64;
+    let sizeCache = 0;
+    const size = () => sizeCache || (sizeCache = el.offsetWidth || 64);
     const bounds = () => {
       const s = size();
       return { minX: 12, maxX: W - s - 12, minY: 66, maxY: H - s - (W <= 720 ? 104 : 20) };
@@ -79,7 +80,7 @@ export const initCompanion = () => {
     const clamp = (v, a, b) => Math.min(Math.max(v, a), Math.max(a, b));
 
     const resize = () => {
-      W = innerWidth; H = innerHeight;
+      W = innerWidth; H = innerHeight; sizeCache = 0;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
@@ -182,8 +183,12 @@ export const initCompanion = () => {
     };
 
     const place = () => {
+      const tilt = f(clamp(vx * 4, -14, 14));
+      const key = `${f(x)}|${f(y)}|${tilt}|${facing}`;
+      if (key === lastPlace) return;
+      lastPlace = key;
       el.style.transform = `translate3d(${f(x)}px,${f(y)}px,0)`;
-      sprite.style.transform = `rotate(${f(clamp(vx * 4, -14, 14))}deg) scaleX(${facing})`;
+      sprite.style.transform = `rotate(${tilt}deg) scaleX(${facing})`;
     };
 
     const step = (now) => {
@@ -194,6 +199,7 @@ export const initCompanion = () => {
         const dx = tx - x, dy = ty - y, d = Math.hypot(dx, dy);
         if (d < 6) {
           mode = 'idle';
+          idleSince = now;
           idleUntil = now + 2000 + rand() * 3000;
           if (pending) { burst(26); if (pending.text) say(pending.text); pending = null; }
         } else {
@@ -218,14 +224,18 @@ export const initCompanion = () => {
         if (mode === 'idle' && !hovering && overInteractive(x + s / 2, y + s / 2)) idleUntil = now;
       }
 
-      emitAcc += (speed > 0.5 ? speed * 0.6 : 0.05) * dt;
+      const settling = mode === 'idle' && now - idleSince < 1200;
+      emitAcc += (speed > 0.5 ? speed * 0.6 : settling ? 0.05 : 0) * dt;
       while (emitAcc >= 1) {
         emitAcc -= 1;
         emit(x + s / 2 - facing * s * 0.28 + (rand() - 0.5) * 8, y + s * 0.62 + (rand() - 0.5) * 8);
       }
 
-      ctx.clearRect(0, 0, W, H);
-      ctx.globalCompositeOperation = document.documentElement.getAttribute('data-theme') === 'dark' ? 'lighter' : 'source-over';
+      if (parts.length || dirty) {
+        ctx.clearRect(0, 0, W, H);
+        dirty = parts.length > 0;
+        ctx.globalCompositeOperation = document.documentElement.getAttribute('data-theme') === 'dark' ? 'lighter' : 'source-over';
+      }
       for (let i = parts.length - 1; i >= 0; i--) {
         const p = parts[i];
         p.life += dt;
@@ -239,12 +249,19 @@ export const initCompanion = () => {
         ctx.drawImage(particleSprite(p.color, p.kind), p.x - r, p.y - r, r * 2, r * 2);
       }
       ctx.globalAlpha = 1;
+      if (mode === 'idle' && !pending && parts.length === 0 && Math.hypot(vx, vy) < 0.05) {
+        raf = 0;
+        // Đang được ngắm (hovering) thì chờ pointerleave đánh thức; không thì dậy khi hết giờ nghỉ.
+        if (!hovering) wakeTimer = setTimeout(() => { wakeTimer = 0; start(); }, Math.max(80, idleUntil - performance.now()));
+        return;
+      }
       raf = requestAnimationFrame(step);
     };
 
-    const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+    const stop = () => { cancelAnimationFrame(raf); raf = 0; clearTimeout(wakeTimer); wakeTimer = 0; };
     const start = () => {
       if (raf || !enabled || document.hidden || reduced()) return;
+      clearTimeout(wakeTimer); wakeTimer = 0;
       last = 0;
       raf = requestAnimationFrame(step);
     };
@@ -267,20 +284,20 @@ export const initCompanion = () => {
 
     /* Chỉ dừng lại ngắm khi đang nghỉ: đang bay ngang nút bấm thì không được đứng chắn */
     el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && mode === 'idle') { hovering = true; el.classList.add('is-curious'); } });
-    el.addEventListener('pointerleave', () => { hovering = false; el.classList.remove('is-curious'); });
+    el.addEventListener('pointerleave', () => { hovering = false; el.classList.remove('is-curious'); start(); });
     el.addEventListener('click', () => {
       say(pickOne(LINES));
       if (reduced()) return;
-      burst();
+      burst(); start();
       el.classList.remove('is-loop'); void el.offsetWidth; el.classList.add('is-loop');
-      setTimeout(() => { el.classList.remove('is-loop'); hovering = false; el.classList.remove('is-curious'); pickTarget(); }, 950);
+      setTimeout(() => { el.classList.remove('is-loop'); hovering = false; el.classList.remove('is-curious'); pickTarget(); start(); }, 950);
     });
     window.addEventListener('miu:companion', (e) => setEnabled(!!(e.detail && e.detail.on)), { signal });
     window.addEventListener('resize', resize, { signal });
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()), { signal });
     reduceMQ.addEventListener('change', () => { stop(); if (enabled) (reduced() ? perch() : (pickTarget(), start())); }, { signal });
 
-    window.addEventListener('miu:route', () => { if (enabled && !reduced()) { hovering = false; pickTarget(); } }, { signal });
+    window.addEventListener('miu:route', () => { if (enabled && !reduced()) { hovering = false; pickTarget(); start(); } }, { signal });
     window.addEventListener('miu:flip', (e) => {
       if (!enabled || reduced() || !e.detail) return;
       const r = e.detail.rect; if (!r) return;
@@ -289,11 +306,18 @@ export const initCompanion = () => {
       ty = clamp(r.top - size() * 0.5, b.minY, b.maxY);
       mode = 'fly';
       pending = { text: e.detail.reversed ? 'Hú… lá ngược, nghe Miu giải thích nhé.' : 'Hú! Lá đẹp ghê.' };
+      start();
     }, { signal });
+
+    blinkTimer = setInterval(() => {
+      if (!enabled || document.hidden || reduced()) return;
+      el.classList.add('is-blink');
+      setTimeout(() => el.classList.remove('is-blink'), 320);
+    }, 4600);
 
     resize();
     el.hidden = !enabled;
     canvas.hidden = !enabled;
     if (enabled) { if (reduced()) perch(); else { pickTarget(); start(); } }
-    return () => { ac.abort(); stop(); el.remove(); canvas.remove(); };
+    return () => { ac.abort(); stop(); clearInterval(blinkTimer); clearTimeout(sayTimer); el.remove(); canvas.remove(); };
 };

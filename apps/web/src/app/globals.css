@@ -638,12 +638,15 @@ p{margin:0}
 :root[data-theme="dark"] .cm-bob svg{filter:drop-shadow(0 0 1px rgba(230,220,255,.6)) drop-shadow(0 0 12px rgba(167,139,250,.5))}
 @keyframes cmBob{50%{transform:translateY(-6px)}}
 .cm-wing,.cm-eyes{transform-box:fill-box}
-.cm-wing-l{transform-origin:100% 35%;animation:flapL .9s ease-in-out infinite}
-.cm-wing-r{transform-origin:0% 35%;animation:flapR .9s ease-in-out infinite}
-.companion.is-flying .cm-wing-l,.companion.is-flying .cm-wing-r{animation-duration:.26s}
+.cm-wing-l{transform-origin:100% 35%}
+.cm-wing-r{transform-origin:0% 35%}
+.companion.is-flying .cm-wing-l{animation:flapL .26s ease-in-out infinite}
+.companion.is-flying .cm-wing-r{animation:flapR .26s ease-in-out infinite}
 @keyframes flapL{50%{transform:rotate(30deg)}}
 @keyframes flapR{50%{transform:rotate(-30deg)}}
-.cm-eyes{transform-origin:center;animation:blink 4.6s infinite;transition:opacity .15s}
+.cm-eyes{transform-origin:center;transition:opacity .15s}
+.companion.is-blink .cm-eyes{animation:cmBlink .3s ease-in-out}
+@keyframes cmBlink{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.1)}}
 .cm-happy{opacity:0;transition:opacity .15s}
 .companion.is-curious .cm-eyes,.companion.is-loop .cm-eyes{opacity:0}
 .companion.is-curious .cm-happy,.companion.is-loop .cm-happy{opacity:1}
