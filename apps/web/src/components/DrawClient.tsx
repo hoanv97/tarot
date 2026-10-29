@@ -7,7 +7,7 @@ import {
 import { useLocale, useTranslations } from 'next-intl';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { cardBackSvg } from '@/components/CardArt';
 import { useCardFace, useConfigured, useContentPatch } from '@/lib/content-client';
 import { Disclaimer } from '@/components/Disclaimer';
@@ -24,7 +24,7 @@ import { useMood } from '@/lib/use-mood';
 
 type Phase = 'idle' | 'shuffling' | 'picking' | 'revealing' | 'flipped' | 'loading' | 'done';
 type PickState = DrawnCard & { flipped: boolean; landed: boolean };
-type AnalysisState = { status: 'idle' | 'done'; data?: AnalysisResult };
+type AnalysisState = { status: 'idle' | 'loading' | 'done'; data?: AnalysisResult };
 
 type Draw = {
   deck: string | null;
@@ -44,9 +44,6 @@ type Draw = {
 };
 
 const WOW = ['sun', 'star', 'world'];
-/** Tốc độ xáo bài so với bản gốc (1 = như cũ). 0.3 nghĩa là thời gian xáo chỉ còn 30%. Đổi số này là đủ; CSS cũng đọc cùng hệ số qua --k. */
-const SHUFFLE_SCALE = 0.3;
-const sh = (ms: number): number => Math.round(ms * SHUFFLE_SCALE);
 const CHEV = <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>;
 const slotCount = (spread: SpreadId | null): number => (spread === '1' ? 1 : 3);
 const fill = (template: string, values: Record<string, string | number>): string =>
@@ -55,7 +52,25 @@ const fill = (template: string, values: Record<string, string | number>): string
 /** Số màu thanh bên trái của các mục kiến giải, khớp với [data-hue] trong globals.css. */
 const HUE_COUNT = 6;
 
-export function DrawClient() {
+/** Đếm số lần xem bài trong ngày (theo giờ máy người dùng), lưu cục bộ trong trình duyệt. */
+const VIEWS_KEY = 'miu.viewsToday';
+const todayKey = (): string => {
+  const now = new Date();
+  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+};
+const readViewsToday = (): number => {
+  try {
+    const raw = window.localStorage.getItem(VIEWS_KEY);
+    const saved = raw ? (JSON.parse(raw) as { day?: string; count?: number }) : null;
+    return saved?.day === todayKey() && typeof saved.count === 'number' ? saved.count : 0;
+  } catch { return 0; }
+};
+const addViewToday = (): void => {
+  try { window.localStorage.setItem(VIEWS_KEY, JSON.stringify({ day: todayKey(), count: readViewsToday() + 1 })); } catch { /* bỏ qua nếu trình duyệt chặn lưu trữ */ }
+};
+
+/** `daily`: trang Daily Tarot, tự chọn sẵn bộ Rider–Waite–Smith, kiểu trải 1 lá hằng ngày và chủ đề Tình yêu. */
+export function DrawClient({ daily = false }: { daily?: boolean } = {}) {
   const t = useTranslations('draw');
   const tDecks = useTranslations('decks');
   const rawLocale = useLocale();
@@ -65,6 +80,11 @@ export function DrawClient() {
   const { mood, setMood, nonce } = useMood();
 
   const [, bump] = useReducer((n: number) => n + 1, 0);
+  /** true khi hôm nay người dùng đã xem ít nhất một lần trước ván này. */
+  const [repeatToday, setRepeatToday] = useState(false);
+  /** Câu thoại ngẫu nhiên của Miu trong khối phân tích (chọn sau khi mount để không lệch hydration). */
+  const [quip, setQuip] = useState(0);
+  useEffect(() => { setRepeatToday(readViewsToday() >= 1); }, []);
   const state = useRef<Draw>({
     deck: null, topic: null, spread: null, question: '', phase: 'idle', order: [...CARD_IDS], picks: [], bubble: '', bubbleKey: 0,
     hint: '', cta: { label: '', visible: true, disabled: true }, resetKey: 0, big: false, analysis: { status: 'idle' }
@@ -150,6 +170,7 @@ export function DrawClient() {
   };
 
   const reset = (message?: string) => {
+    setRepeatToday(readViewsToday() >= 1);
     set({
       phase: 'idle', picks: [], order: shuffled(CARD_IDS), resetKey: state.current.resetKey + 1, big: false,
       hint: t('pileCount', { n: CARD_IDS.length }), cta: { label: t('shuffle'), visible: true, disabled: !isReady() }, analysis: { status: 'idle' }
@@ -171,32 +192,70 @@ export function DrawClient() {
     say(t('say.shuffling'), 'think');
     await wait(30);
     const cards = Array.from(pile.querySelectorAll<HTMLButtonElement>('.deal-card'));
+    const reduced = prefersReducedMotion();
+    const rnd = (min: number, max: number): number => min + Math.random() * (max - min);
     const cx = pile.clientWidth / 2;
     const cy = pile.clientHeight / 2;
     pile.classList.remove('is-idle');
-    pile.style.setProperty('--k', String(SHUFFLE_SCALE));
+    pile.style.setProperty('--k', '.7');
+    const home = cards.map((c) => ({
+      gx: round1(cx - (c.offsetLeft + c.offsetWidth / 2)),
+      gy: round1(cy - (c.offsetTop + c.offsetHeight / 2)),
+      gr: round1(rnd(-14, 14)),
+    }));
+    /* 1. Gom bài về giữa bàn: mỗi lá bay vào lúc ngẫu nhiên, xếp thành một xấp hơi lộn xộn. */
     cards.forEach((c, i) => {
-      c.style.setProperty('--td', `${sh(i * 12)}ms`);
-      c.style.setProperty('--gx', `${round1(cx - (c.offsetLeft + c.offsetWidth / 2))}px`);
-      c.style.setProperty('--gy', `${round1(cy - (c.offsetTop + c.offsetHeight / 2))}px`);
-      c.style.setProperty('--gr', `${round1((Math.random() - 0.5) * 18)}deg`);
-      c.style.setProperty('--sx', `${round1((Math.random() - 0.5) * 120)}px`);
-      c.style.setProperty('--sr', `${round1((Math.random() - 0.5) * 30)}deg`);
+      const h = home[i]!;
+      c.style.setProperty('--td', `${Math.round(rnd(0, 260))}ms`);
+      c.style.setProperty('--gx', `${h.gx}px`);
+      c.style.setProperty('--gy', `${h.gy}px`);
+      c.style.setProperty('--gr', `${h.gr}deg`);
     });
-    await wait(sh(650 + cards.length * 12));
-    pile.classList.add('is-riffle');
-    await wait(sh(1000));
-    pile.classList.remove('is-riffle');
-    cards.forEach((c, i) => {
-      c.style.setProperty('--td', `${sh(i * 30)}ms`);
+    await wait(reduced ? 300 : 760);
+    /* 2. Chia đôi xấp bài rồi xen kẽ (riffle) hai lượt: các lá lần lượt bật sang hai bên, nhấc lên rồi chèn vào nhau. */
+    const riffle = (spread: number): Promise<unknown> => Promise.all(cards.map((c, i) => {
+      const h = home[i]!;
+      const side = i % 2 === 0 ? -1 : 1;
+      const dx = side * spread * rnd(0.7, 1.25);
+      const dy = rnd(-18, 10);
+      const dr = side * rnd(3, 9);
+      const at = (x: number, y: number, r: number, k = 1): string =>
+        `translate(${round1(h.gx + x)}px,${round1(h.gy + y)}px) rotate(${round1(h.gr + r)}deg) scale(${k})`;
+      return c.animate([
+        { transform: at(0, 0, 0) },
+        { transform: at(dx, dy, dr), offset: 0.4 },
+        { transform: at(dx * 0.25, dy - 22, dr * -0.4, 1.06), offset: 0.7 },
+        { transform: at(0, 0, 0) },
+      ], { duration: 520, delay: i * 5 + rnd(0, 40), easing: 'cubic-bezier(.3,.7,.3,1)' }).finished.catch(() => undefined);
+    }));
+    if (reduced || typeof cards[0]?.animate !== 'function') {
+      await wait(300);
+    } else {
+      const spread = Math.min(110, pile.clientWidth * 0.14);
+      await riffle(spread);
+      if (!alive.current || phaseNow() !== 'shuffling') return;
+      await riffle(spread * 1.3);
+    }
+    if (!alive.current || phaseNow() !== 'shuffling') return;
+    /* 3. Trải bài ra lại: thứ tự bay về ngẫu nhiên, không theo hàng. */
+    cards.forEach((c) => {
+      c.style.setProperty('--td', `${Math.round(rnd(0, 380))}ms`);
       c.style.setProperty('--gx', '0px');
       c.style.setProperty('--gy', '0px');
       c.style.setProperty('--gr', '0deg');
     });
-    await wait(sh(cards.length * 30 + 650));
+    await wait(reduced ? 300 : 900);
     if (!alive.current || phaseNow() !== 'shuffling') return;
     cards.forEach((c) => { c.style.setProperty('--td', '0ms'); c.disabled = false; });
     pile.classList.add('is-picking');
+    if (!reduced) {
+      shuffled(cards.map((_, i) => i)).slice(0, 7).forEach((ci, k) => {
+        cards[ci]?.animate(
+          [{ translate: '0 0', scale: 1 }, { translate: '0 -16px', scale: 1.08 }, { translate: '0 0', scale: 1 }],
+          { duration: 480, delay: k * 90, easing: 'ease-in-out' },
+        );
+      });
+    }
     set({ phase: 'picking', cta: { label: '', visible: false, disabled: true }, hint: remainingText() });
     say(d.spread === '1' ? t('say.spread1') : t('say.spreadN', { positions: positions().join(', ') }), 'happy');
   };
@@ -304,6 +363,7 @@ export function DrawClient() {
     say(t('say.listening'), 'happy');
     await wait(1000);
     if (!alive.current || phaseNow() !== 'loading') return;
+    addViewToday();
     set({ phase: 'done', cta: { label: t('redraw'), visible: true, disabled: false } });
     say(t('say.done'), 'happy');
   };
@@ -350,6 +410,7 @@ export function DrawClient() {
     if (spreadParam && isSpreadId(spreadParam)) d.spread = spreadParam;
     const topicParam = params.get('topic');
     if (topicParam && isTopicId(topicParam)) d.topic = topicParam;
+    if (daily) { d.deck = 'rws'; d.spread = '1'; d.topic = 'love'; }
     reset(deckParam && d.deck ? t('say.deckReady', { deck: deckName(d.deck), voice: deckVoice(d.deck) }) : undefined);
     let timer: ReturnType<typeof setTimeout>;
     const onResize = () => { clearTimeout(timer); timer = setTimeout(() => { if (state.current.phase !== 'shuffling') layoutSpread(); }, 120); };
@@ -369,15 +430,18 @@ export function DrawClient() {
 
   /* Khóa cuộn trang khi màn hình chờ đang hiện. */
   useEffect(() => {
-    if (d.phase !== 'loading') return;
+    if (d.phase !== 'loading' && d.analysis.status !== 'loading') return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = previous; };
-  }, [d.phase]);
+  }, [d.phase, d.analysis.status]);
 
   /* ---------- Phân tích chuyên sâu (từ dữ liệu có sẵn, không gọi AI) ---------- */
-  const showAnalysis = () => {
-    if (!d.spread || !d.topic) return;
+  const showAnalysis = async () => {
+    if (!d.spread || !d.topic || d.analysis.status !== 'idle') return;
+    set({ analysis: { status: 'loading' } });
+    await wait(1000);
+    if (!alive.current || state.current.analysis.status !== 'loading') return;
     const result = analyzeSpread({
       picks: d.picks.map((p) => ({ id: p.id, reversed: p.reversed })),
       spreadId: d.spread, topicId: d.topic, locale, question: d.question, isCrisis: detectCrisis,
@@ -398,9 +462,17 @@ export function DrawClient() {
   const deckForArt = d.deck ?? 'rws';
   // Mỗi mục kiến giải dùng một màu thanh bên trái khác với mục liền kề (xoay vòng qua HUE_COUNT màu, xem .ins trong globals.css).
   let analysisHue = 0;
-  const insights = d.phase === 'done' && d.topic && d.spread
+  const rawInsights = d.phase === 'done' && d.topic && d.spread
     ? readSpread({ picks: d.picks.map((p) => ({ id: p.id, reversed: p.reversed })), spreadId: d.spread, topicId: d.topic, locale, bundle, ruleSet: configured.ruleSet })
     : [];
+  const quips = t.raw('analysisQuips') as string[];
+  useEffect(() => { setQuip(Math.floor(Math.random() * 1000)); }, [d.resetKey]);
+  /** Gộp các nhận xét cùng sắc thái (vd. hai mục "Góc nhìn") thành một mục, giữ thứ tự xuất hiện đầu tiên. */
+  const insights = rawInsights.reduce<typeof rawInsights>((merged, item) => {
+    const at = merged.findIndex((m) => m.tone === item.tone);
+    if (at < 0) return [...merged, item];
+    return merged.map((m, k) => (k === at ? { ...m, text: `${m.text} ${item.text}` } : m));
+  }, []);
 
   return (
     <div className="wrap page page-tight">
@@ -453,6 +525,7 @@ export function DrawClient() {
         </div>
       </div>
 
+      {repeatToday ? <p className="repeat-notice" role="status">{t('repeatToday')}</p> : null}
       <div className="stage glass" ref={stageRef}>
         <div className="guide">
           <div key={d.bubbleKey} className="bubble pop" aria-live="polite">{d.bubble}</div>
@@ -517,16 +590,39 @@ export function DrawClient() {
                 return (
                   <Reveal as="article" className="rcard glass" delay={k * 90} key={p.id}>
                     <p className="pos">{labels[k]}</p>
-                    <div className="rc-top">
-                      <div className={`mini${p.reversed ? ' is-rev' : ''}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: face(p.id, d.deck as string) }} />
-                      <div>
+                    <div className={`rc-art mini${p.reversed ? ' is-rev' : ''}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: face(p.id, d.deck as string) }} />
+                    <div className="rc-head">
+                      <div className="rc-title">
                         <h3 className="h3">{card.name}</h3>
-                        <p className="en">{p.reversed ? card.keywords_reversed.join(' · ') : card.keywords_upright.join(' · ')}</p>
                         <span className={`badge${p.reversed ? ' rev' : ''}`}>{p.reversed ? t('reversed') : t('upright')}</span>
                       </div>
+                      <p className="rc-k">{t('rcKeywords')}</p>
+                      <ul className="kw-list">
+                        {(p.reversed ? card.keywords_reversed : card.keywords_upright).map((word) => <li className={`kw${p.reversed ? ' rev' : ''}`} key={word}>{word}</li>)}
+                      </ul>
                     </div>
-                    <p><span className="rc-k">{topicLabel(d.topic as TopicId)}</span>{card.topics[d.topic as TopicId][p.reversed ? 'reversed' : 'upright']}</p>
-                    <p className="rc-gen">{p.reversed ? card.meaning_reversed : card.meaning_upright}</p>
+                    <section className="rc-sec rc-topic">
+                      <h4 className="rc-k">{topicLabel(d.topic as TopicId)}</h4>
+                      <p>{card.topics[d.topic as TopicId][p.reversed ? 'reversed' : 'upright']}</p>
+                    </section>
+                    <section className="rc-sec">
+                      <h4 className="rc-k">{t('rcGeneral')}</h4>
+                      {(p.reversed ? card.meaning_reversed : card.meaning_upright).split('\n\n').map((para, n) => <p className="rc-gen" key={n}>{para}</p>)}
+                    </section>
+                    {card.advice ? (
+                      <section className="rc-sec rc-advice">
+                        <h4 className="rc-k">{t('rcAdvice')}</h4>
+                        <p>{card.advice[p.reversed ? 'reversed' : 'upright']}</p>
+                      </section>
+                    ) : null}
+                    {card.questions ? (
+                      <section className="rc-sec">
+                        <h4 className="rc-k">{t('rcQuestions')}</h4>
+                        <ul className="rc-q">
+                          {card.questions[p.reversed ? 'reversed' : 'upright'].map((q) => <li key={q}>{q}</li>)}
+                        </ul>
+                      </section>
+                    ) : null}
                   </Reveal>
                 );
               })}
@@ -544,28 +640,49 @@ export function DrawClient() {
               </Reveal>
             ) : null}
 
-            <div className="insights glass" aria-live="polite">
-              <p className="eyebrow">{t('analysis')}</p>
+            <div className={`insights glass${d.analysis.status === 'done' ? ' an-read' : ''}`}>
+              {d.analysis.status === 'done' ? <p className="eyebrow">{t('analysis')}</p> : (
+                <div className="guide an-guide">
+                  <div className="bubble pop" key={`${d.resetKey}-${quip}`} aria-live="polite">{quips[quip % quips.length]}</div>
+                  <Mascot mood={d.analysis.status === 'loading' ? 'think' : null} nonce={d.resetKey} />
+                </div>
+              )}
               {d.analysis.status === 'done' && d.analysis.data ? (
                 <>
                   <p className="hint an-intro">{d.analysis.data.source === 'safety' ? t('analysisSafety') : t('analysisLabel')}</p>
                   {d.analysis.data.sections.filter((section) => section.id !== 'insights').map((section) => (
-                    <section className="an-sec" key={section.id}>
+                    <section className="an-sec" data-sec={section.id} key={section.id}>
                       <h3 className="h3 an-h">{section.title}</h3>
                       <ul className="ins-list">
-                        {section.items.map((item, i) => (
-                          <li className="ins" data-tone={item.tone} data-hue={analysisHue++ % HUE_COUNT} key={`${section.id}-${i}`}>
-                            {item.tag ? <span className="ins-tag">{item.tag}</span> : null}
-                            <p>{item.text}</p>
-                          </li>
-                        ))}
+                        {section.items.map((item, i) => {
+                          const pick = section.id === 'cards' ? d.picks[i] : undefined;
+                          const pickCard = pick ? bundle.cards[pick.id] : undefined;
+                          return (
+                            <li className={`ins${pick ? ' ins-card' : ''}`} data-tone={item.tone} data-hue={analysisHue++ % HUE_COUNT} key={`${section.id}-${i}`}>
+                              {pick ? <div className={`ins-art mini${pick.reversed ? ' is-rev' : ''}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: face(pick.id, d.deck as string) }} /> : null}
+                              {item.tag ? <span className="ins-tag">{item.tag}</span> : null}
+                              {pick && pickCard ? (
+                                <div className="ins-name">
+                                  <h4 className="h3">{pickCard.name}</h4>
+                                  <span className={`badge${pick.reversed ? ' rev' : ''}`}>{pick.reversed ? t('reversed') : t('upright')}</span>
+                                </div>
+                              ) : null}
+                              {pick && pickCard ? (
+                                <ul className="kw-list">
+                                  {(pick.reversed ? pickCard.keywords_reversed : pickCard.keywords_upright).slice(0, 4).map((word) => <li className={`kw${pick.reversed ? ' rev' : ''}`} key={word}>{word}</li>)}
+                                </ul>
+                              ) : null}
+                              <p>{item.text}</p>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </section>
                   ))}
                   {d.analysis.data.source === 'analysis' ? <p className="hint an-note">{d.analysis.data.note}</p> : null}
                 </>
               ) : (
-                <button type="button" className="btn btn-secondary an-btn" onClick={showAnalysis}>{t('analysis')}</button>
+                <button type="button" className="btn btn-secondary an-btn" onClick={() => void showAnalysis()} disabled={d.analysis.status === 'loading'}>{t('analysis')}</button>
               )}
             </div>
 
@@ -578,7 +695,7 @@ export function DrawClient() {
         ) : null}
       </div>
 
-      {d.phase === 'loading' && typeof document !== 'undefined'
+      {(d.phase === 'loading' || d.analysis.status === 'loading') && typeof document !== 'undefined'
         ? createPortal(
             <div className="preloader" role="status" aria-live="polite">
               <div className="orbit" aria-hidden="true"><span className="core" /><span className="ring r1"><i /></span><span className="ring r2"><i /></span></div>

@@ -106,7 +106,6 @@ export function CardsExplorer({ initialId }: { initialId: string }) {
   return (
     <div className="wrap page">
       <div className="page-head center">
-        <p className="eyebrow">{t('eyebrow')}</p>
         <h1 className="h2">{t('title', { n: CARDS.length })}</h1>
         <p className="lead">{t('lead')}</p>
       </div>
@@ -155,11 +154,11 @@ export function CardsExplorer({ initialId }: { initialId: string }) {
           <div className="mgrid">
             <article className={`mbox glass${reversed ? '' : ' is-active'}`}>
               <p className="mlabel">{svg(<path d="M12 19V5M6 11l6-6 6 6" />, 2.2)}{t('upMeaning')}</p>
-              <p>{text.meaning_upright}</p>
+              {text.meaning_upright.split('\n\n').map((para, n) => <p key={n}>{para}</p>)}
             </article>
             <article className={`mbox glass${reversed ? ' is-active' : ''}`}>
               <p className="mlabel rev">{svg(<path d="M12 5v14M6 13l6 6 6-6" />, 2.2)}{t('revMeaning')}</p>
-              <p>{text.meaning_reversed}</p>
+              {text.meaning_reversed.split('\n\n').map((para, n) => <p key={n}>{para}</p>)}
             </article>
           </div>
 
@@ -174,6 +173,21 @@ export function CardsExplorer({ initialId }: { initialId: string }) {
             <p><span className="badge">{t('upright')}</span>{topicText.upright}</p>
             <p><span className="badge rev">{t('reversed')}</span>{topicText.reversed}</p>
           </div>
+
+          {text.advice ? (
+            <>
+              <h3 className="h3 sub">{t('advice')}</h3>
+              <p className="advice-box">{text.advice[reversed ? 'reversed' : 'upright']}</p>
+            </>
+          ) : null}
+          {text.questions ? (
+            <>
+              <h3 className="h3 sub">{t('questions')}</h3>
+              <ul className="q-list">
+                {text.questions[reversed ? 'reversed' : 'upright'].map((q) => <li key={q}>{q}</li>)}
+              </ul>
+            </>
+          ) : null}
 
           {text.symbolism ? (
             <>

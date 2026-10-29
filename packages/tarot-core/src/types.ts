@@ -48,6 +48,10 @@ export type CardText = {
   meaning_reversed: string;
   topics: Record<TopicId, TopicText>;
   symbolism: string;
+  /** Lời khuyên ngắn theo chiều lá (tùy chọn, thiếu thì không hiện) */
+  advice?: { upright: string; reversed: string };
+  /** Câu hỏi tự vấn theo chiều lá (tùy chọn) */
+  questions?: { upright: string[]; reversed: string[] };
   /** Lời bình của mèo phù thủy Miu (giọng vui, không đưa lời khuyên) */
   miu: string;
 };

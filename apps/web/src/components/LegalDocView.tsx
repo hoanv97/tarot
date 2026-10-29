@@ -15,20 +15,20 @@ export function LegalDocView({ doc, updatedLabel, otherHref, otherLabel }: Props
         <h1 className="h2">{doc.title}</h1>
         <p className="muted">{updatedLabel}: {LEGAL_UPDATED}</p>
       </div>
-      <article className="glass" style={{ padding: 28, display: 'grid', gap: 22 }}>
-        <p>{doc.intro}</p>
-        {doc.sections.map((s) => (
-          <section key={s.heading} style={{ display: 'grid', gap: 8 }}>
-            <h2 className="h3">{s.heading}</h2>
-            {s.paragraphs?.map((p) => <p key={p}>{p}</p>)}
-            {s.items && (
-              <ul style={{ margin: 0, paddingLeft: 22, display: 'grid', gap: 6 }}>
-                {s.items.map((i) => <li key={i}>{i}</li>)}
-              </ul>
-            )}
+      <article className="glass doc-read">
+        <div className="doc-bars">
+          <p className="doc-bar doc-intro">{doc.intro}</p>
+        </div>
+        {doc.sections.map((s, si) => (
+          <section key={s.heading} className="doc-sec" data-hue={si % 4}>
+            <h2 className="doc-h">{s.heading.replace(/^\d+[.)]\s*/, '')}</h2>
+            <div className="doc-bars">
+              {s.paragraphs?.map((p) => <p key={p} className="doc-bar">{p}</p>)}
+              {s.items?.map((i) => <p key={i} className="doc-bar">{i}</p>)}
+            </div>
           </section>
         ))}
-        <p className="muted"><Link href={otherHref}>{otherLabel}</Link></p>
+        <div className="doc-links"><Link href={otherHref}>{otherLabel}</Link></div>
       </article>
     </div>
   );

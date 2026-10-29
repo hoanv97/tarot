@@ -11,18 +11,27 @@ export default async function LegalPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('legal');
+  const blocks = ['entertainment', 'noAdvice', 'ai', 'age'] as const;
   return (
     <div className="wrap page page-tight">
       <div className="page-head center"><h1 className="h2">{t('title')}</h1></div>
-      <div className="glass" style={{ padding: 28, display: 'grid', gap: 16 }}>
-        <p>{t('entertainment')}</p>
-        <p>{t('noAdvice')}</p>
-        <p>{t('ai')}</p>
-        <p className="muted">{t('age')}</p>
-        <p className="muted">
-          <Link href="/privacy">{t('see_privacy')}</Link> · <Link href="/terms">{t('see_terms')}</Link>
-        </p>
-      </div>
+      <article className="glass doc-read">
+        {blocks.map((key, i) => (
+          <section key={key} className="doc-sec" data-hue={i % 4}>
+            <h2 className="doc-h">{t(`h_${key}`)}</h2>
+            <div className="doc-bars">
+              <p className="doc-bar">{t(key)}</p>
+            </div>
+          </section>
+        ))}
+        <section className="doc-sec">
+          <h2 className="doc-h">{t('h_more')}</h2>
+          <div className="doc-links">
+            <Link href="/privacy">{t('see_privacy')}</Link>
+            <Link href="/terms">{t('see_terms')}</Link>
+          </div>
+        </section>
+      </article>
     </div>
   );
 }
