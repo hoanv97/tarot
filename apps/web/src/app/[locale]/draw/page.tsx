@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
+import { ContentScope } from '@/components/ContentScope';
 import { DrawClient } from '@/components/DrawClient';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -13,7 +14,9 @@ export default async function DrawPage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
   return (
     <Suspense fallback={null}>
-      <DrawClient />
+      <ContentScope>
+        <DrawClient />
+      </ContentScope>
     </Suspense>
   );
 }

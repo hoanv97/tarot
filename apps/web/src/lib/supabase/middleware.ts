@@ -12,6 +12,7 @@ export const refreshSession = async (request: NextRequest, response: NextRespons
       setAll: (items) => items.forEach(({ name, value, options }) => response.cookies.set(name, value, options))
     }
   });
-  await supabase.auth.getUser();
+  // getClaims() làm mới token khi hết hạn và xác minh JWT tại chỗ, không tốn thêm một lượt gọi mạng cho mỗi request.
+  await supabase.auth.getClaims();
   return response;
 };

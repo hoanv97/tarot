@@ -4,6 +4,7 @@ import { CARD_IDS, validateCondition } from '@miu/tarot-core';
 import { lintText } from '@miu/content-policy';
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
+import { revalidateRules } from '@/lib/actions';
 import { createClient } from '@/lib/supabase/client';
 
 export type EditableRule = { id: string; priority: number; enabled: boolean; when_json: unknown; text: string };
@@ -51,6 +52,7 @@ export function RuleEditor({ rules }: { rules: EditableRule[] }) {
     if (ruleError) return fail(ruleError.message);
     const { error: textError } = await supabase.from('rule_translations').update({ text }).eq('rule_id', selectedId).eq('locale', 'vi');
     if (textError) return fail(textError.message);
+    await revalidateRules();
     setMessage({ kind: 'ok', text: t('saved') });
   };
 

@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
+import { adminHref } from '@/lib/admin-url';
 import { KEYS, storeGet, storeSet } from '@/lib/store';
 import { prefersReducedMotion } from '@/lib/motion';
 import { useAuth } from '@/lib/use-auth';
@@ -13,6 +14,7 @@ const TAB = { className: 'tab-ico', viewBox: '0 0 24 24', fill: 'none', stroke: 
 const ICONS = {
   home: <svg {...TAB}><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg>,
   draw: <svg {...TAB}><rect x="4" y="6" width="11" height="15" rx="2" /><path d="M8 3h10a2 2 0 0 1 2 2v13" /><path d="M9.5 11.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" /></svg>,
+  daily: <svg {...TAB}><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path d="M8 3v4M16 3v4M3.5 10h17" /><path d="M12 13.2l.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z" /></svg>,
   cards: <svg {...TAB}><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z" /><path d="M4 19a2 2 0 0 1 2-2h13" /></svg>,
   admin: <svg {...TAB}><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z" /><path d="M9 12l2 2 4-4" /></svg>,
   history: <svg {...TAB}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
@@ -63,9 +65,8 @@ export function Header() {
   };
 
   const current = (path: string) => (path === '/' ? pathname === '/' : pathname === path || pathname.startsWith(`${path}/`));
-  const links: { path: string; key: 'home' | 'draw' | 'cards' | 'history' | 'admin' }[] = [
-    { path: '/', key: 'home' }, { path: '/draw', key: 'draw' }, { path: '/cards', key: 'cards' },
-    ...(user?.role === 'admin' ? [{ path: '/admin', key: 'admin' as const }] : []),
+  const links: { path: string; key: 'home' | 'draw' | 'daily' | 'cards' | 'history' }[] = [
+    { path: '/', key: 'home' }, { path: '/draw', key: 'draw' }, { path: '/daily', key: 'daily' }, { path: '/cards', key: 'cards' },
     { path: '/history', key: 'history' }
   ];
   const otherLocale = routing.locales.find((l) => l !== locale) ?? locale;
@@ -78,6 +79,7 @@ export function Header() {
           <span>Miu Tarot</span>
         </Link>
         <nav className="nav-links" aria-label="main">
+          {user?.role === 'admin' ? <a href={adminHref(locale)}>{ICONS.admin}<span>{t('admin')}</span></a> : null}
           {links.map(({ path, key }) => (
             <Link key={key} href={path} aria-current={current(path) ? 'page' : undefined}>
               {ICONS[key]}<span>{t(key)}</span>
@@ -97,7 +99,7 @@ export function Header() {
           </button>
           {user ? (
             <Link className="nav-auth is-user" href="/history">
-              <span className="avatar sm" aria-hidden="true">{user.email.charAt(0).toUpperCase()}</span>
+              <span className="avatar sm" aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
               <span className="sr-only">{t('account')}</span>
             </Link>
           ) : (

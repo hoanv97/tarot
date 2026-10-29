@@ -1,4 +1,4 @@
-import { CARD_INDEX, RULE_SET, getLocaleBundle, getCardName } from './data';
+import { CARD_INDEX, RULE_SET, getLocaleBundle, getCardName, type LocaleBundle } from './data';
 import { generateInsights } from './insights';
 import { DEFAULT_LOCALE, type DrawnCard, type Insight, type Locale, type RuleSetDef, type RuleTexts, type SpreadId, type TopicId } from './types';
 
@@ -21,16 +21,17 @@ export type ReadSpreadArgs = {
   /** Dùng bảng luật khác (ví dụ lấy từ database) thay cho bản đóng gói sẵn. */
   ruleSet?: RuleSetDef;
   ruleTexts?: RuleTexts;
+  /** Dùng bộ nội dung đã gộp (ví dụ cấu hình trong database) thay cho bản đóng gói sẵn của ngôn ngữ. */
+  bundle?: LocaleBundle;
 };
 
 /** Đường tắt: từ các lá đã rút tới danh sách nhận xét tầng 2, bằng dữ liệu đóng gói sẵn. */
-export const readSpread = ({ picks, spreadId, topicId, locale = DEFAULT_LOCALE, ruleSet = RULE_SET, ruleTexts }: ReadSpreadArgs): Insight[] => {
-  const bundle = getLocaleBundle(locale);
+export const readSpread = ({ picks, spreadId, topicId, locale = DEFAULT_LOCALE, ruleSet = RULE_SET, ruleTexts, bundle = getLocaleBundle(locale) }: ReadSpreadArgs): Insight[] => {
   return generateInsights({
     picks, spreadId, topicId, ruleSet,
     ruleTexts: ruleTexts ?? bundle.ruleTexts,
     ui: bundle.ui,
     cards: CARD_INDEX,
-    cardName: (id) => getCardName(locale, id)
+    cardName: (id) => bundle.cards[id]?.name ?? getCardName(locale, id)
   });
 };

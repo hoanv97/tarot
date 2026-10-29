@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   CARDS, CARD_IDS, CARD_INDEX, RULE_SET, computeMetrics, drawCards, evaluateCondition, getLocaleBundle,
-  matchesPattern, mulberry32, readSpread, selectRules, validateCondition, validateRuleSet,
+  matchesPattern, mulberry32, readSpread, selectRules, TOPIC_IDS, validateCondition, validateRuleSet,
   type Condition, type DrawnCard, type RuleSetDef, type SpreadId, type TopicId
 } from '../src';
 
@@ -171,15 +171,32 @@ describe('đa ngôn ngữ', () => {
   it('tiếng Việt đầy đủ', () => {
     expect(getLocaleBundle('vi').coverage).toEqual({ cards: 1, rules: 1 });
   });
-  it('tiếng Anh: có tên lá, phần chưa dịch rơi về tiếng Việt', () => {
+  it('tiếng Anh: chú giải lá bài đã dịch đầy đủ, luật chưa dịch vẫn rơi về tiếng Việt', () => {
     const en = getLocaleBundle('en');
+    const vi = getLocaleBundle('vi');
     expect(en.cards.fool?.name).toBe('The Fool');
-    expect(en.cards.fool?.meaning_upright).toBe(getLocaleBundle('vi').cards.fool?.meaning_upright);
+    expect(en.cards.fool?.meaning_upright).toMatch(/^The Fool is the card/);
     expect(en.ui.topics.mind).toBe('Mental wellbeing');
+    expect(en.coverage.cards).toBe(1);
+    expect(en.translated.cards.has('fool')).toBe(true);
     expect(en.coverage.rules).toBe(0);
-    expect(en.coverage.cards).toBe(0);
-    expect(en.translated.cards.has('fool')).toBe(false);
-    expect(getLocaleBundle('vi').translated.cards.has('fool')).toBe(true);
+    expect(en.translated.rules.has(RULE_SET.rules[0]!.id)).toBe(false);
+    expect(vi.translated.cards.has('fool')).toBe(true);
+  });
+  it('tiếng Anh: mọi lá có đủ trường, đúng số từ khóa và khác bản tiếng Việt', () => {
+    const en = getLocaleBundle('en');
+    const vi = getLocaleBundle('vi');
+    for (const id of CARD_IDS) {
+      const e = en.cards[id]!;
+      const v = vi.cards[id]!;
+      expect(e.keywords_upright.length, `${id} keywords_upright`).toBe(v.keywords_upright.length);
+      expect(e.keywords_reversed.length, `${id} keywords_reversed`).toBe(v.keywords_reversed.length);
+      for (const field of ['meaning_upright', 'meaning_reversed', 'symbolism', 'miu'] as const) expect(e[field], `${id} ${field}`).not.toBe(v[field]);
+      for (const topic of TOPIC_IDS) for (const side of ['upright', 'reversed'] as const) {
+        expect(e.topics[topic][side], `${id} ${topic}.${side}`).not.toBe(v.topics[topic][side]);
+        expect(e.topics[topic][side].length, `${id} ${topic}.${side}`).toBeGreaterThan(40);
+      }
+    }
   });
   it('luật đã dịch được dùng, dùng tên lá và nguyên tố của ngôn ngữ đó', () => {
     const base = getLocaleBundle('en');

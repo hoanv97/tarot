@@ -1,3 +1,4 @@
+import { createAdminHandler, type AdminDeps } from './admin';
 import { bearerToken, type VerifyToken } from './auth';
 import { errorBody, json, type ApiRequest, type ApiResponse } from './http';
 import { createInterpreter, parseInterpretBody, type InterpretDeps } from './interpret';
@@ -5,6 +6,8 @@ import { createRateLimiter } from './rate-limit';
 
 export type HandlerDeps = InterpretDeps & {
   verify: VerifyToken;
+  /** Không có thì các route /v1/admin trả 503 */
+  admin?: Pick<AdminDeps, 'store' | 'onEvent'>;
   perMinuteLimit: number;
   perDayLimit: number;
   now?: () => number;
@@ -14,6 +17,7 @@ export type HandlerDeps = InterpretDeps & {
  * Toàn bộ logic các route, tách khỏi Express để kiểm thử trực tiếp.
  *   GET  /health
  *   POST /v1/interpret   (cần đăng nhập)  body: { spread, topic, locale?, question?, cards: [{id, reversed}] }
+ *   /v1/admin/*          (chỉ quản trị viên) xem src/admin.ts
  */
 export const createHandler = (deps: HandlerDeps) => {
   const interpreter = createInterpreter(deps);
@@ -22,7 +26,10 @@ export const createHandler = (deps: HandlerDeps) => {
     { windowMs: 24 * 60 * 60_000, max: deps.perDayLimit }
   ], deps.now);
 
+  const admin = deps.admin ? createAdminHandler({ verify: deps.verify, ...deps.admin }) : null;
+
   return async (req: ApiRequest): Promise<ApiResponse> => {
+    if (req.path.startsWith('/v1/admin/')) return admin ? admin(req) : json(503, errorBody('admin_disabled', 'Chức năng quản trị chưa được bật trên máy chủ.'));
     if (req.method === 'GET' && req.path === '/health') return json(200, { ok: true });
 
     if (req.method === 'POST' && req.path === '/v1/interpret') {

@@ -1,0 +1,67 @@
+{
+  "home": {
+    "eyebrow": "Gentle Tarot with Miu",
+    "title": "One card, one gentle prompt for today.",
+    "lead": "Draw one card each morning, or lay out three for a bigger question. Miu sits beside you and tells you what each card wants to say.",
+    "cta": "Draw now",
+    "browse": "Browse the cards",
+    "titleA": "Listen to what ",
+    "titleB": "the universe whispers.",
+    "decksTitle": "Each deck has its own voice.",
+    "decksLead": "The meanings stay the same; only the telling changes. Pick the deck that fits today's mood.",
+    "useDeck": "Use this deck",
+    "featuresTitle": "One card for today. Three for the whole story.",
+    "dailyEyebrow": "Daily tarot",
+    "dailyTitle": "A minute for your morning.",
+    "dailyBody": "Draw a card, read a message. Enough to step out the door with a clear intention.",
+    "dailyCta": "Draw today's card",
+    "threeEyebrow": "Three-card spread",
+    "threeTitle": "Past, Present, Future.",
+    "threeBody": "See your question as a flow: what has passed, what is here, and what is coming.",
+    "threeCta": "Lay out 3 cards",
+    "meetTitle": "Meet Miu, the witch cat.",
+    "meetLead": "A little chatty but very kind. Miu guides you step by step, reacts to every card and always has a remark of her own.",
+    "meet1": "Reminds you of each step: shuffle, pick, flip.",
+    "meet2": "Cheerful or thoughtful, depending on the card you flip.",
+    "meet3": "A playful remark for every card in the card guide.",
+    "meetCta": "Chat with Miu",
+    "finalA": "The answer is already there.",
+    "finalB": "Just flip it over.",
+    "start": "Get started",
+    "touchMiu": "Tap Miu to hear what she says",
+    "lines": [
+      "Meow! I'm Miu. You ask, the cards answer, and I… comment.",
+      "Did you know? Every card has two sides: upright and reversed. Just like a cat's mood.",
+      "Stop scratching my chin… okay, a little more is fine.",
+      "My favourite is The Sun, warm like a sunny spot by the window.",
+      "Ready? Tap “Chat with Miu” and let's draw!"
+    ]
+  },
+  "samples": {
+    "love": [
+      "Where is my current relationship heading?",
+      "What can I do to open my heart to new love?",
+      "What is getting in the way of me and my partner understanding each other?"
+    ],
+    "career": [
+      "Should I change jobs in the near future?",
+      "What will help me grow in my career?",
+      "What should I pay attention to in my current project?"
+    ],
+    "study": [
+      "What should I focus on to study more effectively?",
+      "How can I feel more confident before my upcoming exam?",
+      "Should I keep pursuing this field of study?"
+    ],
+    "finance": [
+      "What should I watch in my spending lately?",
+      "How can I save more consistently?",
+      "Should I start a new financial plan?"
+    ],
+    "mind": [
+      "What has been weighing on my heart lately?",
+      "What can I do to rebalance my emotions?",
+      "How should I take care of myself right now?"
+    ]
+  }
+}

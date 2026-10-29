@@ -14,6 +14,8 @@ describe('nội dung tiếng Việt đóng gói sẵn tuân thủ chính sách (
       if (!card) { problems.push(`${id}: thiếu`); continue; }
       const fields: [string, string][] = [
         ['meaning_upright', card.meaning_upright], ['meaning_reversed', card.meaning_reversed], ['symbolism', card.symbolism],
+        ...(card.advice ? [['advice.upright', card.advice.upright], ['advice.reversed', card.advice.reversed]] as [string, string][] : []),
+        ...(card.questions ? [...card.questions.upright, ...card.questions.reversed].map((q, i) => [`questions.${i}`, q] as [string, string]) : []),
         ...Object.entries(card.topics).flatMap(([t, v]) => [[`${t}.upright`, v.upright], [`${t}.reversed`, v.reversed]] as [string, string][])
       ];
       for (const [field, text] of fields) problems.push(...describeViolations(`${id}.${field}`, text));

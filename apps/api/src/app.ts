@@ -10,7 +10,7 @@ export const createApp = (handler: (req: ApiRequest) => Promise<ApiResponse>, co
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
   app.use(helmet());
-  app.use(cors({ origin: config.corsOrigins, methods: ['GET', 'POST'], allowedHeaders: ['authorization', 'content-type'], maxAge: 600 }));
+  app.use(cors({ origin: config.corsOrigins, methods: ['GET', 'POST', 'DELETE'], allowedHeaders: ['authorization', 'content-type'], maxAge: 600 }));
   // Lớp chặn theo IP (thô); giới hạn theo từng người dùng nằm trong handler.
   app.use(rateLimit({ windowMs: 60_000, limit: 60, standardHeaders: 'draft-7', legacyHeaders: false }));
   app.use(express.json({ limit: '10kb' }));
@@ -18,7 +18,9 @@ export const createApp = (handler: (req: ApiRequest) => Promise<ApiResponse>, co
   app.use(async (req, res) => {
     const headers: Record<string, string | undefined> = {};
     for (const [key, value] of Object.entries(req.headers)) headers[key.toLowerCase()] = Array.isArray(value) ? value.join(', ') : value;
-    const out = await handler({ method: req.method, path: req.path, headers, body: req.body });
+    const query: Record<string, string | undefined> = {};
+    for (const [key, value] of Object.entries(req.query)) if (typeof value === 'string') query[key] = value;
+    const out = await handler({ method: req.method, path: req.path, headers, body: req.body, query });
     for (const [key, value] of Object.entries(out.headers ?? {})) res.setHeader(key, value);
     res.status(out.status).json(out.body);
   });

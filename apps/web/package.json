@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
@@ -11,9 +11,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/be-vietnam-pro": "^5.3.0",
     "@miu/content-policy": "workspace:*",
     "@miu/tarot-core": "workspace:*",
     "@miu/tarot-data": "workspace:*",
+    "@miu/web-shared": "workspace:*",
     "@supabase/ssr": ">=0.6.0 <1.0.0",
     "@supabase/supabase-js": "^2.50.0",
     "next": "^15.5.0",

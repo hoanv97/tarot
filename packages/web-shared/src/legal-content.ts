@@ -30,8 +30,8 @@ const privacyVi: LegalDoc = {
     {
       heading: '1. Dữ liệu chúng tôi thu thập',
       items: [
-        'Email: chỉ khi bạn đăng nhập bằng liên kết gửi qua email. Dùng để xác thực tài khoản.',
-        'Lịch sử rút bài: khi bạn đã đăng nhập, mỗi lần rút được lưu gồm kiểu trải bài, chủ đề, các lá bài (và xuôi/ngược), ngôn ngữ và thời gian.',
+        'Tên đăng nhập và mật khẩu: để tạo và xác thực tài khoản. Mật khẩu được Supabase Auth băm một chiều, chúng tôi không đọc được. Nếu bạn dùng email thật làm tên đăng nhập thì email đó cũng được lưu.',
+        'Lịch sử rút bài: khi bạn đã đăng nhập, mỗi lần rút được lưu gồm kiểu trải bài, bộ bài, chủ đề, các lá bài (và xuôi/ngược), ngôn ngữ và thời gian.',
         'Câu hỏi của bạn (tối đa 200 ký tự), nếu bạn nhập. Đừng nhập thông tin nhạy cảm hoặc định danh người khác vào câu hỏi.',
         'Thiết lập tài khoản: ngôn ngữ ưa dùng và vai trò (người dùng hoặc quản trị).',
         'Dữ liệu kỹ thuật tối thiểu do máy chủ và nhà cung cấp hạ tầng ghi lại để bảo mật và chống lạm dụng, ví dụ địa chỉ IP và nhật ký truy cập.'
@@ -196,8 +196,8 @@ const privacyEn: LegalDoc = {
     {
       heading: '1. Data we collect',
       items: [
-        'Email: only if you sign in with an emailed link. Used to authenticate your account.',
-        'Reading history: when signed in, each reading is saved with its spread, topic, cards (and upright/reversed), language and time.',
+        'Username and password: used to create and authenticate your account. The password is hashed by Supabase Auth and we cannot read it. If you use a real email address as your username, that email is stored too.',
+        'Reading history: when signed in, each reading is saved with its spread, deck, topic, cards (and upright/reversed), language and time.',
         'Your question (up to 200 characters), if you enter one. Please do not include sensitive information or details that identify other people.',
         'Account settings: preferred language and role (user or admin).',
         'Minimal technical data logged by our servers and infrastructure providers for security and abuse prevention, such as IP address and access logs.'

@@ -1,12 +1,13 @@
 'use client';
 
-import { CARD_INDEX, DEFAULT_LOCALE, getLocaleBundle, isLocale, isSpreadId, type SpreadId } from '@miu/tarot-core';
+import { CARD_INDEX, DEFAULT_LOCALE, isLocale, isSpreadId, type SpreadId } from '@miu/tarot-core';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { cardFaceSvg } from '@/components/CardArt';
+import { useCardFace, useConfigured } from '@/lib/content-client';
 import { LoginForm } from '@/components/LoginForm';
 import { Mascot } from '@/components/Mascot';
 import { Link, useRouter } from '@/i18n/navigation';
+import { adminHref } from '@/lib/admin-url';
 import { getHistory, saveHistory, type HistoryEntry } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/use-auth';
@@ -20,7 +21,8 @@ export function HistoryClient() {
   const tCards = useTranslations('cards');
   const raw = useLocale();
   const locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
-  const bundle = useMemo(() => getLocaleBundle(locale), [locale]);
+  const bundle = useConfigured(locale).bundle;
+  const face = useCardFace(locale);
   const router = useRouter();
   const { ready, user } = useAuth();
   const [list, setList] = useState<HistoryEntry[] | null>(null);
@@ -76,14 +78,14 @@ export function HistoryClient() {
           {user ? (
             <>
               <div className="who">
-                <span className="avatar" aria-hidden="true">{user.email.charAt(0).toUpperCase()}</span>
+                <span className="avatar" aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
                 <div>
                   <p className="small muted">{tLogin('hello')}</p>
-                  <p className="who-email">{user.email}</p>
+                  <p className="who-email">{user.name}</p>
                   <span className={`badge${user.role === 'admin' ? '' : ' muted'}`} style={{ marginTop: 6 }}>{user.role === 'admin' ? tLogin('adminBadge') : tLogin('user')}</span>
                 </div>
               </div>
-              {user.role === 'admin' ? <Link className="btn btn-primary btn-block" href="/admin" style={{ marginBottom: 10 }}>{tLogin('admin')}</Link> : null}
+              {user.role === 'admin' ? <a className="btn btn-primary btn-block" href={adminHref(locale)} style={{ marginBottom: 10 }}>{tLogin('admin')}</a> : null}
               <button type="button" className="btn btn-secondary btn-block" onClick={signOut}>{tLogin('logout')}</button>
             </>
           ) : (
@@ -127,7 +129,7 @@ export function HistoryClient() {
                           const name = bundle.cards[c.id]?.name ?? c.id;
                           return (
                             <Link className="h-card" key={`${c.id}-${k}`} href={`/cards/${c.id}`} aria-label={`${labels[k] ?? ''}: ${name}`}>
-                              <span className={`mini${c.reversed ? ' is-rev' : ''}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: cardFaceSvg(c.id, deck, locale) }} />
+                              <span className={`mini${c.reversed ? ' is-rev' : ''}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: face(c.id, deck) }} />
                               <span><b>{name}</b><small>{labels[k] ?? ''}{c.reversed ? ` · ${tCards('reversed')}` : ''}</small></span>
                             </Link>
                           );

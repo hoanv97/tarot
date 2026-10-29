@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { displayName } from '@miu/web-shared';
 
-export type AuthUser = { id: string; email: string; role: 'user' | 'admin' } | null;
+export type AuthUser = { id: string; email: string; /** Tên hiển thị (tên đăng nhập, hoặc email nếu đăng nhập bằng email thật) */ name: string; role: 'user' | 'admin' } | null;
 type State = { ready: boolean; user: AuthUser; configured: boolean };
 
 /** Phiên đăng nhập Supabase + vai trò (đọc từ bảng profiles; RLS vẫn là lớp bảo vệ thật). */
@@ -19,7 +20,7 @@ export const useAuth = (): State => {
       if (!session) { if (alive) setState({ ready: true, user: null, configured: true }); return; }
       const { data } = await supabase.from('profiles').select('role').eq('id', session.user.id).maybeSingle();
       const role = data?.role === 'admin' ? 'admin' : 'user';
-      if (alive) setState({ ready: true, configured: true, user: { id: session.user.id, email: session.user.email ?? '', role } });
+      if (alive) setState({ ready: true, configured: true, user: { id: session.user.id, email: session.user.email ?? '', name: displayName(session.user.email), role } });
     };
 
     supabase.auth.getSession().then(({ data }) => load(data.session));

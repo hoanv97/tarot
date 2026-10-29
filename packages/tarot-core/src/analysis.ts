@@ -1,8 +1,8 @@
-import { CARD_INDEX, CARD_TONES, RULE_SET, getCardName, getLocaleBundle } from './data';
+import { CARD_INDEX, CARD_TONES, RULE_SET, getLocaleBundle, type LocaleBundle } from './data';
 import { mulberry32 } from './draw';
 import { generateInsights } from './insights';
 import {
-  DEFAULT_LOCALE, type AnalysisResult, type AnalysisItem, type AnalysisSection, type AnalysisText, type DrawnCard, type Locale, type RuleSetDef,
+  DEFAULT_LOCALE, type AnalysisResult, type AnalysisItem, type AnalysisSection, type AnalysisText, type CardTones, type DrawnCard, type Locale, type RuleSetDef,
   type RuleTexts, type SpreadId, type Tone, type TopicId
 } from './types';
 
@@ -23,6 +23,10 @@ export type AnalyzeArgs = {
   /** Dùng bảng luật khác (ví dụ lấy từ database) thay cho bản đóng gói sẵn. */
   ruleSet?: RuleSetDef;
   ruleTexts?: RuleTexts;
+  /** Dùng bộ nội dung đã gộp (ví dụ cấu hình trong database) thay cho bản đóng gói sẵn của ngôn ngữ. */
+  bundle?: LocaleBundle;
+  /** Tông của từng lá khi khác bản đóng gói sẵn. */
+  cardTones?: CardTones;
 };
 
 export const MAX_QUESTION_LENGTH = 200;
@@ -63,7 +67,7 @@ export const detectIntent = (question: string, analysis: AnalysisText): Analysis
 
 export const pairKey = (a: string, b: string): string => [a, b].sort().join('+');
 
-const toneOf = (id: string, reversed: boolean): Tone => CARD_TONES[id]?.[reversed ? 1 : 0] ?? 'neutral';
+const toneOf = (tones: CardTones, id: string, reversed: boolean): Tone => tones[id]?.[reversed ? 1 : 0] ?? 'neutral';
 
 const section = (id: AnalysisSection['id'], title: string, items: AnalysisItem[]): AnalysisSection => ({ id, title, items, paragraphs: items.map((i) => i.text) });
 
@@ -71,7 +75,9 @@ const list = (value: string | string[] | undefined): string[] => (value === unde
 
 export const analyzeSpread = (args: AnalyzeArgs): AnalysisResult => {
   const { picks, spreadId, topicId, locale = DEFAULT_LOCALE, ruleSet = RULE_SET } = args;
-  const bundle = getLocaleBundle(locale);
+  const bundle = args.bundle ?? getLocaleBundle(locale);
+  const cardTones = args.cardTones ?? CARD_TONES;
+  const getCardName = (_locale: Locale, id: string): string => bundle.cards[id]?.name ?? id;
   const data = bundle.analysis;
   const ui = bundle.ui;
   const question = cleanQuestion(args.question);
@@ -103,7 +109,7 @@ export const analyzeSpread = (args: AnalyzeArgs): AnalysisResult => {
   sections.push(section('lead', data.labels.lead, [{ text: tidy(fill(leadTemplate, { question, topic: topicLabel })), tone: 'neutral' }]));
 
   /* 2. Bức tranh chung theo tông các lá */
-  const tones = picks.map((p) => toneOf(p.id, p.reversed));
+  const tones = picks.map((p) => toneOf(cardTones, p.id, p.reversed));
   const positive = tones.filter((t) => t === 'positive').length;
   const caution = tones.filter((t) => t === 'caution').length;
   const lean = positive > caution ? 'positive_lean' : caution > positive ? 'caution_lean' : 'balanced';
