@@ -23,8 +23,13 @@ export const useConfigured = (locale: Locale, deck = 'rws'): Configured => {
 /** Hàm vẽ mặt lá bài: dùng ảnh đã tải lên nếu có, không thì hình vẽ mặc định. */
 export const useCardFace = (locale: Locale) => {
   const patch = useContext(ContentContext);
-  return useMemo(() => (id: string, deck: string): string => {
-    const configured = applyContent(locale, deck, patch);
-    return cardFaceSvg(id, deck, locale, { name: configured.bundle.cards[id]?.name, image: configured.images[id] });
+  return useMemo(() => {
+    // applyContent khá nặng (sao chép cả bộ 78 lá); mỗi bộ chỉ gộp một lần rồi dùng lại cho mọi lá.
+    const byDeck = new Map<string, Configured>();
+    return (id: string, deck: string): string => {
+      let configured = byDeck.get(deck);
+      if (!configured) { configured = applyContent(locale, deck, patch); byDeck.set(deck, configured); }
+      return cardFaceSvg(id, deck, locale, { name: configured.bundle.cards[id]?.name, image: configured.images[id] });
+    };
   }, [locale, patch]);
 };

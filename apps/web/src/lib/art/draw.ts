@@ -8,9 +8,9 @@ export const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', 
 export const f = (n) => Math.round(n * 10) / 10;
 
 const DECKS = {
-  rws: { id: 'rws', name: 'Rider–Waite–Smith', voice: 'Kinh điển, rõ ràng, dễ đọc.', bg: 'url(#g-rws-bg)', frame: '#C9A55B', ink: '#3A2E4A', accent: '#E3A63A', soft: '#F1DDAF', sky: '#C9DDF0', water: '#6E9CCB', text: '#3A2E4A' },
+  rws: { id: 'rws', name: 'Rider–Waite–Smith', voice: 'Kinh điển, rõ ràng, dễ đọc.', bg: 'url(#g-rws-bg)', pic: '#F8E9A6', frame: '#8A6A2F', ink: '#1B1722', accent: '#E8B22E', soft: '#F6EEDA', sky: '#BFDDF2', water: '#4E86C4', text: '#1B1722' },
   moon: { id: 'moon', name: 'Nguyệt Quang', voice: 'Bộ này hợp với những câu hỏi về nội tâm.', bg: 'url(#g-moon-bg)', frame: '#CFC8FF', ink: '#EEEBFF', accent: '#F5E2A8', soft: '#6E62B8', sky: '#5B4F9E', water: '#A49BEA', text: '#EEEBFF' },
-  lotus: { id: 'lotus', name: 'Hoa Đăng', voice: 'Nhẹ nhàng như đèn hoa đăng trôi trên sông.', bg: 'url(#g-lotus-bg)', frame: '#E48AAE', ink: '#6A2C4C', accent: '#EE9A4E', soft: '#F6C3D5', sky: '#FBD9E6', water: '#D9789F', text: '#6A2C4C' }
+  lotus: { id: 'lotus', name: 'Hoa Đăng', voice: 'Nhẹ nhàng như đèn hoa đăng trôi trên sông.', bg: '#FFFBFC', frame: '#E48AAE', ink: '#6A2C4C', accent: '#EE9A4E', soft: '#FBE3EC', sky: '#FBD9E6', water: '#D9789F', text: '#6A2C4C' }
 };
 const DECK_IDS = ['rws', 'moon', 'lotus'];
 
@@ -231,17 +231,144 @@ const minorSymbol = (id) => {
   };
 };
 
-const faceSVG = (c, deckId) => {
-  const p = DECKS[deckId] || DECKS.rws;
+/* ================= 3 phong cách minh họa ================= */
+const FACE_OPEN = `<svg viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">`;
+const nameSize = (name) => (name.length > 16 ? 9 : name.length > 12 ? 11 : 13);
+const hashSeed = (s) => { let h = 2166136261; for (const ch of String(s)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const rng = (seed) => () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+/* 1) Rider–Waite–Smith: tranh kể chuyện, nét viền đen, màu phẳng, khung tranh + dải tên ở dưới */
+const rwsFace = (c, p) => {
   const name = String(c.name || '').toUpperCase();
   const sym = SYMBOLS[c.symbol] || SYMBOLS[c.id] || minorSymbol(c.symbol || c.id) || SYMBOLS.star;
-  return `<svg viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">` +
-    `<rect width="200" height="340" rx="14" fill="${p.bg}"/>` +
-    `<rect x="9" y="9" width="182" height="322" rx="9" fill="none" stroke="${p.frame}" stroke-width="1.5"/>` +
-    `<text x="100" y="37" text-anchor="middle" font-size="15" font-weight="600" letter-spacing="2" fill="${p.text}">${esc(c.num || '')}</text>` +
-    sym(p) +
-    `<text x="100" y="317" text-anchor="middle" font-size="${name.length > 16 ? 9 : name.length > 12 ? 11 : 13}" font-weight="600" letter-spacing="1.2" fill="${p.text}">${esc(name)}</text>` +
+  const serif = `font-family="Georgia, 'Times New Roman', serif"`;
+  return FACE_OPEN +
+    `<defs><clipPath id="rws-pic"><rect x="14" y="46" width="172" height="250"/></clipPath></defs>` +
+    `<rect width="200" height="340" rx="14" fill="#F6EEDA"/>` +
+    `<rect x="3" y="3" width="194" height="334" rx="11" fill="none" stroke="${p.ink}" stroke-width="1.2" opacity=".55"/>` +
+    `<text x="100" y="33" text-anchor="middle" ${serif} font-size="15" font-weight="700" letter-spacing="2" fill="${p.ink}">${esc(c.num || '')}</text>` +
+    `<rect x="14" y="46" width="172" height="250" fill="${p.pic}"/>` +
+    `<g clip-path="url(#rws-pic)">${sym(p)}</g>` +
+    `<rect x="14" y="46" width="172" height="250" fill="none" stroke="${p.ink}" stroke-width="3.2"/>` +
+    `<rect x="14" y="304" width="172" height="24" fill="${p.ink}"/>` +
+    `<text x="100" y="320.5" text-anchor="middle" ${serif} font-size="${nameSize(name)}" font-weight="700" letter-spacing="1.6" fill="#F6EEDA">${esc(name)}</text>` +
     `</svg>`;
+};
+
+/* 2) Hiện đại tối giản: hình học đơn giản, ít chi tiết, nhiều khoảng trống */
+const wave = (cx, cy, w) => P(`M${cx - w} ${cy} Q${cx - w / 2} ${cy - 8} ${cx} ${cy} T${cx + w} ${cy}`, 'none', 'currentColor', 2);
+const MIN_SYMBOLS = {
+  fool: (p) => C(100, 108, 15, p.accent) + P('M54 244 L100 166 L146 244Z', p.soft) + C(100, 152, 7, p.ink) + L(54, 244, 146, 244, p.ink, 2.5),
+  magician: (p) => P('M68 112 C68 90 100 90 100 112 C100 134 132 134 132 112 C132 90 100 90 100 112 C100 134 68 134 68 112Z', 'none', p.frame, 3) +
+    L(100, 146, 100, 228, p.ink, 3.5) + C(66, 262, 7, p.frame) + R(86, 255, 14, 14, p.accent) + P('M112 269 L119 255 L126 269Z', p.ink) + P('M146 255 L153 262 L146 269 L139 262Z', p.soft, p.ink, 1.5),
+  priestess: (p) => R(56, 96, 16, 150, p.ink) + R(128, 96, 16, 150, p.soft, 0, p.ink, 2) + `<g transform="rotate(-90 100 170)">${P(crescentPath(100, 170, 24, 0.55), p.frame)}</g>` + C(100, 214, 9, p.accent),
+  empress: (p) => C(100, 138, 28, 'none', p.frame, 4) + L(100, 166, 100, 226, p.frame, 4) + L(80, 198, 120, 198, p.frame, 4) +
+    [0, 1, 2, 3, 4].map((k) => C(f(100 + 56 * Math.cos(Math.PI * (1.15 + k * 0.175))), f(138 + 56 * Math.sin(Math.PI * (1.15 + k * 0.175))), 3.6, p.accent)).join(''),
+  emperor: (p) => R(68, 138, 64, 96, p.soft, 0, p.ink, 2.5) + P('M68 138 L100 98 L132 138Z', p.ink) + C(100, 176, 10, p.accent) + L(52, 250, 148, 250, p.ink, 2.5),
+  hierophant: (p) => L(100, 90, 100, 232, p.ink, 4) + L(76, 118, 124, 118, p.ink, 3.5) + L(84, 146, 116, 146, p.ink, 3.5) + L(90, 174, 110, 174, p.ink, 3.5) + C(78, 256, 6, p.frame) + C(122, 256, 6, p.frame),
+  lovers: (p) => `<g opacity=".72">${C(84, 178, 34, p.frame)}${C(116, 178, 34, p.accent)}</g>` + C(100, 102, 9, p.accent) + L(100, 114, 100, 128, p.accent, 2),
+  chariot: (p) => P('M66 148 Q100 98 134 148Z', p.frame) + R(68, 148, 64, 52, p.soft, 0, p.ink, 2.5) + C(84, 216, 11, 'none', p.ink, 3) + C(116, 216, 11, 'none', p.ink, 3),
+  strength: (p) => P('M72 106 C72 88 100 88 100 106 C100 124 128 124 128 106 C128 88 100 88 100 106 C100 124 72 124 72 106Z', 'none', p.frame, 3) + C(100, 192, 40, p.accent) + C(100, 192, 22, p.soft) + C(100, 192, 6, p.ink),
+  hermit: (p) => P(starPath(100, 100, 18, 7, 6), p.accent) + L(100, 120, 100, 146, p.accent, 2.5) + P('M68 252 L100 146 L132 252Z', p.ink),
+  wheel: (p) => C(100, 170, 56, 'none', p.ink, 3) + C(100, 170, 9, p.accent) + rays(100, 170, 12, 56, 8, p.ink, 2.2, Math.PI / 8) + [0, 1, 2, 3].map((k) => C(f(100 + 56 * Math.cos(k * Math.PI / 2)), f(170 + 56 * Math.sin(k * Math.PI / 2)), 5, p.frame)).join(''),
+  justice: (p) => L(100, 96, 100, 240, p.ink, 3.5) + L(60, 138, 140, 138, p.ink, 3.5) + C(100, 108, 8, p.accent) + L(66, 138, 66, 170, p.ink, 1.8) + L(134, 138, 134, 170, p.ink, 1.8) + P('M52 170 H80 Q66 190 52 170Z', p.frame) + P('M120 170 H148 Q134 190 120 170Z', p.frame),
+  hanged: (p) => L(58, 98, 142, 98, p.ink, 4) + L(100, 98, 100, 148, p.ink, 2.2) + P('M78 148 H122 L100 214Z', p.frame) + C(100, 232, 9, p.accent),
+  death: (p) => P('M58 214 A42 42 0 0 1 142 214Z', p.ink) + L(44, 214, 156, 214, p.frame, 3) + C(100, 244, 5, p.frame) + P(starPath(100, 116, 8, 3, 4), p.accent),
+  temperance: (p) => P('M60 134 H92 L86 164 H66Z', p.frame) + P('M108 196 H140 L134 226 H114Z', p.accent) + P('M88 164 Q104 176 116 196', 'none', p.ink, 2.4) + wave(100, 260, 38).replace(/currentColor/g, p.frame),
+  devil: (p) => C(100, 160, 56, 'none', p.frame, 2) + `<g transform="rotate(180 100 160)">${P(starPath(100, 160, 46, 18, 5), 'none', p.ink, 3)}</g>` + C(78, 248, 7, 'none', p.ink, 2.5) + C(122, 248, 7, 'none', p.ink, 2.5),
+  tower: (p) => R(82, 124, 36, 118, p.ink) + P('M78 124 L100 94 L122 124Z', p.ink) + P('M142 66 L122 116 L140 116 L116 168', 'none', p.accent, 4.5) + L(52, 242, 148, 242, p.frame, 3),
+  star: (p) => P(starPath(100, 150, 48, 19, 8), p.accent) + [[48, 86, 7], [152, 92, 6], [46, 214, 5], [156, 210, 7]].map(([x, y, r]) => P(starPath(x, y, r, f(r * 0.42), 4), p.frame)).join('') + wave(100, 252, 44).replace(/currentColor/g, p.frame),
+  moon: (p) => `<g transform="rotate(-20 100 160)">${P(crescentPath(100, 160, 54, 0.6), p.frame)}</g>` + [[56, 96, 5], [148, 232, 6]].map(([x, y, r]) => P(starPath(x, y, r, f(r * 0.4), 4), p.accent)).join('') + R(62, 242, 10, 22, p.ink) + R(128, 242, 10, 22, p.ink),
+  sun: (p) => C(100, 162, 34, p.accent) + rays(100, 162, 46, 62, 12, p.accent, 3.2) + C(100, 162, 14, p.soft),
+  judgement: (p) => P('M62 128 L138 152 L62 176Z', p.frame) + L(62, 152, 44, 152, p.frame, 3) + rays(138, 152, 12, 26, 5, p.accent, 2.2, -0.9) + R(54, 226, 20, 26, 'none', 0, p.ink, 2.5) + R(90, 226, 20, 26, 'none', 0, p.ink, 2.5) + R(126, 226, 20, 26, 'none', 0, p.ink, 2.5),
+  world: (p) => `<ellipse cx="100" cy="170" rx="46" ry="76" fill="none" stroke="${p.frame}" stroke-width="6"/>` + P('M100 138 L118 170 L100 202 L82 170Z', p.accent) + [[52, 98], [148, 98], [52, 242], [148, 242]].map(([x, y]) => C(x, y, 5, p.ink)).join('')
+};
+const minGlyph = (suit, x, y, s, p) => {
+  if (suit === 'wands') return L(x, f(y + s * 0.9), x, f(y - s * 0.6), p.accent, s * 0.2) + C(x, f(y - s * 0.95), s * 0.22, p.accent);
+  if (suit === 'cups') return P(`M${f(x - s * 0.8)} ${f(y - s * 0.45)} A${f(s * 0.8)} ${f(s * 0.8)} 0 0 0 ${f(x + s * 0.8)} ${f(y - s * 0.45)}Z`, p.water) + L(x, f(y + s * 0.2), x, f(y + s * 0.75), p.water, s * 0.14) + L(f(x - s * 0.4), f(y + s * 0.8), f(x + s * 0.4), f(y + s * 0.8), p.water, s * 0.14);
+  if (suit === 'swords') return P(`M${x} ${f(y - s)} L${f(x + s * 0.17)} ${f(y + s * 0.35)} H${f(x - s * 0.17)}Z`, p.ink) + L(f(x - s * 0.5), f(y + s * 0.35), f(x + s * 0.5), f(y + s * 0.35), p.ink, s * 0.14) + L(x, f(y + s * 0.35), x, f(y + s * 0.85), p.ink, s * 0.14);
+  return C(x, y, s * 0.82, 'none', p.frame, s * 0.2) + C(x, y, s * 0.26, p.frame);
+};
+const minSuitColor = (suit, p) => ({ wands: p.accent, cups: p.water, swords: p.ink, pentacles: p.frame }[suit]);
+const minMinor = (id) => {
+  const m = /^(wands|cups|swords|pentacles)-(ace|\d+|page|knight|queen|king)$/.exec(String(id || ''));
+  if (!m) return null;
+  const [, suit, rank] = m;
+  return (p) => {
+    if (rank === 'ace') return C(100, 168, 78, 'none', p.soft, 1.6) + minGlyph(suit, 100, 168, 46, p);
+    if (/^\d+$/.test(rank)) {
+      const n = Number(rank);
+      const s = n <= 3 ? 24 : n <= 6 ? 19 : n <= 8 ? 16 : 14;
+      return (PIPS[n] || []).map(([u, v]) => minGlyph(suit, f(54 + u * 92), f(78 + v * 190), s, p)).join('');
+    }
+    const col = minSuitColor(suit, p);
+    const count = { page: 1, knight: 2, queen: 3, king: 4 }[rank];
+    const body = {
+      page: P('M76 244 L100 162 L124 244Z', col),
+      knight: P('M100 156 L136 198 L100 240 L64 198Z', col),
+      queen: P('M70 246 Q100 150 130 246Z', col),
+      king: R(74, 160, 52, 86, col)
+    }[rank];
+    const dots = Array.from({ length: count }, (_, k) => C(f(100 + (k - (count - 1) / 2) * 14), 92, 3.4, p.accent)).join('');
+    return dots + C(100, 124, 15, 'none', p.ink, 3) + body + minGlyph(suit, 100, 274, 11, p);
+  };
+};
+const minimalFace = (c, p) => {
+  const name = String(c.name || '').toUpperCase();
+  const sym = MIN_SYMBOLS[c.symbol] || MIN_SYMBOLS[c.id] || minMinor(c.symbol || c.id) || MIN_SYMBOLS.star;
+  return FACE_OPEN +
+    `<rect width="200" height="340" rx="14" fill="#FFFBFC"/>` +
+    `<rect x="9" y="9" width="182" height="322" rx="9" fill="none" stroke="${p.frame}" stroke-width="1" opacity=".55"/>` +
+    `<text x="100" y="38" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="3.5" fill="${p.ink}" opacity=".75">${esc(c.num || '')}</text>` +
+    sym(p) +
+    L(88, 296, 112, 296, p.frame, 1.4) +
+    `<text x="100" y="316" text-anchor="middle" font-size="${Math.min(nameSize(name), 11)}" font-weight="600" letter-spacing="2.4" fill="${p.ink}">${esc(name)}</text>` +
+    `</svg>`;
+};
+
+/* 3) Huyền bí / thiên văn: nền đêm, vàng–tím, chòm sao nối quanh biểu tượng, trăng */
+const mysticFace = (c, p) => {
+  const name = String(c.name || '').toUpperCase();
+  const sym = SYMBOLS[c.symbol] || SYMBOLS[c.id] || minorSymbol(c.symbol || c.id) || SYMBOLS.star;
+  const rand = rng(hashSeed(c.id));
+  const gold = '#E7C97A';
+  const stars = Array.from({ length: 30 }, () => `<circle cx="${f(16 + rand() * 168)}" cy="${f(52 + rand() * 240)}" r="${f(0.5 + rand() * 0.9)}" fill="#F5E2A8" opacity="${f(0.35 + rand() * 0.55)}"/>`).join('');
+  const n = 6 + Math.floor(rand() * 3);
+  const base = rand() * Math.PI * 2;
+  const pts = Array.from({ length: n }, (_, k) => {
+    const a = base + (k * 2 * Math.PI) / n + (rand() - 0.5) * 0.5;
+    const r = 0.84 + rand() * 0.18;
+    return [f(100 + 80 * r * Math.cos(a)), f(170 + 110 * r * Math.sin(a))];
+  });
+  const lines = pts.map(([x, y], k) => { const [x2, y2] = pts[(k + 1) % n]; return k === n - 1 && rand() < 0.5 ? '' : `<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}"/>`; }).join('');
+  const chord = (() => { const a = pts[0], b = pts[Math.floor(n / 2)]; return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke-dasharray="2 4" opacity=".55"/>`; })();
+  const nodes = pts.map(([x, y], k) => P(starPath(x, y, k % 2 ? 3.4 : 5.2, k % 2 ? 1.3 : 2, 4), '#FFF1C4')).join('');
+  return FACE_OPEN +
+    `<defs><radialGradient id="mys-glow" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#7A64D0" stop-opacity=".55"/><stop offset="1" stop-color="#7A64D0" stop-opacity="0"/></radialGradient>` +
+    `<linearGradient id="mys-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#171436"/><stop offset=".55" stop-color="#2A2260"/><stop offset="1" stop-color="#3E2F78"/></linearGradient></defs>` +
+    `<rect width="200" height="340" rx="14" fill="url(#mys-bg)"/>` +
+    `<circle cx="100" cy="170" r="104" fill="url(#mys-glow)"/>` +
+    stars +
+    `<circle cx="100" cy="170" r="74" fill="none" stroke="${gold}" stroke-width=".8" opacity=".35"/>` +
+    `<circle cx="100" cy="170" r="88" fill="none" stroke="${gold}" stroke-width=".7" stroke-dasharray="2 5" opacity=".4"/>` +
+    `<g stroke="${gold}" stroke-width=".8" stroke-opacity=".55" fill="none">${lines}${chord}</g>` +
+    nodes +
+    `<g transform="translate(12 20) scale(.88)">${sym(p)}</g>` +
+    `<rect x="8" y="8" width="184" height="324" rx="9" fill="none" stroke="${gold}" stroke-width="1.4" opacity=".9"/>` +
+    `<rect x="14" y="14" width="172" height="312" rx="6" fill="none" stroke="${gold}" stroke-width=".6" opacity=".5"/>` +
+    `<g transform="rotate(-25 34 34)">${P(crescentPath(34, 34, 9, 0.55), gold)}</g>` +
+    P(starPath(166, 34, 7, 2.6, 4), gold) +
+    `<text x="100" y="40" text-anchor="middle" font-size="13" font-weight="600" letter-spacing="3" fill="${gold}">${esc(c.num || '')}</text>` +
+    P(starPath(100, 298, 4.2, 1.6, 4), gold) + L(58, 298, 90, 298, gold, 0.8) + L(110, 298, 142, 298, gold, 0.8) +
+    `<text x="100" y="319" text-anchor="middle" font-size="${nameSize(name)}" font-weight="600" letter-spacing="1.8" fill="#F5E2A8">${esc(name)}</text>` +
+    `</svg>`;
+};
+
+const faceSVG = (c, deckId) => {
+  const p = DECKS[deckId] || DECKS.rws;
+  if (deckId === 'lotus') return minimalFace(c, p);
+  if (deckId === 'moon') return mysticFace(c, p);
+  return rwsFace(c, p);
 };
 
 export const backSVG = (deckId) => `<svg viewBox="0 0 200 340" aria-hidden="true" focusable="false"><use href="#back-${deckId}"/></svg>`;
@@ -249,7 +376,7 @@ export const backSVG = (deckId) => `<svg viewBox="0 0 200 340" aria-hidden="true
 /** Tạo SVG mặt trước. card cần: id, numeral, name. */
 export const faceSvgFor = (card, deckId) => faceSVG({ id: card.id, num: card.numeral, name: card.name, symbol: card.id }, deckId);
 
-export const spriteMarkup = () => {
+const buildSprite = () => {
   const gold = '#E7C97A';
   const lotusPetals = [-2, -1, 1, 2, 0].map((k) =>
     `<path d="M100 196 C86 172 88 142 100 124 C112 142 114 172 100 196Z" fill="#fff" fill-opacity="${k === 0 ? 0.95 : 0.7}" transform="rotate(${k * 30} 100 196)"/>`).join('');
@@ -277,6 +404,7 @@ export const spriteMarkup = () => {
       <rect width="200" height="340" rx="14" fill="url(#g-back-moon)"/><rect width="200" height="340" rx="14" fill="url(#p-dots)"/>
       <rect x="10" y="10" width="180" height="320" rx="9" fill="none" stroke="#CFC8FF" stroke-width="1.2" stroke-opacity=".7"/>
       <circle cx="100" cy="170" r="58" fill="none" stroke="#CFC8FF" stroke-opacity=".35"/>
+      <path d="M56 74 L100 40 L148 96 L142 270 L100 300 L64 262 Z" fill="none" stroke="#F5E2A8" stroke-opacity=".4" stroke-width=".9"/>
       <g transform="rotate(-30 100 170)"><path d="${crescentPath(100, 170, 44, 0.6)}" fill="#F5E2A8"/></g>
       ${[[56, 74, 7], [148, 96, 5], [64, 262, 5], [142, 270, 8], [100, 40, 4], [100, 300, 4]].map(([x, y, r]) => `<path d="${starPath(x, y, r, f(r * 0.4), 4)}" fill="#F5E2A8"/>`).join('')}
     </symbol>
@@ -292,6 +420,10 @@ export const spriteMarkup = () => {
   </defs></svg>`;
   return sprite;
 };
+
+// Chuỗi SVG dùng chung không đổi giữa các lần render, nên dựng một lần.
+let spriteCache;
+export const spriteMarkup = () => (spriteCache ??= buildSprite());
 
 
 export const mascotSVG = () => `<svg class="mascot-svg" viewBox="0 0 635 640" aria-hidden="true" focusable="false">

@@ -30,6 +30,9 @@ export type HistoryEntry = {
   question: string;
   locale: string;
   cards: { id: string; reversed: boolean }[];
+  /** Lượt rút Tarot Có / Không: chỉ lưu trên thiết bị, kèm kết quả. */
+  kind?: 'yesno';
+  verdict?: 'yes' | 'no' | 'maybe' | 'later';
 };
 
 export const getHistory = (): HistoryEntry[] => {

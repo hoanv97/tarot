@@ -28,7 +28,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <Reveal as="p" className="lead" delay={120}>{t('lead')}</Reveal>
         <Reveal className="cta-row" delay={180}>
           <Link className="btn btn-primary btn-lg" href="/draw">{t('cta')}</Link>
-          <Link className="link-chev" href="/cards">{t('browse')}{CHEV}</Link>
+          <Link className="link-chev" href="/collection">{t('browse')}{CHEV}</Link>
         </Reveal>
         <Reveal className="hero-stage" delay={240}>
           <div className="halo" />

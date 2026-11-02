@@ -7,20 +7,24 @@
     "home": "Trang chủ",
     "draw": "Rút bài",
     "daily": "Daily Tarot",
+    "yesno": "Yes/No",
     "cards": "Lá bài",
+    "collection": "Bộ sưu tập",
     "admin": "Quản trị",
     "login": "Đăng nhập",
     "logout": "Đăng xuất",
     "legal": "Lưu ý nội dung",
     "history": "Lịch sử",
     "skip": "Bỏ qua tới nội dung",
+    "loading": "Đang tải…",
     "brandAria": "Miu Tarot, về trang chủ",
     "themeDark": "Bật giao diện tối",
     "themeLight": "Bật giao diện sáng",
     "companionHide": "Ẩn linh vật Cú Mơ",
     "companionShow": "Hiện linh vật Cú Mơ",
     "account": "Tài khoản của bạn",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "profile": "Hồ sơ"
   },
   "draw": {
     "title": "Rút bài",
@@ -198,6 +202,85 @@
       "unconfigured": "Chưa cấu hình Supabase (xem .env.example)."
     }
   },
+  "yesno": {
+    "metaTitle": "Tarot Có / Không",
+    "metaDescription": "Rút một hoặc ba lá để nhận gợi ý Có, Không hoặc Có thể cho câu hỏi của bạn. Mang tính tham khảo và giải trí.",
+    "titleA": "Một câu hỏi. ",
+    "titleB": "Một lá bài.",
+    "configAria": "Thiết lập Tarot Có / Không",
+    "deck": "Bộ bài",
+    "mode": "Số lá",
+    "mode1": "1 lá",
+    "mode3": "3 lá (lấy đa số)",
+    "question": "Câu hỏi",
+    "questionPlaceholder": "Ví dụ: Mình có nên nói chuyện thẳng với bạn ấy tuần này không?",
+    "tip": "Hỏi về việc bạn có thể tự làm trong thời gian gần, mỗi lần một câu. Tránh câu \"A hay B\" (hãy rút riêng cho từng lựa chọn).",
+    "samplesLabel": "Gợi ý",
+    "samples": [
+      "Mình có nên chủ động nhắn tin cho người ấy hôm nay không?",
+      "Mình có nên nói thẳng cảm xúc của mình trong tuần này không?",
+      "Mình có nên cho mối quan hệ này thêm thời gian không?",
+      "Mình có nên nhận lời mời làm việc mới không?",
+      "Mình có nên bắt đầu học một khóa mới trong tháng này không?",
+      "Hôm nay có phải lúc tốt để mình bắt đầu việc mới không?"
+    ],
+    "draw": "Xáo và rút bài",
+    "shuffling": "Đang xáo bài…",
+    "redraw": "Rút lại",
+    "fullSpread": "Xem trải bài đầy đủ",
+    "repeatNotice": "Rút lại nhiều lần để tìm đáp án ưng ý sẽ làm lá bài mất ý nghĩa. Hãy ưu tiên lần rút đầu tiên.",
+    "upright": "Xuôi",
+    "reversed": "Ngược",
+    "verdict": {
+      "yes": {
+        "word": "Có",
+        "line": "Lá bài nghiêng về câu trả lời \"Có\". Hướng đi này đang được năng lượng ủng hộ."
+      },
+      "no": {
+        "word": "Không",
+        "line": "Lá bài nghiêng về câu trả lời \"Không\". Có điều gì đó đang cản trở hoặc chưa phù hợp."
+      },
+      "maybe": {
+        "word": "Có thể",
+        "line": "Lá bài chưa nghiêng hẳn về bên nào. Có thể còn thiếu thông tin hoặc quyết định của bạn chưa rõ."
+      },
+      "later": {
+        "word": "Chưa phải lúc",
+        "line": "Câu trả lời có thể là \"Có\" nhưng đang bị chậm hoặc bị chặn lại. Hãy chờ thêm hoặc chuẩn bị kỹ hơn."
+      }
+    },
+    "strengthStrong": "Lá Ẩn Chính: câu trả lời mạnh, mang tính định hướng lớn.",
+    "strengthQualified": "Lá Ẩn Phụ: câu trả lời có điều kiện, phụ thuộc vào hoàn cảnh cụ thể của bạn.",
+    "majorityNote": "Kết quả theo đa số của ba lá: {yes} lá nghiêng về Có, {no} lá nghiêng về Không, {other} lá chưa rõ hoặc chưa phải lúc.",
+    "why": "Vì sao",
+    "reason": "Lá {name} ({orient}) gợi lên {keywords}.",
+    "advice": "Lời khuyên",
+    "self": "Để bạn tự vấn",
+    "sensitive": "Câu hỏi của bạn có thể liên quan đến sức khỏe, tài chính hoặc pháp lý. Tarot chỉ mang tính tham khảo và giải trí, không thay thế ý kiến của chuyên gia. Với quyết định quan trọng, hãy hỏi người có chuyên môn.",
+    "crisis": "Mình nghe thấy bạn đang rất nặng lòng. Tarot không phải nơi phù hợp để trả lời câu hỏi này. Hãy nói chuyện với người thân hoặc một chuyên gia gần bạn. Nếu bạn đang gặp nguy hiểm, hãy gọi ngay số khẩn cấp ở nơi bạn sống (tại Việt Nam: 115 cấp cứu, 113 công an).",
+    "say": {
+      "idle": "Nghĩ về một câu hỏi Có hoặc Không, rồi bấm \"Xáo và rút bài\" nhé.",
+      "shuffling": "Miu đang xáo bài. Bạn cứ giữ câu hỏi trong đầu nhé…",
+      "revealing": "Bài đã chọn xong, cùng lật từng lá nào!",
+      "crisis": "Mình ở đây với bạn. Hãy liên hệ người thân hoặc chuyên gia nhé.",
+      "yes": [
+        "Lá bài nghiêng về \"Có\". Chúc bạn một bước đi nhẹ nhàng!",
+        "Có vẻ năng lượng đang ủng hộ bạn đó."
+      ],
+      "no": [
+        "Lá bài nói \"Không\". Đây chỉ là gợi ý, quyết định vẫn là của bạn.",
+        "Chưa hợp lúc này. Thử nhìn lại câu hỏi xem sao nhé."
+      ],
+      "maybe": [
+        "Chưa rõ lắm. Có lẽ bạn cần thêm thông tin.",
+        "Lá bài đang ở giữa, hãy nghe thêm lòng mình."
+      ],
+      "later": [
+        "Chưa phải lúc, nhưng chưa chắc là không đâu.",
+        "Thử chờ thêm hoặc chuẩn bị kỹ hơn nhé."
+      ]
+    }
+  },
   "legal": {
     "title": "Lưu ý về nội dung",
     "entertainment": "Miu Tarot mang tính tham khảo và giải trí. Các lá bài là lời gợi mở để bạn suy ngẫm, không phải lời tiên đoán chắc chắn về tương lai.",
@@ -220,6 +303,19 @@
     "line2": "Tarot mang tính tham khảo và giải trí, không thay thế lời khuyên của chuyên gia.",
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản"
+  },
+  "collection": {
+    "metaTitle": "Bộ sưu tập",
+    "metaDescription": "Ba bộ bài Miu Tarot: xem album từng bộ và đọc ý nghĩa của từng lá bài.",
+    "title": "Bộ sưu tập",
+    "lead": "Chọn một bộ bài để xem album, rồi mở từng lá để đọc ý nghĩa xuôi, ngược và lời bình của Miu.",
+    "openAlbum": "Xem album",
+    "cardCount": "{n} lá bài",
+    "allDecks": "Tất cả bộ bài",
+    "showing": "Đang hiển thị {n} lá",
+    "albumAria": "Album lá bài",
+    "backToAlbum": "Về album {deck}",
+    "deckCardAria": "Mở album bộ {deck}"
   },
   "decks": {
     "rws": {
@@ -248,6 +344,20 @@
     "count": "{n} lần",
     "clear": "Xóa lịch sử",
     "clearArmed": "Bấm lần nữa để xóa",
+    "filterAria": "Lọc theo ngày",
+    "fAll": "Tất cả",
+    "fToday": "Hôm nay",
+    "f7": "7 ngày qua",
+    "f30": "30 ngày qua",
+    "from": "Từ ngày",
+    "to": "Đến ngày",
+    "countOf": "{n} / {total} lần",
+    "noMatch": "Không có lần xem nào trong khoảng ngày này.",
+    "resetFilter": "Xóa bộ lọc",
+    "pickDate": "Chọn ngày",
+    "clearDate": "Xóa",
+    "prevMonth": "Tháng trước",
+    "nextMonth": "Tháng sau",
     "cleared": "Đã xóa lịch sử.",
     "emptyTitle": "Chưa có lần xem nào.",
     "emptyBody": "Rút lá đầu tiên, Miu sẽ ghi lại ở đây.",
@@ -255,6 +365,61 @@
     "daily": "Hằng ngày",
     "three": "Trải 3 lá",
     "threeSelf": "Trải 3 lá · Bản thân",
-    "localNote": "Lịch sử đang được lưu trên thiết bị này. Đăng nhập để lưu thêm vào tài khoản."
+    "yesno": "Yes/No",
+    "yesnoQuestion": "Câu hỏi",
+    "yesnoMore": "Lời khuyên và câu tự vấn",
+    "verdicts": {
+      "yes": "Có",
+      "no": "Không",
+      "maybe": "Có thể",
+      "later": "Chưa phải lúc"
+    },
+    "localNote": "Lịch sử đang được lưu trên thiết bị này. Đăng nhập để lưu thêm vào tài khoản.",
+    "editProfile": "Chỉnh sửa hồ sơ"
+  },
+  "profile": {
+    "metaTitle": "Hồ sơ của bạn",
+    "eyebrow": "Tài khoản",
+    "title": "Thông tin của bạn.",
+    "lead": "Cập nhật để Miu gọi bạn đúng tên. Thông tin chỉ dùng cho tài khoản của bạn.",
+    "loading": "Đang tải…",
+    "loginNeeded": "Đăng nhập để xem và chỉnh sửa hồ sơ.",
+    "unconfigured": "Chưa cấu hình Supabase nên chưa thể lưu hồ sơ.",
+    "avatarTitle": "Ảnh đại diện",
+    "avatarChange": "Chọn ảnh",
+    "avatarRemove": "Xóa ảnh",
+    "avatarUploading": "Đang tải lên…",
+    "avatarHint": "JPG, PNG hoặc WebP, tối đa 5MB. Ảnh được cắt vuông ở giữa.",
+    "avatarSaved": "Đã cập nhật ảnh đại diện.",
+    "avatarRemoved": "Đã xóa ảnh đại diện.",
+    "avatarBadType": "Chỉ hỗ trợ ảnh JPG, PNG hoặc WebP.",
+    "avatarTooBig": "Ảnh quá lớn (tối đa 5MB).",
+    "avatarFail": "Không tải được ảnh lên. Hãy chạy migration 0006_avatars.sql trong Supabase rồi thử lại.",
+    "username": "Tên đăng nhập",
+    "usernameHint": "Tên đăng nhập không thể thay đổi.",
+    "fullName": "Họ và tên",
+    "fullNamePh": "Nguyễn Văn A",
+    "birthdate": "Ngày tháng năm sinh",
+    "day": "Ngày",
+    "month": "Tháng",
+    "year": "Năm",
+    "birthBad": "Ngày sinh chưa hợp lệ. Hãy chọn đủ ngày, tháng, năm.",
+    "gender": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác",
+    "na": "Không muốn nói",
+    "email": "Email liên hệ",
+    "emailHint": "Chỉ để lưu thông tin liên hệ, không thay đổi cách bạn đăng nhập.",
+    "emailBad": "Email chưa hợp lệ.",
+    "save": "Lưu thay đổi",
+    "saving": "Đang lưu…",
+    "reset": "Hoàn tác",
+    "unsaved": "Có thay đổi chưa lưu",
+    "saved": "Đã lưu thông tin.",
+    "saveFail": "Không lưu được. Vui lòng thử lại.",
+    "history": "Xem lịch sử",
+    "logout": "Đăng xuất",
+    "admin": "Vào trang quản trị"
   }
 }

@@ -49,3 +49,7 @@ for f in supabase/migrations/*.sql supabase/seed.sql; do psql "$DATABASE_URL" -v
 ```
 
 `shim.sql` tạo vai trò `anon`/`authenticated`/`service_role`, bảng `auth.users`, hàm `auth.uid()` (đọc từ `request.jwt.claim.sub`) và bảng `storage.*` tối thiểu.
+
+## Ảnh đại diện (trang Hồ sơ)
+
+Chạy `supabase/migrations/0006_avatars.sql` (SQL Editor hoặc `supabase db push`) để tạo bucket công khai `avatars` (tối đa 1MB, JPG/PNG/WebP). Mỗi người dùng chỉ ghi được vào thư mục `avatars/<id người dùng>/`. Họ tên, ngày sinh, giới tính, email liên hệ và đường dẫn ảnh lưu trong `user_metadata` của Supabase Auth, không cần thêm bảng.
