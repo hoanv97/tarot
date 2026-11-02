@@ -15,7 +15,8 @@ export const cardFaceSvg = (id: string, deck: string, locale: Locale, configured
   }
   const structure = CARD_INDEX.get(id);
   const text = getLocaleBundle(locale).cards[id];
-  const name = configured.name ?? text?.name;
+  // Tên in trên hình lá bài luôn bằng tiếng Anh (như bản gốc RWS)
+  const name = getLocaleBundle('en').cards[id]?.name ?? configured.name ?? text?.name;
   const svg = structure && name ? faceSvgFor({ id, numeral: structure.numeral, name }, deck) : backSVG(deck);
   faceCache.set(key, svg);
   return svg;

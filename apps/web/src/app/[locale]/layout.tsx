@@ -43,6 +43,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
     <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+        <link rel="preload" href="/miu.webp" as="image" type="image/webp" />
       </head>
       <body>
         <NextIntlClientProvider>

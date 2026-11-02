@@ -7,20 +7,24 @@
     "home": "Home",
     "draw": "Draw",
     "daily": "Daily Tarot",
+    "yesno": "Yes/No",
     "cards": "Cards",
+    "collection": "Collection",
     "admin": "Admin",
     "login": "Sign in",
     "logout": "Sign out",
     "legal": "Content notice",
     "history": "History",
     "skip": "Skip to content",
+    "loading": "Loading…",
     "brandAria": "Miu Tarot, back to home",
     "themeDark": "Switch to dark mode",
     "themeLight": "Switch to light mode",
     "companionHide": "Hide the owl companion",
     "companionShow": "Show the owl companion",
     "account": "Your account",
-    "language": "Language"
+    "language": "Language",
+    "profile": "Profile"
   },
   "draw": {
     "title": "Draw cards",
@@ -198,6 +202,85 @@
       "unconfigured": "Supabase is not configured (see .env.example)."
     }
   },
+  "yesno": {
+    "metaTitle": "Yes / No Tarot",
+    "metaDescription": "Draw one or three cards for a Yes, No or Maybe hint on your question. For guidance and entertainment.",
+    "titleA": "One question. ",
+    "titleB": "One card.",
+    "configAria": "Yes / No Tarot settings",
+    "deck": "Deck",
+    "mode": "Cards",
+    "mode1": "1 card",
+    "mode3": "3 cards (majority)",
+    "question": "Question",
+    "questionPlaceholder": "E.g. Should I talk to them directly this week?",
+    "tip": "Ask about something you can act on soon, one question at a time. Avoid \"A or B\" (draw separately for each option).",
+    "samplesLabel": "Try one",
+    "samples": [
+      "Should I message them first today?",
+      "Should I say how I feel this week?",
+      "Should I give this relationship more time?",
+      "Should I accept the new job offer?",
+      "Should I start a new course this month?",
+      "Is today a good day to start something new?"
+    ],
+    "draw": "Shuffle and draw",
+    "shuffling": "Shuffling…",
+    "redraw": "Draw again",
+    "fullSpread": "See the full spread",
+    "repeatNotice": "Drawing again and again to find an answer you like drains the meaning from the cards. Your first draw is the one to trust.",
+    "upright": "Upright",
+    "reversed": "Reversed",
+    "verdict": {
+      "yes": {
+        "word": "Yes",
+        "line": "The card leans toward \"Yes\". The energy supports this direction."
+      },
+      "no": {
+        "word": "No",
+        "line": "The card leans toward \"No\". Something is blocking this or it isn't a fit right now."
+      },
+      "maybe": {
+        "word": "Maybe",
+        "line": "The card doesn't lean either way. There may be missing information, or you may not have decided yet."
+      },
+      "later": {
+        "word": "Not yet",
+        "line": "It could be a \"Yes\", but it is delayed or blocked. Wait a little or prepare more."
+      }
+    },
+    "strengthStrong": "Major Arcana: a strong answer with a big-picture direction.",
+    "strengthQualified": "Minor Arcana: a qualified answer that depends on your circumstances.",
+    "majorityNote": "Majority of three cards: {yes} lean Yes, {no} lean No, {other} unclear or not yet.",
+    "why": "Why",
+    "reason": "{name} ({orient}) suggests {keywords}.",
+    "advice": "Advice",
+    "self": "Ask yourself",
+    "sensitive": "Your question may touch on health, money or legal matters. Tarot is for guidance and entertainment only and does not replace a professional. For important decisions, ask a qualified person.",
+    "crisis": "I hear that you are carrying a lot. Tarot is not the right place to answer this. Please talk to someone close to you or a professional nearby. If you are in danger, call your local emergency number right away.",
+    "say": {
+      "idle": "Think of a Yes or No question, then press \"Shuffle and draw\".",
+      "shuffling": "Miu is shuffling. Hold your question in mind…",
+      "revealing": "The cards are chosen. Let's flip them!",
+      "crisis": "I'm here with you. Please reach out to someone you trust or a professional.",
+      "yes": [
+        "The card leans \"Yes\". Wishing you a smooth step!",
+        "The energy seems to be on your side."
+      ],
+      "no": [
+        "The card says \"No\". It is only a hint, the choice is still yours.",
+        "Not a fit right now. Maybe look at the question again."
+      ],
+      "maybe": [
+        "Not so clear. You may need more information.",
+        "The card sits in the middle. Listen to your own heart too."
+      ],
+      "later": [
+        "Not yet, but not necessarily a no.",
+        "Try waiting a little or preparing more."
+      ]
+    }
+  },
   "legal": {
     "title": "Content notice",
     "entertainment": "Miu Tarot is for guidance and entertainment. The cards are prompts for reflection, not certain predictions about the future.",
@@ -220,6 +303,19 @@
     "line2": "Tarot is for reference and entertainment and does not replace professional advice.",
     "privacy": "Privacy",
     "terms": "Terms"
+  },
+  "collection": {
+    "metaTitle": "Collection",
+    "metaDescription": "The three Miu Tarot decks: browse each deck's album and read the meaning of every card.",
+    "title": "Collection",
+    "lead": "Pick a deck to browse its album, then open any card to read its upright and reversed meanings and Miu's remark.",
+    "openAlbum": "Open album",
+    "cardCount": "{n} cards",
+    "allDecks": "All decks",
+    "showing": "Showing {n} cards",
+    "albumAria": "Card album",
+    "backToAlbum": "Back to the {deck} album",
+    "deckCardAria": "Open the {deck} album"
   },
   "decks": {
     "rws": {
@@ -248,6 +344,20 @@
     "count": "{n} readings",
     "clear": "Clear history",
     "clearArmed": "Tap again to clear",
+    "filterAria": "Filter by date",
+    "fAll": "All",
+    "fToday": "Today",
+    "f7": "Last 7 days",
+    "f30": "Last 30 days",
+    "from": "From",
+    "to": "To",
+    "countOf": "{n} of {total}",
+    "noMatch": "No readings in this date range.",
+    "resetFilter": "Clear filter",
+    "pickDate": "Pick a date",
+    "clearDate": "Clear",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
     "cleared": "History cleared.",
     "emptyTitle": "No readings yet.",
     "emptyBody": "Draw your first card and Miu will note it here.",
@@ -255,6 +365,61 @@
     "daily": "Daily",
     "three": "3-card spread",
     "threeSelf": "3-card spread · Self",
-    "localNote": "History is stored on this device. Sign in to also save it to your account."
+    "yesno": "Yes/No",
+    "yesnoQuestion": "Question",
+    "yesnoMore": "Advice and reflection",
+    "verdicts": {
+      "yes": "Yes",
+      "no": "No",
+      "maybe": "Maybe",
+      "later": "Not yet"
+    },
+    "localNote": "History is stored on this device. Sign in to also save it to your account.",
+    "editProfile": "Edit profile"
+  },
+  "profile": {
+    "metaTitle": "Your profile",
+    "eyebrow": "Account",
+    "title": "Your details.",
+    "lead": "Update them so Miu can call you by name. This information is only used for your account.",
+    "loading": "Loading…",
+    "loginNeeded": "Sign in to view and edit your profile.",
+    "unconfigured": "Supabase is not configured, so the profile cannot be saved.",
+    "avatarTitle": "Profile photo",
+    "avatarChange": "Choose photo",
+    "avatarRemove": "Remove photo",
+    "avatarUploading": "Uploading…",
+    "avatarHint": "JPG, PNG or WebP, up to 5MB. The photo is cropped to a square.",
+    "avatarSaved": "Profile photo updated.",
+    "avatarRemoved": "Profile photo removed.",
+    "avatarBadType": "Only JPG, PNG or WebP images are supported.",
+    "avatarTooBig": "The image is too large (5MB max).",
+    "avatarFail": "Could not upload the photo. Run the 0006_avatars.sql migration in Supabase and try again.",
+    "username": "Username",
+    "usernameHint": "Your username cannot be changed.",
+    "fullName": "Full name",
+    "fullNamePh": "Jane Doe",
+    "birthdate": "Date of birth",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "birthBad": "The date of birth is not valid. Please choose day, month and year.",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "na": "Prefer not to say",
+    "email": "Contact email",
+    "emailHint": "Kept as contact information only; it does not change how you sign in.",
+    "emailBad": "This email is not valid.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "reset": "Undo",
+    "unsaved": "Unsaved changes",
+    "saved": "Details saved.",
+    "saveFail": "Could not save. Please try again.",
+    "history": "View history",
+    "logout": "Sign out",
+    "admin": "Open admin site"
   }
 }
